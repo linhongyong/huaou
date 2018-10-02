@@ -1,19 +1,24 @@
 <template>
   <div>
     <Card>
-      <tables ref="tables" editable searchable search-place="top" v-model="tableData" size="small" :columns="columns" @on-delete="handleDelete" @addModalShow="addModalShow"  @editModalShow="editModalShow"/>
+      <tables ref="tables" editable searchable search-place="top" v-model="tableData" size="small" :columns="columns" @on-delete="handleDelete" @addModalShow="addModalShow"  @editModalShow="editModalShow" @detailModalShow="detailModalShow"/>
       <Button style="margin: 10px 0;" type="primary" @click="exportExcel">导出为Csv文件</Button>
     </Card>
-    <Modal v-model="addModal.show" title="新增旁站监理" ok-text="提交" footer-hide="true" width="60%">
-    	<div id="" style="width:80%, margin:0 auto">
-    		<Add  @addModalClose="addModalClose"></Add>
+    <Modal v-model="addModal.show" title="新增旁站灌注" ok-text="提交" :footer-hide="true" width="60%">
+      <div id="" style="width:80%, margin:0 auto">
+        <Add  @addModalClose="addModalClose"></Add>
 
-    	</div>
+      </div>
     </Modal>
-    <Modal v-model="editModal.show" title="修改旁站监理" ok-text="提交" footer-hide="true" width="60%">
-    	<div id="" style="width:80%, margin:0 auto">
-    		<Edit  @editModalClose="editModalClose" :formItem="formItem"></Edit>
-    	</div>
+    <Modal v-model="editModal.show" title="修改旁站灌注" ok-text="提交" :footer-hide="true" width="60%">
+      <div id="" style="width:80%, margin:0 auto">
+        <Edit  @editModalClose="editModalClose" :formItem="formItem"></Edit>
+      </div>
+    </Modal>
+    <Modal v-model="detailModal.show" title="旁站灌注详情" ok-text="确认" :footer-hide="true" width="60%" :scrollable="true">
+      <div id="">
+        <Detail  :obj="formItem"></Detail>
+      </div>
     </Modal>
   </div>
 </template>
@@ -22,13 +27,14 @@
 import Tables from '_c/tables'
 import Add from './add.vue'
 import Edit from './edit.vue'
-import expandRow from './table-expand.vue';
+import Detail from './detail.vue'
+import expandRow from './table-expand.vue'
 
 import { getJxZkGzzPzjlList, deleteJxZkGzzPzjl, getJxZkGzzPzjl } from '@/api/JxZkGzZpjl'
 export default {
   name: 'tables_page',
   components: {
-    Tables, Add, Edit
+    Tables, Add, Edit, Detail
   },
   data () {
     return {
@@ -50,7 +56,7 @@ export default {
         {title: '施工单位', key: 'buildCompany'},
         {title: '楼栋号', key: 'building'},
         {title: '桩号', key: 'pile'},
-/*        {title: '监理开始时间', key: 'startTime'},
+        /*        {title: '监理开始时间', key: 'startTime'},
         {title: '监理结束时间', key: 'endTime'},
         {title: '钻机型号', key: 'drillModel'},
         {title: '钻机工作状态', key: 'workState'},
@@ -85,95 +91,147 @@ export default {
         {title: '充盈系数', key: 'fillingCoefficient'},
         {title: '试块制作组数', key: 'sampleMaking'},
         {title: '发现的问题及处理情况', key: 'problemContent'},
-        {title: '站旁监理人员id', key: 'superId'},*/
+        {title: '站旁监理人员id', key: 'superId'}, */
         {
           title: '操作',
           key: 'handle',
-          options: ['delete','add'],
+          options: ['delete', 'add'],
           button: [
-          	(h, params, vm) => {
-				    return h('Button', {
-				      	props:{
-				          type: 'text',
-				          ghost: true
-				        },
-				        on: {
-				        'click': (e) => {
-				        	console.log('modal click');
-				        	vm.$emit('editModalShow', params);
-				        }
-				      }
-				      }, [
-				        h('Icon', {
-				          props: {
-				            type: 'ios-create',
-				            size: 18,
-				            color: '#000000'
-				          }
-				        })
-				      ])
-          	}
+            (h, params, vm) => { // 编辑
+              return h('Button', {
+                props: {
+                  type: 'text',
+                  ghost: true
+                },
+                on: {
+                  'click': (e) => {
+                    console.log('modal click')
+                    vm.$emit('editModalShow', params)
+                  }
+                }
+              }, [
+                h('Icon', {
+                  props: {
+                    type: 'ios-create',
+                    size: 18,
+                    color: '#000000'
+                  }
+                })
+              ])
+            },
+            (h, params, vm) => { // 详情
+              return h('Button', {
+                props: {
+                  type: 'text',
+                  ghost: true
+                },
+                on: {
+                  'click': (e) => {
+                    console.log('modal click')
+                    vm.$emit('detailModalShow', params)
+                  }
+                }
+              }, [
+                h('Icon', {
+                  props: {
+                    type: 'md-eye',
+                    size: 18,
+                    color: '#000000'
+                  }
+                })
+              ])
+            }
           ]
         }
       ],
+
       tableData: [],
       addModal: {
-      	show: false,
+        show: false
       },
       editModal: {
-      	show: false,
+        show: false
+      },
+      detailModal: {
+        show: false
       },
       timeToSubmit: false,
-      formItem:{
-      	
+      formItem: {
+
       }
     }
   },
   methods: {
     handleDelete (params) {
       console.log(params)
-      let that = this;
+
       deleteJxZkGzzPzjl(params.row.id).then(res => {
-      	
-      	console.log(res);
-      	if(res.data.code == "Success"){
-    	 		that.tableData = params.tableData.filter((item, index) => index !== params.row.initRowIndex);
-      	}
-    	})
-      
-     
+        console.log(res)
+        if (res.data.code === 'Success') {
+          this.tableData = params.tableData.filter((item, index) => index !== params.row.initRowIndex)
+        }
+      })
+      //    downloadWord(params.row.id).then(res => {
+      //
+      //      console.log(res);
+      //      if(res.data.code == "Success"){
+      //         that.tableData = params.tableData.filter((item, index) => index !== params.row.initRowIndex);
+      //      }
+      //    })
     },
     exportExcel () {
       this.$refs.tables.exportCsv({
         filename: `table-${(new Date()).valueOf()}.csv`
       })
     },
-    addModalShow() {
-     	this.addModal.show = true;
+    addModalShow () {
+      this.addModal.show = true
     },
-    addModalClose(){
-    	console.log('handleModalClose')
-    	this.addModal.show = false;
-    	getJxZkGzzPzjlList().then(res => {
-      this.tableData = res.data.result.list
-    })
+    addModalClose () {
+      console.log('handleModalClose')
+      this.addModal.show = false
+      getJxZkGzzPzjlList().then(res => {
+        this.tableData = res.data.result.list
+      })
     },
-    editModalShow(params) {
-    	console.log("--+++++++++++++paramsparamsparams+++++++++++++++++++++++++++++++++");
-    	console.log(params)
-    	getJxZkGzzPzjl(params.row.id).then(res => {
-	    	console.log("-------------------------");
-	    	console.log(res.data);
-	      this.formItem = res.data.result
-	    })
-     	this.editModal.show = true;
+    editModalShow (params) {
+      console.log('--+++++++++++++paramsparamsparams+++++++++++++++++++++++++++++++++')
+      console.log(params)
+      getJxZkGzzPzjl(params.row.id).then(res => {
+        console.log('-------------------------')
+        console.log(res.data)
+        this.formItem = res.data.result
+      })
+      this.editModal.show = true
     },
-    editModalClose(){
-    	console.log('editModalClose')
-    	this.editModal.show = false;
-    	getJxZkGzzPzjlList().then(res => {
-      this.tableData = res.data.result.list
-    })
+
+    detailModalShow (params) {
+      getJxZkGzzPzjl(params.row.id).then(res => {
+        console.log('-------------------------')
+        console.log(res.data)
+        if (res.data.result.actualDeepImg === '') {
+          res.data.result.actualDeepImg = []
+        } else {
+          res.data.result.actualDeepImg = JSON.parse(res.data.result.actualDeepImg)
+        }
+        if (res.data.result.barCageCountImg === '') {
+          res.data.result.barCageCountImg = []
+        } else {
+          res.data.result.barCageCountImg = JSON.parse(res.data.result.barCageCountImg)
+        }
+        this.formItem = res.data.result
+        this.formItem.barCageCountImg = imgs2 && imgs2.length ? imgs2 : []
+
+        this.detailModal.show = true
+      })
+    },
+
+    editModalClose () {
+      console.log('editModalClose')
+      this.editModal.show = false
+      getJxZkGzzPzjlList().then(res => {
+        this.tableData = res.data.result.list
+      })
     }
   },
   mounted () {

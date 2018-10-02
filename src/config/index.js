@@ -14,8 +14,7 @@ export default {
    */
   baseUrl: {
     dev: 'http://47.98.132.165:18088/',
-//  dev: 'https://www.easy-mock.com/mock/5add9213ce4d0e69998a6f51/iview-admin/',
-    pro: 'https://produce.com'
+    //  dev: 'https://www.easy-mock.com/mock/5add9213ce4d0e69998a6f51/iview-admin/',
+    pro: 'http://47.98.132.165:18088/'
   }
 }
-

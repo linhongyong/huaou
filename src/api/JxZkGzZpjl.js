@@ -15,7 +15,6 @@ export const addJxZkGzzPzjl = (data) => {
  * 查询
  */
 export const getJxZkGzzPzjlList = (data) => {
-
   return axios.request({
     url: 'jxZkGzzPzjl/list',
     method: 'post'
@@ -25,7 +24,7 @@ export const getJxZkGzzPzjlList = (data) => {
 export const getJxZkGzzPzjl = (id) => {
   return axios.request({
     url: `jxZkGzzPzjl/getJxZkGzzPzjl?id=${id}`,
-    method: 'get',
+    method: 'get'
   })
 }
 /**
@@ -34,7 +33,7 @@ export const getJxZkGzzPzjl = (id) => {
 export const deleteJxZkGzzPzjl = (id) => {
   return axios.request({
     url: `jxZkGzzPzjl/delete?id=${id}`,
-    method: 'post',
+    method: 'post'
   })
 }
 
@@ -53,5 +52,15 @@ export const getDragList = () => {
   return axios.request({
     url: 'get_drag_list',
     method: 'get'
+  })
+}
+
+/**
+ * 下载
+ */
+export const downloadWord = (id) => {
+  return axios.request({
+    url: `/jxZkGzzPzjl/download?id=${id}`,
+    method: 'post'
   })
 }

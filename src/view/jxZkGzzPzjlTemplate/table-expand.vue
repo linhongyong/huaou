@@ -110,14 +110,14 @@
             </Col>
         <!--</Row>
         <Row class="expand-row">-->
-            <Col span="4">
+            <!--<Col span="4">
                 <span class="expand-key">灌注时间起 : </span>
                 <span class="expand-value">{{ row.perfusionStartTime }}</span>
             </Col>
             <Col span="4">
                 <span class="expand-key">灌注时间止 : </span>
                 <span class="expand-value">{{ row.perfusionEndTime }}</span>
-            </Col>
+            </Col>-->
             <Col span="4">
                 <span class="expand-key">设计坍落度 : </span>
                 <span class="expand-value">{{ row.designSlump }}</span>
@@ -168,5 +168,5 @@ export default {
   props: {
     row: Object
   }
-};
+}
 </script>

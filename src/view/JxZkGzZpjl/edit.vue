@@ -1,70 +1,70 @@
 <template>
-  	<Form :model="formItem" :label-width="140">
-  		<FormItem label="选择模板">
+    <Form :model="formItem" :label-width="140">
+      <FormItem label="选择模板">
             <Select v-model="formItem.templateId">
-                <Option v-bind:value="item.id" v-for="item in templateList">{{ item.buildCompany }}</Option>
+                <Option v-bind:value="item.id" v-for="item in templateList" v-bind:key="item">{{ item.buildCompany }}</Option>
             </Select>
         </FormItem>
-    	<Row>
+      <Row>
             <Col span="6">
                 <FormItem label="天气">
-            		<Input v-model="formItem.weather" placeholder=""></Input>
-        		</FormItem>
+                <Input v-model="formItem.weather" placeholder=""></Input>
+            </FormItem>
             </Col>
             <Col span="6">
                 <FormItem label="施工单位">
-            		<Input v-model="formItem.buildCompany" placeholder=""></Input>
-        		</FormItem>
+                <Input v-model="formItem.buildCompany" placeholder=""></Input>
+            </FormItem>
             </Col>
             <Col span="6">
                 <FormItem label="楼栋号">
-            		<Input v-model="formItem.building" placeholder=""></Input>
-        		</FormItem>
+                <Input v-model="formItem.building" placeholder=""></Input>
+            </FormItem>
             </Col>
             <!--<Col span="6">
                 <FormItem label="桩号">
-            		<Input v-model="formItem.pile" placeholder=""></Input>
-        		</FormItem>
+                <Input v-model="formItem.pile" placeholder=""></Input>
+            </FormItem>
             </Col>
             <Col span="6">
                 <FormItem label="监理开始时间">
-            		<Input v-model="formItem.startTime" placeholder=""></Input>
-        		</FormItem>
+                <Input v-model="formItem.startTime" placeholder=""></Input>
+            </FormItem>
             </Col>
             <Col span="6">
                 <FormItem label="监理结束时间">
-            		<Input v-model="formItem.endTime" placeholder=""></Input>
-        		</FormItem>
-            </Col>  
+                <Input v-model="formItem.endTime" placeholder=""></Input>
+            </FormItem>
+            </Col>
             <Col span="6">
                 <FormItem label="钻机型号">
-            		<Input v-model="formItem.drillModel" placeholder=""></Input>
-        		</FormItem>
+                <Input v-model="formItem.drillModel" placeholder=""></Input>
+            </FormItem>
             </Col>
             <Col span="6">
                 <FormItem label="钻机工作状态">
-            		<Input v-model="formItem.workState" placeholder=""></Input>
-        		</FormItem>
+                <Input v-model="formItem.workState" placeholder=""></Input>
+            </FormItem>
             </Col>
             <Col span="6">
                 <FormItem label="主钢筋">
-            		<Input v-model="formItem.mainBar" placeholder=""></Input>
-        		</FormItem>
+                <Input v-model="formItem.mainBar" placeholder=""></Input>
+            </FormItem>
             </Col>
             <Col span="6">
                 <FormItem label="箍钢筋">
-            		<Input v-model="formItem.circularBar" placeholder=""></Input>
-        		</FormItem>
+                <Input v-model="formItem.circularBar" placeholder=""></Input>
+            </FormItem>
             </Col>
             <Col span="6">
                 <FormItem label="加强钢筋">
-            		<Input v-model="formItem.strongBar" placeholder=""></Input>
-        		</FormItem>
+                <Input v-model="formItem.strongBar" placeholder=""></Input>
+            </FormItem>
             </Col>
             <Col span="6">
                 <FormItem label="钢筋笼数量（节）">
-            		<Input v-model="formItem.barCageCount" placeholder=""></Input>
-        		</FormItem>
+                <Input v-model="formItem.barCageCount" placeholder=""></Input>
+            </FormItem>
             </Col>  -->
         </Row>
         <FormItem>
@@ -125,80 +125,49 @@
     </Form>
 </template>
 <script>
-	import { addJxZkGzzPzjl, updateJxZkGzzPzjl } from '@/api/JxZkGzZpjl'
-	import { getJxZkGzzPzjlTemplateList, deleteJxZkGzzPzjlTemplate } from '@/api/jxZkGzzPzjlTemplate'
-    export default {
-        data () { 
-            return {
-//              formItem: {
-//              	templateId: 0, //模板id
-//              	weather : '',
-//              	buildCompany : '',
-//              	building : '',
-//                  input: '',
-//                  select: '',
-//                  radio: 'male',
-//                  checkbox: [],
-//                  switch: true,
-//                  date: '',
-//                  time: '',
-//                  slider: [20, 50],
-//                  textarea: ''
-//              },
-
-            }
-        },
-        props:{
-        	formItem: {
-		      type: Object,
-		      default () {
-		        return {
-                	templateId: 0, //模板id
-                	weather : '',
-                	buildCompany : '',
-                	building:0
-                }
-		      }
-		    },
-        },
-//      watch: {
-//		    time (val) {
-//		      	addJxZkGzzPzjl(this.formItem).then(res => {
-//					console.log("**********************formItem************");
-//			    	console.log(res);
-//			    })
-//		    }
-//		  },
-        methods: {
-            handleSubmit () {
-            	let that = this;
-            	this.formItem.templateId ? this.formItem.templateId : 2;
-            	updateJxZkGzzPzjl(this.formItem).then(res => {
-					console.log("**********************formItem************");
-			    	console.log(res);
-			    	that.$emit('editModalClose', true);
-			    });
-            	
-
-//              this.$refs[name].validate((valid) => {
-//                  if (valid) {
-//                      this.$Message.success('Success!');
-//                  } else {
-//                      this.$Message.error('Fail!');
-//                  }
-//              })
-            },
-            handleReset (formItem) {
-//              this.$refs[name].resetFields();
-				this.$emit('editModalClose', true);
-            }
-        },
-        mounted () {
-		    getJxZkGzzPzjlTemplateList().then(res => {
-		    	console.log("-------------------------");
-		    	console.log(res.data);
-		      	this.templateList = res.data.result.list
-		    })
-  		}
+import { updateJxZkGzzPzjl } from '@/api/JxZkGzZpjl'
+import { getJxZkGzzPzjlTemplateList } from '@/api/jxZkGzzPzjlTemplate'
+export default {
+  data () {
+    return {
+      templateList: []
     }
+  },
+  props: {
+    formItem: {
+      type: Object,
+      default () {
+        return {
+          templateId: 0, // 模板id
+          weather: '',
+          buildCompany: '',
+          building: 0
+        }
+      }
+    }
+  },
+  methods: {
+    handleSubmit () {
+      let that = this
+      that.formItem.templateId = that.formItem.templateId ? this.formItem.templateId : 2
+      updateJxZkGzzPzjl(this.formItem).then(res => {
+        console.log('**********************formItem************')
+        console.log(res)
+        that.$emit('editModalClose', true)
+      }
+      )
+    },
+    handleReset (formItem) {
+      // this.$refs[name].resetFields();
+      this.$emit('editModalClose', true)
+    }
+  },
+  mounted () {
+    getJxZkGzzPzjlTemplateList().then(res => {
+      console.log('-------------------------')
+      console.log(res.data)
+      this.templateList = res.data.result.list
+    })
+  }
+}
 </script>

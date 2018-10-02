@@ -32,6 +32,8 @@ export default {
     handleLogin ({ commit }, {userName, password}) {
       userName = userName.trim()
       return new Promise((resolve, reject) => {
+        commit('setToken', 'super_admin')
+        resolve()
         login({
           userName,
           password
@@ -63,6 +65,17 @@ export default {
     // 获取用户相关信息
     getUserInfo ({ state, commit }) {
       return new Promise((resolve, reject) => {
+        //      let data = {
+        //        avator: '',
+        //        user_name: 'admin',
+        //        user_id: 1,
+        //        access: true
+        //      }
+        //      commit('setAvator', data.avator)
+        //      commit('setUserName', data.user_name)
+        //      commit('setUserId', data.user_id)
+        //      commit('setAccess', data.access)
+        //      resolve(data)
         getUserInfo(state.token).then(res => {
           const data = res.data
           commit('setAvator', data.avator)
