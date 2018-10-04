@@ -1,25 +1,37 @@
 import axios from '@/libs/api.request'
 
-export const login = ({ userName, password }) => {
+export const login = ({
+  userName,
+  password
+}) => {
   const data = {
     userName,
     password
   }
-  return axios.request({
-    url: 'login',
-    data,
-    method: 'post'
-  })
+  return new Promise(function(resolve, reject){
+    resolve(data)
+  });
+//return axios.request({
+//  url: 'login',
+//  data,
+//  method: 'post'
+//})
 }
 
 export const getUserInfo = (token) => {
-  return axios.request({
-    url: 'get_info',
-    params: {
-      token
-    },
-    method: 'get'
-  })
+  //return axios.request({
+  //  url: 'get_info',
+  //  params: {
+  //    token
+  //  },
+  //  method: 'get'
+  //})
+  return Promise.resolve({data: {
+      avator: '',
+      user_name: 'admin',
+      user_id: 1,
+      access: ['super_admin']
+  }})
 }
 
 export const logout = (token) => {

@@ -164,11 +164,11 @@ export default {
   methods: {
     handleDelete (params) {
       console.log(params)
-
+      let that = this
       deleteJxZkGzzPzjl(params.row.id).then(res => {
         console.log(res)
         if (res.data.code === 'Success') {
-          this.tableData = params.tableData.filter((item, index) => index !== params.row.initRowIndex)
+          that.tableData = params.tableData.filter((item, index) => index !== params.row.initRowIndex)
         }
       })
       //    downloadWord(params.row.id).then(res => {

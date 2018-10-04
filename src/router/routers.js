@@ -44,7 +44,82 @@ export default [
     ]
   },
   //--------------------------------------------hong----------------------------------------start
-  {
+  {//旁站记录
+    path: '/pangzhan',
+    name: 'pangzhan',
+    meta: {
+      icon: 'ios-folder-open',
+      title: '旁站记录'
+    },
+    component: Main,
+    children: [
+      {
+        path: 'jxgz',
+        name: 'jxgz',
+        meta: {
+          access: ['super_admin'],
+          icon: 'md-folder',
+          showAlways: true,
+          title: '机械灌注桩'
+        },
+        component: parentView,
+        children: [
+          {
+            path: 'list',
+            name: 'list',
+            meta: {
+              icon: 'ios-list-box',
+              title: '旁站列表'
+            },
+             component: () => import('@/view/pangzhan/jxgz/jxgz.vue')
+          },
+          {
+            path: 'tpl',
+            name: 'tpl',
+            meta: {
+              icon: 'ios-list-box',
+              title: '模板列表'
+            },
+             component: () => import('@/view/pangzhan/jxgz/tpl.vue')
+          }
+        ]
+       
+      },
+      {//水泥搅拌
+        path: 'snjb',
+        name: 'snjb',
+        meta: {
+          access: ['super_admin'],
+          icon: 'md-folder',
+          showAlways: true,
+          title: '水泥搅拌'
+        },
+        component: parentView,
+        children: [
+          {
+            path: 'list',
+            name: 'list2',
+            meta: {
+              icon: 'ios-list-box',
+              title: '旁站列表'
+            },
+             component: () => import('@/view/pangzhan/snjb/snjb.vue')
+          },
+          {
+            path: 'tpl',
+            name: 'tpl2',
+            meta: {
+              icon: 'ios-list-box',
+              title: '模板列表'
+            },
+             component: () => import('@/view/pangzhan/snjb/tpl.vue')
+          }
+        ]
+       
+      },
+    ]
+  },
+  {//旁站老
     path: '/JxZkGzZpjl',
     name: 'JxZkGzZpjl',
     meta: {
@@ -70,6 +145,73 @@ export default [
           title: '旁站监理模板列表'
         },
         component: () => import('@/view/jxZkGzzPzjlTemplate/tables.vue')
+      }
+    ]
+  },
+  {// 项目管理
+    path: '/project',
+    name: 'project',
+    meta: {
+      icon: 'ios-podium',
+      title: '项目管理'
+    },
+    component: Main,
+    children: [
+      {
+        path: '/list',
+        name: 'project_list',
+        meta: {
+          icon: 'ios-list-box',
+          title: '项目列表'
+        },
+        component: () => import('@/view/project/project.vue')
+      }
+    ]
+  },
+	{// 用户管理
+    path: '/sys',
+    name: 'sys',
+    meta: {
+      icon: 'md-person',
+      title: '系统管理'
+    },
+    component: Main,
+    children: [
+      {
+        path: '/user_list',
+        name: 'user_list',
+        meta: {
+          icon: 'ios-list-box',
+          title: '用户管理'
+        },
+        component: () => import('@/view/user/user.vue')
+      },
+      {
+        path: '/role_list',
+        name: 'role_list',
+        meta: {
+          icon: 'ios-list-box',
+          title: '角色管理'
+        },
+        component: () => import('@/view/role/role.vue')
+      },
+      {
+        path: '/dept_list',
+        name: 'dept_list',
+        meta: {
+          icon: 'ios-list-box',
+          title: '部门管理'
+        },
+        component: () => import('@/view/dept/dept.vue')
+      },
+      {
+        path: '/menu_list',
+        name: 'menu_list',
+        meta: {
+          icon: 'ios-list-box',
+          title: '菜单管理'
+        },
+        component: () => import('@/view/menu/menu.vue')
       }
     ]
   },
