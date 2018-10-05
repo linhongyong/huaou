@@ -2,8 +2,8 @@
   <Form :model="obj" ref="obj" :rules="ruleCustom">
         <Row  type="flex"  justify="center">
       <Col span="12">
-        <FormItem label="角色" prop="deptName">
-          <Input v-model="obj.deptName" placeholder=""></Input>
+        <FormItem label="部门" prop="deptName">
+          <Input v-model="obj.deptName" placeholder="" />
         </FormItem>
       </Col>
     </Row>
@@ -16,7 +16,7 @@
         </FormItem>
         <div class="peoples">
           <div class="">
-            
+
           </div>
         </div>
       </Col>
@@ -38,7 +38,7 @@
       <Button style="margin-left: 8px"  @click="handleReset('obj')">取消</Button>
     </FormItem>
   </Form>
-  
+
 </template>
 <script>
 import deptApi from '@/api/dept-api'
@@ -47,7 +47,7 @@ export default {
     const validateDeptName = (rule, value, callback) => {
       if (value === '') {
         callback(new Error('必填'));
-      } 
+      }
       callback();
     };
     return {
@@ -60,7 +60,7 @@ export default {
         deptName: '',
       },
 
-      
+
     }
   },
   props: {
@@ -71,7 +71,7 @@ export default {
       this.$refs[obj].validate((valid) => {
         if (valid) {
           deptApi.addDept(this.obj, (data) => {
-            console.log(data); 
+            console.log(data);
             this.$refs[obj].resetFields();
             this.$Message.success({
               content: '添加成功！',

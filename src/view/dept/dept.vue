@@ -7,12 +7,12 @@
         <Button style="" type="primary" shape="circle" icon="md-add" v-on:click="addModal.show = true"></Button>
       </div>
     </Card>
-    <Modal v-model="editModal.show" title="修改角色信息" :footer-hide="true" width="60%">
+    <Modal v-model="editModal.show" title="修改部门信息" :footer-hide="true" width="60%">
       <div id="" style="width:80%, margin:0 auto">
         <Edit :obj="dept"  @editModalClose="editModalClose"></Edit>
       </div>
     </Modal>
-    <Modal v-model="addModal.show" title="添加角色" :footer-hide="true" width="60%">
+    <Modal v-model="addModal.show" title="添加部门" :footer-hide="true" width="60%">
       <div id="" style="width:80%, margin:0 auto">
         <Add @addModalClose="addModalClose"></Add>
       </div>
