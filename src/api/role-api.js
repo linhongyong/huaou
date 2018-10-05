@@ -56,4 +56,18 @@ role.getRoles = (data, fnOk, fnError) => {
     }
   })
 }
+role.getRolesByType = (data, fnOk, fnError) => {
+  axios.request({
+    url: `/role/getRolesByType?type=${data.type}`,
+    method: 'get',
+  }).then(res => {
+    console.log(res)
+    if(res.data.code != "Success"){
+      fnError(res.data)
+    }else{
+      fnOk(res.data)
+    }
+  })
+}
+
 export default role

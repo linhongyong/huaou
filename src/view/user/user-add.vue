@@ -24,6 +24,25 @@
         </FormItem>
       </Col>-->
     </Row>
+    <div class="" style="min-height: 200px;">
+    	<div class=""  style="min-height: 100px; clear: both;padding: 0 20px; font-size: 18px;">
+        <div class="" style="float: left;"  v-if="roleSelectedList.length > 0"> 已选角色 ：</div>
+        <div class="" v-for="(item, index) in roleSelectedList" style="float: left; padding-right: 20px;" v-on:click="reduceRole(index)">
+          <span class="">{{ item.roleName }}</span><Icon class="add-icon" type="md-remove" />
+        </div>
+      </div>
+      
+      <div class=""  style="min-height: 100px; clear: both;padding: 0 20px; font-size: 18px;">
+        <div class="" style="float: left;" v-if="roleList.length > 0">可选角色 ：</div>
+        <div class="" v-for="(item, index) in roleList" style="float: left; padding-right: 20px;" v-on:click="addRole(index)">
+          <span class="">{{ item.roleName }}</span><Icon class="add-icon" type="md-add"/>
+        </div>
+      </div>
+    </div>
+    
+    
+      
+      
     <FormItem style="text-align: right;">
       <Button type="primary" @click="handleSubmit('obj')">保存</Button>
       <Button style="margin-left: 8px"  @click="handleReset('obj')">取消</Button>
@@ -33,6 +52,7 @@
 </template>
 <script>
 import userApi from '@/api/user-api'
+import roleApi from '@/api/role-api'
 export default {
   data () {
     const validateUserName = (rule, value, callback) => {
@@ -73,18 +93,33 @@ export default {
         job: 'job',
         department: '人事部'
       },
-      departments: ['人事部', '造价部', '工程部']
-      
+
+      roleList: [],
+      roleSelectedList: []
     }
   },
   props: {
   },
   methods: {
+    addRole (index){
+      this.roleSelectedList.push(this.roleList[index])
+      this.roleList.splice(index, 1)
+      console.log(this.roleSelectedList);
+    },
+    reduceRole (index){
+      this.roleList.push(this.roleSelectedList[index])
+      this.roleSelectedList.splice(index, 1)
+      console.log(this.roleSelectedList);
+    },
     handleSubmit (obj) {
       let that = this
+      let userRoles = []
+      for(let i=0; i<this.roleSelectedList.length; i++ ){
+        userRoles.push({ roleId:this.roleSelectedList[i].id})
+      }
       this.$refs[obj].validate((valid) => {
         if (valid) {
-          userApi.addUser(this.obj, (data) => {
+          userApi.addUser({user:this.obj, userRoles:userRoles }, (data) => {
             console.log(data); 
             this.$refs[obj].resetFields();
             this.$Message.success({
@@ -105,10 +140,22 @@ export default {
     handleReset (obj) {
       this.$refs[obj].resetFields();
       this.$emit('addModalClose', true)
+//    this.roleList = []
+//    this.roleSelectedList = []
     }
   },
   mounted () {
-
+    roleApi.getRolesByType({type: 0}, (data) => {
+      console.log(data)
+      this.roleList = data.result
+    })
   }
 }
 </script>
+<style type="text/css">
+	.add-icon{
+	  padding: 5px 10px 5px 5px;
+	  color: #2d8cf0;
+	  cursor:pointer;
+	}
+</style>

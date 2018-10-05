@@ -16,34 +16,31 @@
         </FormItem>
       </Col>
       <Col span="11">
-        <FormItem label="添加对应角色用户">
-          <Input v-model="obj.userName" @on-change="searchUser"></Input>
-          <div id=""  style="z-index: 999; width: 100%;">
-          	<div v-for="(item, index) in userList"  style="cursor:pointer;"   v-on:click="selectUser(index)">
+        <FormItem label="搜索 - 添加对应角色用户">
+          <Input @on-change="searchUser"  v-model="searchKey"></Input>
+          <div id=""  style="z-index: 9999; width: 100%;position: absolute; background-color: #fff;">
+          	<div v-for="(item, index) in userList" v-if="item.userName != '' || item.mobile != ''">
               <div class="user-item display-flex-center-between" style="" >
-                <div class="">{{item.userName}}</div>
-                <span  style="color: green;">添加</span>
+                <div class="">{{item.userName}} ({{item.mobile}}) </div>
+                <span  style="color: #2d8cf0;cursor:pointer;" v-on:click="selectUser(index)">添加</span>
               </div>
             </div>
           </div>
           
         </FormItem>
       </Col>
-      <!--<Col span="2" class="display-flex-center-center" >
-        <FormItem label="点击添加">
-        	<Button type="primary" shape="circle" icon="md-person-add" v-on:click="addProjectMenber"></Button>
-        </FormItem>
-      </Col>-->
     </Row>
-    <Row class="menber-row"  type="flex"  v-for="item in roleTypeList">
-      <span class="">{{ item }} : </span>
-      <span>
-        <span class=""  v-for="itemU in hooks[item]" style="padding-left:20px ;">
-          {{ itemU }} ; 
-          <div class="" style="display: inline">X</div>
-        </span>
-      </span>
-    </Row>
+    <div class="" style="min-height: 150px;">
+      <Row class="menber-row"  type="flex"  v-for="item in roleTypeList">
+        	<span class="" style="font-size: 18px;">{{ item }} : </span>
+          <span>
+            <span class=""  v-for="(itemU, index) in hooks[item]" style="padding-left:20px; font-size: 18px;">
+              {{ itemU.userName }}（{{ itemU.mobile }} ） 
+              <div class="" style="display: inline; color: red; font-size: 12px;cursor: pointer;" :data-index="index" :data-roletype="item" v-on:click="removeRoleUser">删除</div>;
+            </span>
+          </span>
+      </Row>
+    </div>
     <FormItem style="text-align: right;">
       <Button type="primary" @click="handleSubmit('obj')">保存</Button>
       <Button style="margin-left: 8px"  @click="handleReset('obj')">取消</Button>
@@ -52,6 +49,7 @@
   
 </template>
 <script>
+import tools from '_u/tools.js'
 import projectApi from '@/api/project-api'
 import roleApi from '@/api/role-api'
 import userApi from '@/api/user-api'
@@ -81,51 +79,58 @@ export default {
       },
       obj: {
         projectName: '',
-        userName: '',
-        project:{
-          projectName: '',
-        },
         userRoles: []
       },
-      roleList: [],
-      userList: [],
-      currentUser: {},
-      currentUserIndex: -1,
-      currentRoleIndex: -1,
       hooks: [],
       roleTypeList:[], //已选角色
+      roleList: [],
+      userList: [],
+      currentRoleIndex: -1,
+      searchKey:""
     }
   },
   props: {
   },
   methods: {
-    addProjectMenber: function() {
-      if(this.currentRoleIndex == -1 ){
-        console.log("000")
-        return
+    removeRoleUser: function(e){
+      console.log(e);
+      this.hooks[e.target.dataset.roletype].splice(e.target.dataset.index, 1)
+      console.log(this.hooks[e.target.dataset.roletype]);
+//    this.$set(this.hooks, e.target.dataset.roletype, this.hooks[e.target.dataset.roletype])
+      this.hooks = Object.assign({}, this.hooks)
+      this.roleTypeList = [];
+      for(var prop in this.hooks){
+        if(this.hooks[prop].length == 0){
+          delete this.hooks[prop]
+        }else{
+          this.roleTypeList.push(prop);
+        }
+        
       }
-      if(this.currentUserIndex == -1){
-        console.log("-1-1-1")
-        return
-      }
-      this.obj.userRoles.push({userId: this.currentUser.id, roleId: this.roleList[this.currentRoleIndex].id})
+      console.log(this.roleTypeList)
+      console.log(this.hooks[e.target.dataset.roletype])
+      console.log(this.hooks);
+    },
+    selectUser: function(index) {
+      console.log(index);
 
-      console.log(this.roleList[this.currentRoleIndex].roleName, this.currentUser.userName)
-      this.addhooks(this.roleList[this.currentRoleIndex].roleName, this.currentUser.userName);
+
+      if(this.currentRoleIndex == -1 ){
+        this.$Message.error('请选择角色!');
+        return
+      }
+      this.obj.userRoles.push({userId: this.userList[index].id, roleId: this.roleList[this.currentRoleIndex].id})
+
+      console.log(this.roleList[this.currentRoleIndex].roleName, this.userList[index].userName)
+      this.hooks = tools.addhooks(this.hooks, this.roleList[this.currentRoleIndex].roleName, this.userList[index]);
       this.roleTypeList = [];
       for(var prop in this.hooks){
         this.roleTypeList.push(prop);
       }
+      this.userList = []
+      this.searchKey=""
       console.log(this.hooks)
       console.log(this.obj.userRoles)
-    },
-    addhooks: function(type, hook) {//添加历史记录
-      var hooks = this.hooks[type];
-      if (!hooks) {
-        hooks = [];
-      }
-      hooks.push(hook);
-      this.hooks[type] = hooks;
     },
     onRoleChange: function(index) {
       console.log(index);
@@ -135,16 +140,11 @@ export default {
       console.log(e.data);
       userApi.searchUsers({searchStr:e.data}, (data) => {
         console.log(data.result);
+        if(data.result.length > 3){
+          data.result.length = 3
+        }
         this.userList = data.result
       })
-    },
-    selectUser: function(index){
-      this.currentUserIndex = index
-      console.log(index);
-      this.obj.userName = this.userList[index].userName
-      this.currentUser = this.userList[index]
-      console.log(this.currentUser);
-      this.userList = [];
     },
     handleSubmit (obj) {
       let that = this
@@ -158,6 +158,8 @@ export default {
               content: '添加成功！',
               onClose: () => {
                  this.$emit('addModalClose', true)
+                 this.hooks = []
+                  this.roleTypeList = []
               }
             });
           }, (data) => {
@@ -171,20 +173,22 @@ export default {
     },
     handleReset (obj) {
       this.$refs[obj].resetFields();
+      this.hooks = []
+      this.roleTypeList = []
       this.$emit('addModalClose', true)
     }
   },
   mounted () {
-      roleApi.getRoles({pageIndex: 1, pageSize: 80}, (data) => {
+      roleApi.getRolesByType({type: 1}, (data) => {
         console.log(data)
-        this.roleList = data.result.list
+        this.roleList = data.result
       })
   }
 }
 </script>
 <style>
   .user-item{
-    padding: 0 10px 0 10px;
+    padding: 5px 10px;
     border-bottom: 1px solid #ccc;
     border-left: 1px solid #ccc;
     border-right: 1px solid #ccc;
@@ -209,5 +213,6 @@ export default {
   }
   .menber-row{
     padding: 10px 20px;
+
   }
 </style>

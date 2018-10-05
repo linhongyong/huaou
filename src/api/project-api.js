@@ -71,4 +71,33 @@ project.getProjectDetail = (data, fnOk, fnError) => {
     }
   })
 }
+
+project.deleteUserRole = (data, fnOk, fnError) => {
+  axios.request({
+    url: `/userRole/delete?id=${data.id}`,
+    method: 'post',
+  }).then(res => {
+    console.log(res)
+    if(res.data.code != "Success"){
+      fnError(res.data)
+    }else{
+      fnOk(res.data)
+    }
+  })
+}
+
+project.addUserRole = (data, fnOk, fnError) => {
+  axios.request({
+    url: '/userRole/add',
+    method: 'post',
+    data
+  }).then(res => {
+    console.log(res)
+    if(res.data.code != "Success"){
+      fnError(res.data)
+    }else{
+      fnOk(res.data)
+    }
+  })
+}
 export default project

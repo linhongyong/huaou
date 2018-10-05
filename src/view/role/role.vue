@@ -52,6 +52,11 @@ export default {
           //  width: 100
         },
         {
+          title: '是否项目角色',
+          key: 'type'
+          //  width: 100
+        },
+        {
           title: 'Action',
           key: 'action',
           //  fixed: 'right',

@@ -7,7 +7,7 @@
         <Button style="" type="primary" shape="circle" icon="md-add" v-on:click="addModal.show = true"></Button>
       </div>
     </Card>
-    <Modal v-model="editModal.show" title="修改工程信息" :footer-hide="true" width="60%">
+    <Modal v-model="editModal.show" title="修改工程信息" :footer-hide="true" width="60%" @on-cancel="onCancelEditModal">
       <div id="" style="width:80%, margin:0 auto">
         <Edit :obj="project"  @editModalClose="editModalClose"></Edit>
       </div>
@@ -39,6 +39,8 @@ export default {
         show: false
       },
       project:{},
+      hooks: [],
+      roleTypeList:[],
       columns2: [
         {
           title: '工程名',
@@ -63,13 +65,23 @@ export default {
                     
                     projectApi.getProjectDetail({id:this.userList[params.index].id}, (data) => {
                       console.log(data);
+                      for(let i=0; i<data.result.userRoleDTOS.length; i++){
+                        this.addhooks(data.result.userRoleDTOS[i].roleName, data.result.userRoleDTOS[i]);
+                      }
+                      for(var prop in this.hooks){
+                        this.roleTypeList.push(prop);
+                      }
+                      data.result.hooks = this.hooks
+                      data.result.roleTypeList = this.roleTypeList
+                      data.result.projectName = data.result.project.projectName
                       this.project = data.result
                       this.editModal.show = true
+                      console.log(this.project)
                     }, (data) => {
                       this.$Message.error(data.message);
                     })
                     
-                    console.log(this.project)
+                    
                   }
                 },
                 style: {
@@ -110,11 +122,22 @@ export default {
     }
   },
   methods: {
+    addhooks: function(type, hook) {//
+      var hooks = this.hooks[type];
+      if (!hooks) {
+        hooks = [];
+      }
+      hooks.push(hook);
+      this.hooks[type] = hooks;
+    },
     addModalClose () {
+      
       this.addModal.show = false
       this.getProjects()
     },
     editModalClose () {
+      this.hooks = []
+      this.roleTypeList = []
       this.editModal.show = false
       this.getProjects()
     },
@@ -134,6 +157,10 @@ export default {
       console.log(pageSize)
       this.pageSize = parseInt(pageSize);
       this.getProjects()
+    },
+    onCancelEditModal(){
+      this.hooks = []
+      this.roleTypeList = []
     }
   },
   mounted () {

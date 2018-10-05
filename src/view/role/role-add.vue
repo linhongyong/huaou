@@ -12,32 +12,20 @@
         </FormItem>
       </Col>
     </Row>
-    <!--<Row  type="flex"  justify="space-around">
-      <Col span="7">
-         <FormItem label="添加总监">
-          <Input v-model="value13">
-            <Button slot="append" icon="ios-search"></Button>
-          </Input>
-        </FormItem>
-        <div class="peoples">
-          <div class="">
-            
-          </div>
+    <Row  type="flex"  >
+      <Col span="12">
+        <div class="" style="padding-left: 20px;">
+        	<FormItem label="是否项目角色 :">
+            <RadioGroup v-model="obj.type">
+              <Radio label="1">是</Radio>
+              <Radio label="0">否</Radio>
+            </RadioGroup>
+          </FormItem>
         </div>
+        
+        
       </Col>
-      <Col span="7">
-        <FormItem label="添加专监">
-          <Input v-model="obj.name" placeholder=""></Input>
-        </FormItem>
-      </Col>
-      <Col span="7">
-        <FormItem label="添加监理">
-          <Select v-model="obj.department">
-            <Option v-bind:value="item" v-for="item in departments" v-bind:key="item">{{ item }}</Option>
-          </Select>
-        </FormItem>
-      </Col>
-    </Row>-->
+    </Row>
     <FormItem style="text-align: right;">
       <Button type="primary" @click="handleSubmit('obj')">保存</Button>
       <Button style="margin-left: 8px"  @click="handleReset('obj')">取消</Button>
@@ -72,9 +60,9 @@ export default {
       },
       obj: {
         roleName: '',
-        remark: ''
+        remark: '',
+        type: "0"
       },
-
       
     }
   },

@@ -84,6 +84,19 @@ user.getUsers = (data, fnOk, fnError) => {
     }
   })
 }
+user.getUserById = (data, fnOk, fnError) => {
+  axios.request({
+    url: `/user/get?id=${data.id}`,
+    method: 'get',
+  }).then(res => {
+    console.log(res)
+    if(res.data.code != "Success"){
+      fnError(res.data)
+    }else{
+      fnOk(res.data)
+    }
+  })
+}
 user.searchUsers = (data, fnOk, fnError) => {
   axios.request({
     url: `/user/searchUser?searchStr=${data.searchStr}`,

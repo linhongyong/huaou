@@ -25,6 +25,7 @@ import Tables from '_c/tables'
 import Edit from './user-edit.vue'
 import Add from './user-add.vue'
 import userApi from '@/api/user-api'
+import roleApi from '@/api/role-api'
 
 export default {
   components: {
@@ -38,7 +39,7 @@ export default {
       addModal: {
         show: false
       },
-      user:{},
+      user:{roleSelectedList:[], roleList:[]},
       columns2: [
         {
           title: '姓名',
@@ -70,9 +71,31 @@ export default {
                 },
                 on: {
                   'click': (e) => {
-                    this.editModal.show = true
-                    this.user = this.userList[params.index]
-                    console.log(this.user)
+                    userApi.getUserById({id:this.userList[params.index].id}, (data) => {
+                      data.result.user.roleSelectedList = []
+                      data.result.user.roleList = []
+                      this.user = data.result.user
+                      this.user.roleSelectedList = data.result.userRoleDTOList
+                      let tempSelectedRoleList = data.result.userRoleDTOList
+                      roleApi.getRolesByType({type: 0}, (data2) => {
+                        console.log(data2)
+                        let tempList = []
+                        for(let i=0; i<data2.result.length; i++){
+                          let count = 0;
+                          for(let j=0; j<tempSelectedRoleList.length; j++){
+                            if(data2.result[i].roleName != tempSelectedRoleList[j].roleName){
+                               count ++
+                            }
+                          }
+                          if(count == tempSelectedRoleList.length){
+                            tempList.push(data2.result[i])
+                          }
+                        }
+                        this.user.roleList = tempList
+                        console.log(this.user)   
+                        this.editModal.show = true
+                      })                      
+                    })
                   }
                 },
                 style: {
@@ -87,7 +110,7 @@ export default {
                 on: {
                   'on-ok': () => {
                     console.warn(params.index);
-                    userApi.deleteUser({id:this.userList[params.index].id}, () => {
+                    userApi.deleteUser({id:this.userList[params.index].id}, (data) => {
                       this.userList.splice(params.index, 1)
                       this.total = this.total - 1
                       this.$Message.success("删除成功！");

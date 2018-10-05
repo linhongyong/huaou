@@ -148,6 +148,27 @@ export default [
       }
     ]
   },
+  {// 用户管理
+    path: '/user',
+    name: 'user',
+    meta: {
+      icon: 'ios-podium',
+      title: '用户管理'
+    },
+    component: Main,
+    children: [
+      {
+        path: '/user_list',
+        name: 'user_list',
+        meta: {
+          icon: 'ios-list-box',
+          title: '用户管理'
+        },
+        component: () => import('@/view/user/user.vue')
+      }
+    ]
+  },
+  
   {// 项目管理
     path: '/project',
     name: 'project',
@@ -162,7 +183,7 @@ export default [
         name: 'project_list',
         meta: {
           icon: 'ios-list-box',
-          title: '项目列表'
+          title: '项目管理'
         },
         component: () => import('@/view/project/project.vue')
       }
@@ -177,15 +198,6 @@ export default [
     },
     component: Main,
     children: [
-      {
-        path: '/user_list',
-        name: 'user_list',
-        meta: {
-          icon: 'ios-list-box',
-          title: '用户管理'
-        },
-        component: () => import('@/view/user/user.vue')
-      },
       {
         path: '/role_list',
         name: 'role_list',

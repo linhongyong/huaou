@@ -16,14 +16,23 @@
           <Input v-model="obj.password" placeholder=""></Input>
         </FormItem>
       </Col>
-      <!--<Col span="7">
-        <FormItem label="部门" prop="">
-          <Select v-model="obj.department">
-            <Option v-bind:value="item" v-for="item in departments" v-bind:key="item">{{ item }}</Option>
-          </Select>
-        </FormItem>
-      </Col>-->
+      
     </Row>
+    <div class="" style="min-height: 200px;">
+      <div class=""  style="min-height: 100px; clear: both;padding: 0 20px; font-size: 18px;">
+        <div class="" style="float: left;"  v-if="obj.roleSelectedList.length > 0"> 已选角色 ：</div>
+        <div class="" v-for="(item, index) in obj.roleSelectedList" style="float: left; padding-right: 20px;" v-on:click="reduceRole(index)">
+          <span class="">{{ item.roleName }}{{ item.projectName ? "（"+item.projectName+"项目）" : ""}}</span><Icon class="add-icon" type="md-remove" />
+        </div>
+      </div>
+      
+      <div class=""  style="min-height: 100px; clear: both;padding: 0 20px; font-size: 18px;">
+        <div class="" style="float: left;" v-if="obj.roleList.length > 0">可选角色 ：</div>
+        <div class="" v-for="(item, index) in obj.roleList" style="float: left; padding-right: 20px;" v-on:click="addRole(index)">
+          <span class="">{{ item.roleName }}</span><Icon class="add-icon" type="md-add"/>
+        </div>
+      </div>
+    </div>
     <FormItem style="text-align: right;">
       <Button type="primary" @click="handleSubmit('obj')">保存</Button>
       <Button style="margin-left: 8px"  @click="handleReset('obj')">取消</Button>
@@ -33,6 +42,9 @@
 </template>
 <script>
 import userApi from '@/api/user-api'
+import roleApi from '@/api/role-api'
+import userRoleApi from '@/api/userRole-api'
+
 export default {
   data () {
     const validateUserName = (rule, value, callback) => {
@@ -65,7 +77,6 @@ export default {
             { validator: validatePassword, trigger: 'blur' }
         ]
       },
-      templateList: [],
 //    obj: {
 //      userName: '',
 //      mobile: '',
@@ -81,11 +92,41 @@ export default {
     obj: {
       type: Object,
       default () {
-        return {}
+        return {
+          roleSelectedList:[],
+          roleList:[]
+        }
       }
     }
   },
   methods: {
+    addRole (index){
+      
+      
+      userRoleApi.addUserRole({roleId: this.obj.roleList[index].id, userId: this.obj.id  }, (data)=> {
+        
+        this.obj.roleSelectedList.push(this.obj.roleList[index])
+        this.obj.roleList.splice(index, 1)
+        console.log(this.obj.roleSelectedList);
+        
+        this.$Message.success(data.message);
+      }, (data)=>{
+        this.$Message.error(data.message);
+      })
+      
+    },
+    reduceRole (index){
+      if(this.obj.roleSelectedList[index].projectName && this.obj.roleSelectedList[index].projectName != ""){
+        this.$Message.error("暂无相应权限");
+        return;
+      }
+      userRoleApi.deleteUserRole({id: this.obj.roleSelectedList[index].id}, (data) => {
+        this.obj.roleList.push(this.obj.roleSelectedList[index])
+        this.obj.roleSelectedList.splice(index, 1)
+        console.log(this.obj.roleSelectedList);
+        this.$Message.success(data.message);
+      })
+    },
     handleSubmit (obj) {
       let that = this
       this.$refs[obj].validate((valid) => {
@@ -114,6 +155,7 @@ export default {
     }
   },
   mounted () {
+    
 
   }
 }
