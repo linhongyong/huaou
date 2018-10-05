@@ -1,5 +1,5 @@
 <template>
-  <div class="">
+  <div>
     <Card>
       <Table width="100%" border :columns="columns2" :data="menuList"></Table>
       <div style="padding: 18px 10px 18px;text-align: right;clear: both;">
@@ -20,17 +20,20 @@
   </div>
 </template>
 <script>
-
-import Tables from '_c/tables'
-import Edit from './menu-edit.vue'
-import Add from './menu-add.vue'
-import menuApi from '@/api/menu-api'
+import Tables from "_c/tables";
+import Edit from "./menu-edit.vue";
+import Add from "./menu-add.vue";
+import menuApi from "@/api/menu-api";
+import tableExpand from "./table-expand";
 
 export default {
   components: {
-    Tables, Edit, Add
+    Tables,
+    Edit,
+    Add,
+    tableExpand
   },
-  data () {
+  data() {
     return {
       editModal: {
         show: false
@@ -38,128 +41,161 @@ export default {
       addModal: {
         show: false
       },
-      menu:{},
+      menu: {},
+      subMenu: [],
       columns2: [
         {
-          title: '菜单名称',
-          key: 'menuName'
+          type: "expand",
+          width: 50,
+          render: (h, params) => {
+            return h(tableExpand, {
+              props: {
+                row: params.row
+              }
+            });
+          }
+        },
+        {
+          title: "菜单名称",
+          key: "menuName"
           //  width: 100,
           //  fixed: 'left'
         },
         {
-          title: '权限标识',
-          key: 'perms'
+          title: "权限标识",
+          key: "perms"
           //  width: 100,
           //  fixed: 'left'
         },
         {
-          title: '资源url',
-          key: 'url'
+          title: "资源url",
+          key: "url"
           //  width: 100,
           //  fixed: 'left'
         },
         {
-          title: '类型 0菜单 /1按钮',
-          key: 'type'
+          title: "类型 0菜单 /1按钮",
+          key: "type"
           //  width: 100,
           //  fixed: 'left'
         },
         {
-          title: '排序',
-          key: 'orderNum'
+          title: "排序",
+          key: "orderNum"
           //  width: 100,
           //  fixed: 'left'
         },
         {
-          title: 'Action',
-          key: 'action',
+          title: "Action",
+          key: "action",
           //  fixed: 'right',
           //  width: 120,
           render: (h, params) => {
-            return h('div', [
-              h('Button', {
-                props: {
-                  type: 'success',
-                  size: 'small'
-                },
-                on: {
-                  'click': (e) => {
-                    this.editModal.show = true
-                    this.menu = this.menuList[params.index]
-                    console.log(this.menu)
-                  }
-                },
-                style: {
-                  marginRight: '5px'
-                }
-              }, '修改'),
-              h('Poptip', {
-                props: {
-                  confirm: true,
-                  title: '你确定要删除吗?'
-                },
-                on: {
-                  'on-ok': () => {
-                    console.warn(params.index);
-                    menuApi.deleteMenu({id:this.menuList[params.index].id}, () => {
-                      this.menuList.splice(params.index, 1)
-                      this.$Message.success("删除成功！");
-                      this.total = this.total - 1
-                    })
-                  }
-                }
-              }, [
-                h('Button', {
+            return h("div", [
+              h(
+                "Button",
+                {
                   props: {
-                    type: 'error',
-                    size: 'small'
+                    type: "success",
+                    size: "small"
+                  },
+                  on: {
+                    click: e => {
+                      this.editModal.show = true;
+                      this.menu = this.menuList[params.index];
+                      console.log(this.menu);
+                    }
+                  },
+                  style: {
+                    marginRight: "5px"
                   }
-                }, '删除')
-              ])
-            ])
+                },
+                "修改"
+              ),
+              h(
+                "Poptip",
+                {
+                  props: {
+                    confirm: true,
+                    title: "你确定要删除吗?"
+                  },
+                  on: {
+                    "on-ok": () => {
+                      console.warn(params.index);
+                      menuApi.deleteMenu(
+                        { id: this.menuList[params.index].id },
+                        () => {
+                          this.menuList.splice(params.index, 1);
+                          this.$Message.success("删除成功！");
+                          this.total = this.total - 1;
+                        }
+                      );
+                    }
+                  }
+                },
+                [
+                  h(
+                    "Button",
+                    {
+                      props: {
+                        type: "error",
+                        size: "small"
+                      }
+                    },
+                    "删除"
+                  )
+                ]
+              )
+            ]);
           }
         }
       ],
       menuList: [],
       pageIndex: 1,
       pageSize: 10,
-      total:0
-    }
+      total: 0
+    };
   },
   methods: {
-    addModalClose () {
-      this.addModal.show = false
-      this.getMenus()
+    addModalClose() {
+      this.addModal.show = false;
+      this.getMenus();
     },
-    editModalClose () {
-      this.editModal.show = false
-      this.getMenus()
+    editModalClose() {
+      this.editModal.show = false;
+      this.getMenus();
     },
-    getMenus () {
-      menuApi.getMenus({pageIndex: this.pageSize*(this.pageIndex - 1)+1, pageSize: this.pageSize}, (data) => {
-        console.log(data)
-        this.menuList = data.result.list
-        this.total =  data.result.total
-      })
+    getMenus() {
+      menuApi.getMenus(
+        {
+          pageIndex: this.pageSize * (this.pageIndex - 1) + 1,
+          pageSize: this.pageSize
+        },
+        data => {
+          console.log(data);
+          this.menuList = data.result.list;
+          this.total = data.result.total;
+        }
+      );
     },
-    pageChange (pageIndex) {
-      console.log(pageIndex)
-      this.pageIndex = pageIndex
-      this.getMenus()
+    pageChange(pageIndex) {
+      console.log(pageIndex);
+      this.pageIndex = pageIndex;
+      this.getMenus();
     },
-    pageSizeChange(pageSize){
-      console.log(pageSize)
+    pageSizeChange(pageSize) {
+      console.log(pageSize);
       this.pageSize = parseInt(pageSize);
-      this.getMenus()
+      this.getMenus();
     }
   },
-  mounted () {
-    this.getMenus()
+  mounted() {
+    this.getMenus();
   }
-}
+};
 </script>
 <style>
-  .float-l{
-    float: left;
-  }
+.float-l {
+  float: left;
+}
 </style>
