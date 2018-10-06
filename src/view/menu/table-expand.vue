@@ -92,34 +92,8 @@ export default {
     };
   },
   created() {
-    this.menuList = [
-      {
-        createTime: 1538540226000,
-        icon: "",
-        id: 1,
-        menuName: "子菜单1",
-        modifyTime: null,
-        orderNum: null,
-        parentId: 0,
-        perms: "test",
-        type: "0",
-        url: "/test"
-      },
-      {
-        createTime: 1538540226000,
-        icon: "",
-        id: 1,
-        menuName: "子菜单2",
-        modifyTime: null,
-        orderNum: null,
-        parentId: 0,
-        perms: "test",
-        type: "0",
-        url: "/test"
-      }
-    ];
+    this.menuList = this.row.childMenus;
   },
-
   methods: {}
 };
 </script>

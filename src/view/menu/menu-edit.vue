@@ -42,91 +42,78 @@
   
 </template>
 <script>
-import menuApi from '@/api/menu-api'
+import menuApi from "@/api/menu-api";
 export default {
-  data () {
+  data() {
     const validateMenuName = (rule, value, callback) => {
-      if (value === '') {
-        callback(new Error('必填！'));
-      } 
+      if (value === "") {
+        callback(new Error("必填！"));
+      }
       callback();
     };
     const validatePerms = (rule, value, callback) => {
-      if (value === '') {
-        callback(new Error('必填！'));
-      } 
+      if (value === "") {
+        callback(new Error("必填！"));
+      }
       callback();
     };
     const validateType = (rule, value, callback) => {
-      if (value === '') {
-        callback(new Error('必填！'));
-      } 
+      if (value === "") {
+        callback(new Error("必填！"));
+      }
       callback();
     };
     const validateOrderNum = (rule, value, callback) => {
-      if (value !== '' && parseInt(value-0) > 0) {
+      if (value !== "" && parseInt(value - 0) > 0) {
         callback();
-      }else{
-        callback(new Error('请输入整数！'));
+      } else {
+        callback(new Error("请输入整数！"));
       }
       callback();
     };
     return {
       ruleCustom: {
-        menuName: [
-          { validator: validateMenuName, trigger: 'blur' }
-        ],
-        perms: [
-            { validator: validatePerms, trigger: 'blur' }
-        ],
-        type: [
-            { validator: validateType, trigger: 'blur' }
-        ],
-        orderNum: [
-            { validator: validateOrderNum, trigger: 'blur' }
-        ]
+        menuName: [{ validator: validateMenuName, trigger: "blur" }],
+        perms: [{ validator: validatePerms, trigger: "blur" }],
+        type: [{ validator: validateType, trigger: "blur" }],
+        orderNum: [{ validator: validateOrderNum, trigger: "blur" }]
       },
-      templateList: [],
-    }
+      templateList: []
+    };
   },
   props: {
     obj: {
       type: Object,
-      default () {
-        return {}
+      default() {
+        return {};
       }
     }
   },
   methods: {
-    handleSubmit (obj) {
-      let that = this
-      this.$refs[obj].validate((valid) => {
+    handleSubmit(obj) {
+      let that = this;
+      this.$refs[obj].validate(valid => {
         if (valid) {
-          menuApi.updateMenu(this.obj, (data) => {
-            console.log(data); 
-            this.$refs[obj].resetFields();
-            this.$Message.success({
-              content: '修改成功！',
-              onClose: () => {
-                 this.$emit('editModalClose', true)
-              }
-            });
-          }, (data) => {
-            this.$Message.error(data.message);
-          })
+          menuApi.updateMenu(
+            this.obj,
+            data => {
+              this.$emit("editModalClose", true);
+              this.$Message.success("修改成功！");
+            },
+            data => {
+              this.$Message.error(data.message);
+            }
+          );
         } else {
-          this.$Message.error('提交失败!');
+          this.$Message.error("提交失败!");
         }
-      })
-
+      });
     },
-    handleReset (obj) {
+    handleReset(obj) {
       this.$refs[obj].resetFields();
-      this.$emit('editModalClose', true)
+      this.$emit("editModalClose", true);
     }
   },
-  mounted () {
-
-  }
-}
+  mounted() {}
+};
 </script>
