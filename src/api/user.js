@@ -15,7 +15,7 @@ export const login = ({
     method: 'post'
   }).then((res) => {
     if (res.data.code === 'Success') {
-      return Promise.resolve(res)
+      return Promise.resolve(res.data)
     } else {
       throw new Error('账号或密码错误')
     }

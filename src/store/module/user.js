@@ -49,10 +49,9 @@ export default {
         login({
           userName,
           password
-        }).then(res => {
-          console.log('登錄成功');
+        }).then(data => {
           // const data = res.data
-          commit('setToken', 'super_admin')
+          commit('setToken', data.result)
           resolve()
         }).catch(err => {
           reject(err)
