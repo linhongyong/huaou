@@ -5,17 +5,22 @@ export const login = ({
   password
 }) => {
   const data = {
-    userName,
+    mobile: userName,
     password
   }
-  return new Promise(function(resolve, reject){
-    resolve(data)
-  });
-//return axios.request({
-//  url: 'login',
-//  data,
-//  method: 'post'
-//})
+
+  return axios.request({
+    url: '/login',
+    data,
+    method: 'post'
+  }).then((res) => {
+    if (res.data.code === 'Success') {
+      return Promise.resolve(res)
+    } else {
+      throw new Error('账号或密码错误')
+    }
+  })
+
 }
 
 export const getUserInfo = (token) => {
@@ -26,17 +31,19 @@ export const getUserInfo = (token) => {
   //  },
   //  method: 'get'
   //})
-  return Promise.resolve({data: {
+  return Promise.resolve({
+    data: {
       avator: '',
       user_name: 'admin',
       user_id: 1,
       access: ['super_admin']
-  }})
+    }
+  })
 }
 
-export const logout = (token) => {
+export const logout = () => {
   return axios.request({
-    url: 'logout',
-    method: 'post'
+    url: '/logout',
+    method: 'get'
   })
 }
