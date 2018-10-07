@@ -98,9 +98,8 @@
         this.$refs.form.validate(valid => {
           if (valid) {
             const reqData = Object.assign(this.obj, {
-              parentId: this.parentMenus.id
+              parentId: this.parentMenus.id || ''
             });
-            console.log(reqData);
             menuApi
               .addMenu(reqData)
               .then(result => {
