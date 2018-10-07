@@ -55,7 +55,7 @@
                     },
                     on: {
                       click: e => {
-                        cthis.$emit('edit-menu', params.row)
+                        this.$emit('edit-menu', params.row)
                       }
                     },
                     style: {
@@ -64,24 +64,6 @@
                   },
                   "修改"
                 ),
-                // h(
-                //   "Button",
-                //   {
-                //     props: {
-                //       type: "success",
-                //       size: "small"
-                //     },
-                //     on: {
-                //       click: e => {
-                //         this.$emit('add-menu', params.row)
-                //       }
-                //     },
-                //     style: {
-                //       marginRight: "5px"
-                //     }
-                //   },
-                //   "新增"
-                // ),
                 h(
                   "Poptip",
                   {

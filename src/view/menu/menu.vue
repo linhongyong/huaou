@@ -23,14 +23,14 @@
   import Edit from "./menu-edit.vue";
   import Add from "./menu-add.vue";
   import menuApi from "@/api/menu-api";
-  import tableExpand from "./table-expand";
+  import subMenu from "./subMenu.vue";
 
   export default {
     components: {
       Tables,
       Edit,
       Add,
-      tableExpand
+      subMenu
     },
     data() {
       return {
@@ -47,7 +47,7 @@
             type: "expand",
             width: 50,
             render: (h, params) => {
-              return h(tableExpand, {
+              return h(subMenu, {
                 props: {
                   row: params.row
                 },
