@@ -1,4 +1,5 @@
 import axios from '@/libs/api.request';
+import httpClient from './httpClient';
 
 let menu = new Object();
 
@@ -76,6 +77,11 @@ menu.getMenus = (data, fnOk, fnError) => {
       }
     });
 };
+// 封装一层axios 并返回Promise对象 实现链式调用
+menu.getMenuList = (data) => httpClient.post({ url: `/menu/list`, data });
+
+menu.getMenusByParentId = (data) => httpClient.get({ url: '/menu/getMenusByParentId', data });
+
 menu.getMenusLevel1 = (data, fnOk, fnError) => {
   axios
     .request({
