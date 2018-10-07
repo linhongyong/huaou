@@ -64,24 +64,24 @@
                   },
                   "修改"
                 ),
-                h(
-                  "Button",
-                  {
-                    props: {
-                      type: "success",
-                      size: "small"
-                    },
-                    on: {
-                      click: e => {
-                        this.$emit('add-menu', params.row)
-                      }
-                    },
-                    style: {
-                      marginRight: "5px"
-                    }
-                  },
-                  "新增"
-                ),
+                // h(
+                //   "Button",
+                //   {
+                //     props: {
+                //       type: "success",
+                //       size: "small"
+                //     },
+                //     on: {
+                //       click: e => {
+                //         this.$emit('add-menu', params.row)
+                //       }
+                //     },
+                //     style: {
+                //       marginRight: "5px"
+                //     }
+                //   },
+                //   "新增"
+                // ),
                 h(
                   "Poptip",
                   {
