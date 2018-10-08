@@ -99,8 +99,8 @@ export default [
         component: parentView,
         children: [
           {
-            path: 'list',
-            name: 'list2',
+            path: 'snjblist',
+            name: 'snjblist',
             meta: {
               icon: 'ios-list-box',
               title: '旁站管理'
@@ -213,15 +213,15 @@ export default [
         },
         component: () => import('@/view/role/role.vue')
       },
-      {
-        path: '/dept_list',
-        name: 'dept_list',
-        meta: {
-          icon: 'ios-list-box',
-          title: '部门管理'
-        },
-        component: () => import('@/view/dept/dept.vue')
-      },
+//    {
+//      path: '/dept_list',
+//      name: 'dept_list',
+//      meta: {
+//        icon: 'ios-list-box',
+//        title: '部门管理'
+//      },
+//      component: () => import('@/view/dept/dept.vue')
+//    },
       {
         path: '/menu_list',
         name: 'menu_list',

@@ -2,8 +2,10 @@
   <div>
     <Card>
       <Table width="100%" border :columns="columns" :data="tableData"></Table>
-      <!--<tables ref="tables" editable searchable search-place="top" v-model="tableData" size="small" :columns="columns" @on-delete="handleDelete" @addModalShow="addModalShow"  @editModalShow="editModalShow" @detailModalShow="detailModalShow"/>-->
-      <!--<Button style="margin: 10px 0;" type="primary" @click="exportExcel">导出为Csv文件</Button>-->
+      <div style="padding: 18px 10px 18px;text-align: right;clear: both;">
+        <Page :total="total" show-total class="float-l" show-elevator show-sizer @on-change="pageChange" @on-page-size-change="pageSizeChange" :current="pageIndex"/>
+        <!--<Button style="" type="primary" shape="circle" icon="md-add" v-on:click="addModal.show = true"></Button>-->
+      </div>
     </Card>
     <!--<Modal v-model="addModal.show" title="新增旁站灌注" ok-text="提交" :footer-hide="true" width="60%">
       <div id="" style="width:80%, margin:0 auto">
@@ -31,7 +33,7 @@ import Edit from './edit.vue'
 import Detail from './detail.vue'
 //import expandRow from './table-expand.vue'
 
-import JxZkGzZpjlApi from '@/api/JxZkGzZpjl-api'
+import jxgzApi from '@/api/jxgz-api'
 export default {
   name: 'tables_page',
   components: {
@@ -105,7 +107,9 @@ export default {
                 },
                 on: {
                   'click': (e) => {
-                    this.getDetai(params.row.id, () => {
+                    console.log(this.tableData[params.index]);
+                    
+                    this.getDetai(this.tableData[params.index], () => {
                       this.detailModal.show = true
                     });
                   }
@@ -121,7 +125,7 @@ export default {
                 },
                 on: {
                   'click': (e) => {
-                    this.getDetai(params.row.id, () => {
+                    this.getDetai(this.tableData[params.index], () => {
                       this.editModal.show = true
                     });
                   }
@@ -143,7 +147,7 @@ export default {
 //                      this.$Message.success("删除成功！");
 //                      this.total = this.total - 1
 //                  })
-                    JxZkGzZpjlApi.deleteJxZkGzzPzjl(this.tableData[params.index].id).then(res => {
+                    jxgzApi.deleteJxZkGzzPzjl(this.tableData[params.index].id).then(res => {
                        this.tableData.splice(params.index, 1)
                         this.$Message.success("删除成功！");
 //                      this.total = this.total - 1
@@ -153,7 +157,7 @@ export default {
 //                    }
                     })
 //                  console.warn(params.index);
-//                  JxZkGzZpjlApi.deleteRole({id:this.roleList[params.index].id}, () => {
+//                  jxgzApi.deleteRole({id:this.roleList[params.index].id}, () => {
 //                    this.roleList.splice(params.index, 1)
 //                    this.$Message.success("删除成功！");
 //                    this.total = this.total - 1
@@ -170,53 +174,6 @@ export default {
               ])
             ])
           }
-//        options: ['delete', 'add'],
-//        button: [
-//          (h, params, vm) => { // 编辑
-//            return h('Button', {
-//              props: {
-//                type: 'text',
-//                ghost: true
-//              },
-//              on: {
-//                'click': (e) => {
-//                  console.log('modal click')
-//                  vm.$emit('editModalShow', params)
-//                }
-//              }
-//            }, [
-//              h('Icon', {
-//                props: {
-//                  type: 'ios-create',
-//                  size: 18,
-//                  color: '#000000'
-//                }
-//              })
-//            ])
-//          },
-//          (h, params, vm) => { // 详情
-//            return h('Button', {
-//              props: {
-//                type: 'text',
-//                ghost: true
-//              },
-//              on: {
-//                'click': (e) => {
-//                  console.log('modal click')
-//                  vm.$emit('detailModalShow', params)
-//                }
-//              }
-//            }, [
-//              h('Icon', {
-//                props: {
-//                  type: 'md-eye',
-//                  size: 18,
-//                  color: '#000000'
-//                }
-//              })
-//            ])
-//          }
-//        ]
         }
       ],
 
@@ -248,29 +205,24 @@ export default {
     addModalClose () {
       console.log('handleModalClose')
       this.addModal.show = false
-      JxZkGzZpjlApi.getJxZkGzzPzjlList().then(res => {
+      jxgzApi.getJxZkGzzPzjlList().then(res => {
         this.tableData = res.data.result.list
       })
-    },
-    editModalShow (params) {
-      console.log('--+++++++++++++paramsparamsparams+++++++++++++++++++++++++++++++++')
-      console.log(params)
-      JxZkGzZpjlApi.getJxZkGzzPzjl(params.row.id).then(res => {
-        console.log('-------------------------')
-        console.log(res.data)
-        this.formItem = res.data.result
-      })
-      this.editModal.show = true
     },
     editModalClose () {
       console.log('editModalClose')
       this.editModal.show = false
-      JxZkGzZpjlApi.getJxZkGzzPzjlList().then(res => {
+      jxgzApi.getJxZkGzzPzjlList().then(res => {
         this.tableData = res.data.result.list
       })
     },
-    getDetai(id, okfn) {
-      JxZkGzZpjlApi.getJxZkGzzPzjl(id).then(res => {
+    getDetai(obj, okfn) {
+      let tempobj = {
+        projectId: 35,
+        buildingNum:obj.building,
+        pileNum: obj.pile,
+      }
+      jxgzApi.getJxgzByCondition(tempobj).then(res => {
         console.log('--------------------------------------------------------------')
         console.log(res.data)
         if (res.data.result.actualDeepImg === '') {
@@ -288,12 +240,28 @@ export default {
 
         okfn && okfn();
       })
+    },
+    getJxgzs () {
+//    jxgzApi.getJxZkGzzPzjlList({pageIndex: this.pageSize*(this.pageIndex - 1)+1, pageSize: this.pageSize, data:35}).then(res => {
+      jxgzApi.getJxZkGzzPzjlList({data:35}).then(res => {
+        console.log(res)
+        this.tableData = res.data.result
+        this.total =  res.result.total
+      })
+    },
+    pageChange (pageIndex) {
+      console.log(pageIndex)
+      this.pageIndex = pageIndex
+      this.getJxgzs()
+    },
+    pageSizeChange(pageSize){
+      console.log(pageSize)
+      this.pageSize = parseInt(pageSize);
+      this.getJxgzs()
     }
   },
   mounted () {
-    JxZkGzZpjlApi.getJxZkGzzPzjlList().then(res => {
-      this.tableData = res.data.result.list
-    })
+    this.getJxgzs();
   }
 }
 </script>

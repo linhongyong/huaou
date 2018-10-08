@@ -17,8 +17,9 @@ obj.addJxZkGzzPzjl = (data) => {
  */
 obj.getJxZkGzzPzjlList = (data) => {
   return axios.request({
-    url: 'jxZkGzzPzjl/list',
-    method: 'post'
+    url: '/jxZkGzzPzjl/listProject',
+    method: 'post',
+    data
   })
 }
 
@@ -26,6 +27,13 @@ obj.getJxZkGzzPzjl = (id) => {
   return axios.request({
     url: `jxZkGzzPzjl/getJxZkGzzPzjl?id=${id}`,
     method: 'get'
+  })
+}
+obj.getJxgzByCondition = (data) => {
+  return axios.request({
+    url: `/jxZkGzzPzjl/getGzzByCondition`,
+    method: 'post',
+    data
   })
 }
 /**

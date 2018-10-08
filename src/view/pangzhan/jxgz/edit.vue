@@ -119,7 +119,9 @@
       </div> 
     </div>
   </div>
-  <Button type="primary" @click="handleSubmit()">保存</Button>
+  <div class="" style="text-align: right;">
+      <Button type="primary" @click="handleSubmit()">保存</Button>
+     </div>  
   <!--<FormItem style="text-align: right;">
       
 
@@ -128,7 +130,7 @@
 </div> 
 </template>
 <script>
-import JxZkGzZpjlApi from '@/api/JxZkGzZpjl-api'
+import jxgzApi from '@/api/jxgz-api'
 export default {
   data () {
     return {
@@ -154,7 +156,7 @@ export default {
   },
   methods: {
       handleSubmit () {
-        JxZkGzZpjlApi.updateJxZkGzzPzjl(this.obj).then(res => {
+        jxgzApi.updateJxZkGzzPzjl(this.obj).then(res => {
         console.log(res)
         if (res.data.code === 'Success') {
           this.$Message.success({
