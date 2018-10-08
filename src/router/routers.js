@@ -49,7 +49,7 @@ export default [
     name: 'pangzhan',
     meta: {
       icon: 'ios-folder-open',
-      title: '旁站记录'
+      title: '旁站'
     },
     component: Main,
     children: [
@@ -69,18 +69,18 @@ export default [
             name: 'list',
             meta: {
               icon: 'ios-list-box',
-              title: '旁站列表'
+              title: '旁站管理'
             },
              component: () => import('@/view/pangzhan/jxgz/jxgz.vue')
           },
           {
-            path: 'tpl',
-            name: 'tpl',
+            path: 'jxgztmpl',
+            name: 'jxgztmpl',
             meta: {
               icon: 'ios-list-box',
-              title: '模板列表'
+              title: '模板管理'
             },
-             component: () => import('@/view/pangzhan/jxgz/tpl.vue')
+             component: () => import('@/view/pangzhan/jxgz-tmpl/jxgz-tmpl.vue')
           }
         ]
        
@@ -101,53 +101,53 @@ export default [
             name: 'list2',
             meta: {
               icon: 'ios-list-box',
-              title: '旁站列表'
+              title: '旁站管理'
             },
              component: () => import('@/view/pangzhan/snjb/snjb.vue')
           },
           {
-            path: 'tpl',
-            name: 'tpl2',
+            path: 'snjbtmpl',
+            name: 'snjbtmpl',
             meta: {
               icon: 'ios-list-box',
-              title: '模板列表'
+              title: '模板管理'
             },
-             component: () => import('@/view/pangzhan/snjb/tpl.vue')
+             component: () => import('@/view/pangzhan/snjb-tmpl/snjb-tmpl.vue')
           }
         ]
        
       },
     ]
   },
-  {//旁站老
-    path: '/JxZkGzZpjl',
-    name: 'JxZkGzZpjl',
-    meta: {
-      icon: 'md-menu',
-      title: '旁站监理'
-    },
-    component: Main,
-    children: [
-      {
-        path: 'JxZkGzZpjl_1',
-        name: 'JxZkGzZpjl_1',
-        meta: {
-          icon: 'md-grid',
-          title: '旁站监理记录'
-        },
-        component: () => import('@/view/JxZkGzZpjl/tables.vue')
-      },
-      {
-        path: 'level_2_3',
-        name: '旁站监理模板列表',
-        meta: {
-          icon: 'md-grid',
-          title: '旁站监理模板列表'
-        },
-        component: () => import('@/view/jxZkGzzPzjlTemplate/tables.vue')
-      }
-    ]
-  },
+//{//旁站老
+//  path: '/JxZkGzZpjl',
+//  name: 'JxZkGzZpjl',
+//  meta: {
+//    icon: 'md-menu',
+//    title: '旁站监理'
+//  },
+//  component: Main,
+//  children: [
+//    {
+//      path: 'JxZkGzZpjl_1',
+//      name: 'JxZkGzZpjl_1',
+//      meta: {
+//        icon: 'md-grid',
+//        title: '旁站监理记录'
+//      },
+//      component: () => import('@/view/JxZkGzZpjl/tables.vue')
+//    },
+//    {
+//      path: 'level_2_3',
+//      name: '旁站监理模板列表',
+//      meta: {
+//        icon: 'md-grid',
+//        title: '旁站监理模板列表'
+//      },
+//      component: () => import('@/view/jxZkGzzPzjlTemplate/tables.vue')
+//    }
+//  ]
+//},
   {// 用户管理
     path: '/user',
     name: 'user',

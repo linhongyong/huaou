@@ -1,37 +1,3 @@
-<style>
-.flex{
-display: flex;
-}
-.flex-6{
-flex: 6;
-}
-.flex-3{
-flex: 3;
-}
-.row{
-overflow: hidden;
-}
-.float-l{
-float: left;
-}
-.padding-v-5{
-padding-top: 5px;
-padding-bottom: 5px;;
-}
-.padding-left-40{
-padding-left: 40px;;
-}
-.btn{
-float: right;
-background-color: #1890FF;
-outline: none;
-border: none;
-padding: 5px;
-color: white;
-}
-
-</style>
-
 <template>
   <div style="width: 90%; margin: 0 auto;">
     <form :action="'http://47.98.132.165:18088//jxZkGzzPzjl/download?id='+obj.id" method="post">
@@ -105,8 +71,6 @@ color: white;
         <div class="flex">
              <div class="flex-3">灌注开始时间 : {{ obj.perfusionStartTime }}</div>
              <div class="flex-3">灌注结束时间 : {{ obj.perfusionEndTime }}</div>
-             <div class="flex-3"></div>
-             <div class="flex-3"></div>
           </div>
        </div>
        <div class="padding-v-5 padding-left-40">
@@ -131,8 +95,11 @@ color: white;
       <img  v-for="(item, index) in obj.barCageCountImg" v-bind:key="item" :src="item" width="100" height="100" v-if="index<5"/>
     </div>
     <div class="" style="margin-top: 30px;">
-      <div class="" style="min-height: 20px;">
+      <div class="" style="min-height: 100px;">
          发现问题及处理情况：
+         <div class="padding-v-5" style="text-indent: 2em;">
+         	{{ obj.problemContent ? obj.problemContent : "施工正常" }}
+         </div>
       </div>
     </div>
   </div>
@@ -173,3 +140,35 @@ export default {
   }
 }
 </script>
+<style>
+  .flex{
+  display: flex;
+  }
+  .flex-6{
+  flex: 6;
+  }
+  .flex-3{
+  flex: 3;
+  }
+  .row{
+  overflow: hidden;
+  }
+  .float-l{
+  float: left;
+  }
+  .padding-v-5{
+  padding-top: 5px;
+  padding-bottom: 5px;;
+  }
+  .padding-left-40{
+  padding-left: 40px;;
+  }
+  .btn{
+  float: right;
+  background-color: #1890FF;
+  outline: none;
+  border: none;
+  padding: 5px;
+  color: white;
+  }
+</style>

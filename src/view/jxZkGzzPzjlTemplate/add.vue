@@ -126,7 +126,8 @@
 </template>
 <script>
 //	import { addJxZkGzzPzjl } from '@/api/JxZkGzZpjl'
-	import { getJxZkGzzPzjlTemplateList, addJxZkGzzPzjlTemplate } from '@/api/jxZkGzzPzjlTemplate'
+
+	import JxZkGzZpjlApi from '@/api/JxZkGzZpjl-api'
     export default {
         data () { 
             return {
@@ -167,7 +168,7 @@
         methods: {
             handleSubmit () {
             	let that = this;
-            	addJxZkGzzPzjlTemplate(this.formItem).then(res => {
+            	JxZkGzZpjlApi.addJxZkGzzPzjlTemplate(this.formItem).then(res => {
 					console.log("**********************formItem************");
 			    	console.log(res);
 			    	that.$emit('addModalClose', true);
@@ -188,7 +189,7 @@
             }
         },
         mounted () {
-//		    getJxZkGzzPzjlTemplateList().then(res => {
+//		    JxZkGzZpjlApi.getJxZkGzzPzjlTemplateList().then(res => {
 //		    	console.log("-------------------------");
 //		    	console.log(res.data);
 //		      	this.templateList = res.data.result.list

@@ -125,7 +125,8 @@
     </Form>
 </template>
 <script>
-	import { addJxZkGzzPzjl, updateJxZkGzzPzjl } from '@/api/JxZkGzZpjl'
+
+	 import JxZkGzZpjlApi from '@/api/JxZkGzZpjl-api'
 	import { getJxZkGzzPzjlTemplateList, updateJxZkGzzPzjlTemplate } from '@/api/jxZkGzzPzjlTemplate'
     export default {
         data () { 

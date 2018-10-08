@@ -1,9 +1,10 @@
 import axios from '@/libs/api.request'
 
+let obj = new Object();
 /**
  * 添加
  */
-export const addJxZkGzzPzjl = (data) => {
+obj.addJxZkGzzPzjl = (data) => {
   return axios.request({
     url: 'jxZkGzzPzjl/add',
     method: 'post',
@@ -14,14 +15,14 @@ export const addJxZkGzzPzjl = (data) => {
 /**
  * 查询
  */
-export const getJxZkGzzPzjlList = (data) => {
+obj.getJxZkGzzPzjlList = (data) => {
   return axios.request({
     url: 'jxZkGzzPzjl/list',
     method: 'post'
   })
 }
 
-export const getJxZkGzzPzjl = (id) => {
+obj.getJxZkGzzPzjl = (id) => {
   return axios.request({
     url: `jxZkGzzPzjl/getJxZkGzzPzjl?id=${id}`,
     method: 'get'
@@ -30,7 +31,7 @@ export const getJxZkGzzPzjl = (id) => {
 /**
  * 删除
  */
-export const deleteJxZkGzzPzjl = (id) => {
+obj.deleteJxZkGzzPzjl = (id) => {
   return axios.request({
     url: `jxZkGzzPzjl/delete?id=${id}`,
     method: 'post'
@@ -40,7 +41,7 @@ export const deleteJxZkGzzPzjl = (id) => {
 /**
  * 改
  */
-export const updateJxZkGzzPzjl = (data) => {
+obj.updateJxZkGzzPzjl = (data) => {
   return axios.request({
     url: 'jxZkGzzPzjl/update',
     method: 'post',
@@ -48,7 +49,7 @@ export const updateJxZkGzzPzjl = (data) => {
   })
 }
 
-export const getDragList = () => {
+obj.getDragList = () => {
   return axios.request({
     url: 'get_drag_list',
     method: 'get'
@@ -58,9 +59,12 @@ export const getDragList = () => {
 /**
  * 下载
  */
-export const downloadWord = (id) => {
+obj.downloadWord = (id) => {
   return axios.request({
     url: `/jxZkGzzPzjl/download?id=${id}`,
     method: 'post'
   })
 }
+
+
+export default obj
