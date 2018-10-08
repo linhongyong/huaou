@@ -34,6 +34,11 @@
         return this.$store.state.app.breadCrumbList
       },
     },
+    watch: {
+      role() {
+        console.log('项目发生改变');
+      }
+    },
     data() {
       return {
         projectId: '',
