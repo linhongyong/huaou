@@ -20,17 +20,20 @@
   </div>
 </template>
 <script>
-
-import Tables from '_c/tables'
-import Edit from './snjb-edit.vue'
-import Add from './snjb-add.vue'
-import snjbApi from '@/api/snjb-api'
+import Tables from "_c/tables";
+import Edit from "./snjb-edit.vue";
+import Add from "./snjb-add.vue";
+import snjbApi from "@/api/snjb-api";
+import MIXIN_ROLE from "@/mixin/ROLE";
 
 export default {
+  mixins: [MIXIN_ROLE], // 引入mixin之后，即可通过this.ROLE获取到权限信息
   components: {
-    Tables, Edit, Add
+    Tables,
+    Edit,
+    Add
   },
-  data () {
+  data() {
     return {
       editModal: {
         show: false
@@ -38,102 +41,125 @@ export default {
       addModal: {
         show: false
       },
-      role:{},
+      role: {},
       columns2: [
-        {title: '模板名称', key: 'templateName'},
-        {title: '模板备注', key: 'remark'},
-        {title: '供应单位', key: 'supplier'},
-        {title: '搅拌机型号', key: 'blenderModel'},
+        { title: "模板名称", key: "templateName" },
+        { title: "模板备注", key: "remark" },
+        { title: "供应单位", key: "supplier" },
+        { title: "搅拌机型号", key: "blenderModel" },
         {
-          title: '操作',
-          key: 'action',
+          title: "操作",
+          key: "action",
           //  fixed: 'right',
           //  width: 120,
           render: (h, params) => {
-            return h('div', [
-              h('Button', {
-                props: {
-                  type: 'success',
-                  size: 'small'
-                },
-                on: {
-                  'click': (e) => {
-                    this.editModal.show = true
-                    this.role = this.snjbList[params.index]
-                    console.log(this.role)
-                  }
-                },
-                style: {
-                  marginRight: '5px'
-                }
-              }, '修改'),
-              h('Poptip', {
-                props: {
-                  confirm: true,
-                  title: '你确定要删除吗?'
-                },
-                on: {
-                  'on-ok': () => {
-                    console.warn(params.index);
-                    snjbApi.deleteSnjb({id:this.snjbList[params.index].id}, () => {
-                      this.snjbList.splice(params.index, 1)
-                      this.$Message.success("删除成功！");
-                      this.total = this.total - 1
-                    })
-                  }
-                }
-              }, [
-                h('Button', {
+            return h("div", [
+              h(
+                "Button",
+                {
                   props: {
-                    type: 'error',
-                    size: 'small'
+                    type: "success",
+                    size: "small"
+                  },
+                  on: {
+                    click: e => {
+                      this.editModal.show = true;
+                      this.role = this.snjbList[params.index];
+                      console.log(this.role);
+                    }
+                  },
+                  style: {
+                    marginRight: "5px"
                   }
-                }, '删除')
-              ])
-            ])
+                },
+                "修改"
+              ),
+              h(
+                "Poptip",
+                {
+                  props: {
+                    confirm: true,
+                    title: "你确定要删除吗?"
+                  },
+                  on: {
+                    "on-ok": () => {
+                      console.warn(params.index);
+                      snjbApi.deleteSnjb(
+                        { id: this.snjbList[params.index].id },
+                        () => {
+                          this.snjbList.splice(params.index, 1);
+                          this.$Message.success("删除成功！");
+                          this.total = this.total - 1;
+                        }
+                      );
+                    }
+                  }
+                },
+                [
+                  h(
+                    "Button",
+                    {
+                      props: {
+                        type: "error",
+                        size: "small"
+                      }
+                    },
+                    "删除"
+                  )
+                ]
+              )
+            ]);
           }
         }
       ],
       snjbList: [],
       pageIndex: 1,
       pageSize: 10,
-      total:0
-    }
+      total: 0
+    };
   },
   methods: {
-    addModalClose () {
-      this.addModal.show = false
-      this.getSnjbs()
+    addModalClose() {
+      this.addModal.show = false;
+      this.getList();
     },
-    editModalClose () {
-      this.editModal.show = false
-      this.getSnjbs()
+    editModalClose() {
+      this.editModal.show = false;
+      this.getList();
     },
-    getSnjbs () {
-      snjbApi.getSnjbList({pageIndex: this.pageSize*(this.pageIndex - 1)+1, pageSize: this.pageSize}, (data) => {
-        console.log(data)
-        this.snjbList = data.result.list
-        this.total =  data.result.total
-      })
+    // 获取列表的方法名统一改为getList，为了在选择工程的时候 刷新页面
+    getList() {
+      console.log(this.ROLE);
+      snjbApi.getSnjbList(
+        {
+          pageIndex: this.pageSize * (this.pageIndex - 1) + 1,
+          pageSize: this.pageSize
+        },
+        data => {
+          console.log(data);
+          this.snjbList = data.result.list;
+          this.total = data.result.total;
+        }
+      );
     },
-    pageChange (pageIndex) {
-      console.log(pageIndex)
-      this.pageIndex = pageIndex
-      this.getSnjbs()
+    pageChange(pageIndex) {
+      console.log(pageIndex);
+      this.pageIndex = pageIndex;
+      this.getList();
     },
-    pageSizeChange(pageSize){
-      console.log(pageSize)
+    pageSizeChange(pageSize) {
+      console.log(pageSize);
       this.pageSize = parseInt(pageSize);
-      this.getSnjbs()
+      this.getList();
     }
   },
-  mounted () {
-    this.getSnjbs()
+  mounted() {
+    this.getList();
   }
-}
+};
 </script>
 <style>
-  .float-l{
-    float: left;
-  }
+.float-l {
+  float: left;
+}
 </style>

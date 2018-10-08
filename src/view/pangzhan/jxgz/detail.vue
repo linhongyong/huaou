@@ -92,7 +92,7 @@
             孔深照片：
       <img :src="obj.actualDeepImg[0]" v-if="obj.actualDeepImg.length > 0" width="100" height="100"/>
       <span class="padding-left-40">钢筋笼照片组：</span>
-      <img  v-for="(item, index) in obj.barCageCountImg" v-bind:key="item" :src="item" width="100" height="100" v-if="index<5"/>
+      <img  v-for="(item, index) in obj.barCageCountImg" v-bind:key="index" :src="item" width="100" height="100" v-if="index<5"/>
     </div>
     <div class="" style="margin-top: 30px;">
       <div class="" style="min-height: 100px;">

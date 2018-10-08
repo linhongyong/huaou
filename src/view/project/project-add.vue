@@ -11,7 +11,7 @@
       <Col span="11">
          <FormItem label="选择角色类型" prop="currentRoleIndex">
             <Select @on-change="onRoleChange">
-              <Option v-bind:value="index" v-for="(item, index) in roleList" :key="item">{{ item.roleName }}</Option>
+              <Option v-bind:value="index" v-for="(item, index) in roleList" :key="index">{{ item.roleName }}</Option>
             </Select>
         </FormItem>
       </Col>
@@ -19,7 +19,7 @@
         <FormItem label="搜索 - 添加对应角色用户">
           <Input @on-change="searchUser"  v-model="searchKey"></Input>
           <div id=""  style="z-index: 9999; width: 100%;position: absolute; background-color: #fff;">
-          	<div v-for="(item, index) in userList" v-if="item.userName != '' || item.mobile != ''" :key="item">
+          	<div v-for="(item, index) in userList" v-if="item.userName != '' || item.mobile != ''" >
               <div class="user-item display-flex-center-between" style="" >
                 <div class="">{{item.userName}} ({{item.mobile}}) </div>
                 <span  style="color: #2d8cf0;cursor:pointer;" v-on:click="selectUser(index)">添加</span>
@@ -31,7 +31,7 @@
       </Col>
     </Row>
     <div class="" style="min-height: 150px;">
-      <Row class="menber-row"  type="flex"  v-for="item in roleTypeList" :key="item">
+      <Row class="menber-row"  type="flex"  v-for="(item,index) in roleTypeList" :key="index">
         	<span class="" style="font-size: 18px;">{{ item }} : </span>
           <span>
             <span class=""  v-for="(itemU, index) in hooks[item]" style="padding-left:20px; font-size: 18px;" :key="index">
@@ -187,13 +187,16 @@ export default {
       this.hooks = [];
       this.roleTypeList = [];
       this.$emit("addModalClose", true);
+    },
+    getList(role) {
+      roleApi.getRolesByType({ type: 1 }, data => {
+        console.log(data);
+        this.roleList = data.result;
+      });
     }
   },
   mounted() {
-    roleApi.getRolesByType({ type: 1 }, data => {
-      console.log(data);
-      this.roleList = data.result;
-    });
+    this.getList();
   }
 };
 </script>

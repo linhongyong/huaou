@@ -17,7 +17,6 @@ import customBreadCrumb from "./custom-bread-crumb";
 import "./header-bar.less";
 import apiProject from "@/api/project-api";
 import { mapMutations, mapState } from "vuex";
-import MIXIN_ROLE from "@/mixin/roleChange";
 
 export default {
   name: "HeaderBar",
@@ -72,7 +71,6 @@ export default {
         "setRole",
         this.projectList.find(item => item.id === id)
       );
-      console.log(this.$store);
     }
   }
 };

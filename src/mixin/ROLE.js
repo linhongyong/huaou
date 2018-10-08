@@ -10,8 +10,8 @@ export default ({
     })
   },
   watch: {
-    ROLE(val) {
-      getList(val)
+    ROLE() {
+      this.getList()
     }
   },
 })
