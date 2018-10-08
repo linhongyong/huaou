@@ -255,15 +255,15 @@ export default [
         },
         component: () => import('@/view/menu/menu.vue')
       },
-      {
-        path: '/menu_manage',
-        name: 'menu_manage',
-        meta: {
-          icon: 'ios-list-box',
-          title: '菜单管理(新)'
-        },
-        component: () => import('@/view/menu/menuManage/index.vue')
-      }
+      // {
+      //   path: '/menu_manage',
+      //   name: 'menu_manage',
+      //   meta: {
+      //     icon: 'ios-list-box',
+      //     title: '菜单管理(新)'
+      //   },
+      //   component: () => import('@/view/menu/menuManage/index.vue')
+      // }
     ]
   }
   //{

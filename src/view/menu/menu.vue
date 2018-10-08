@@ -131,7 +131,6 @@
                     on: {
                       click: e => {
                         this.addModalShow(params.row);
-
                       }
                     },
                     style: {
