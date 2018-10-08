@@ -12,72 +12,77 @@
   </div>
 </template>
 <script>
-  import siderTrigger from './sider-trigger'
-  import customBreadCrumb from './custom-bread-crumb'
-  import './header-bar.less'
-  import apiProject from '@/api/project-api'
-  import { mapMutations, mapState } from 'vuex'
-  export default {
-    name: 'HeaderBar',
-    components: {
-      siderTrigger,
-      customBreadCrumb
+import siderTrigger from "./sider-trigger";
+import customBreadCrumb from "./custom-bread-crumb";
+import "./header-bar.less";
+import apiProject from "@/api/project-api";
+import { mapMutations, mapState } from "vuex";
+import MIXIN_ROLE from "@/mixin/roleChange";
+
+export default {
+  name: "HeaderBar",
+  components: {
+    siderTrigger,
+    customBreadCrumb
+  },
+  props: {
+    collapsed: Boolean
+  },
+  computed: {
+    ...mapState({
+      ROLE: state => state.user.role
+    }),
+    breadCrumbList() {
+      return this.$store.state.app.breadCrumbList;
+    }
+  },
+  watch: {
+    ROLE(val) {}
+  },
+  data() {
+    return {
+      projectId: "",
+      projectList: []
+    };
+  },
+  created() {
+    this.getList();
+  },
+  methods: {
+    handleCollpasedChange(state) {
+      this.$emit("on-coll-change", state);
     },
-    props: {
-      collapsed: Boolean
+    getList() {
+      apiProject
+        .getOwnList()
+        .then(data => {
+          this.projectList = data;
+          // 默认选择第一个项目
+          if (this.projectList.length > 0) {
+            this.projectId = this.projectList[0].id;
+            this.$store.commit("setRole", this.projectList[0]);
+          }
+        })
+        .catch(err => {
+          this.$Message.error("获取项目列表失败");
+        });
     },
-    computed: {
-      ...mapState({
-        role: state => state.user.role
-      }),
-      breadCrumbList() {
-        return this.$store.state.app.breadCrumbList
-      },
-    },
-    watch: {
-      role() {
-        console.log('项目发生改变');
-      }
-    },
-    data() {
-      return {
-        projectId: '',
-        projectList: []
-      }
-    },
-    created() {
-      this.getList()
-    },
-    methods: {
-      handleCollpasedChange(state) {
-        this.$emit('on-coll-change', state)
-      },
-      getList() {
-        apiProject.getOwnList()
-          .then((data) => {
-            this.projectList = data;
-            // 默认选择第一个项目
-            if (this.projectList.length > 0) {
-              this.projectId = this.projectList[0].id;
-              this.$store.commit('setRole', this.projectList[0])
-            }
-          }).catch((err) => {
-            this.$Message.error('获取项目列表失败')
-          });
-      },
-      handleSelectChange(id) {
-        this.$store.commit('setRole', this.projectList.find((item) => item.id === id))
-        console.log(this.$store);
-      }
+    handleSelectChange(id) {
+      this.$store.commit(
+        "setRole",
+        this.projectList.find(item => item.id === id)
+      );
+      console.log(this.$store);
     }
   }
+};
 </script>
 <style scoped>
-  .i-select {
-    vertical-align: top;
-    margin-right: 20px;
-    float: left;
-    margin-top: 16px;
-  }
+.i-select {
+  vertical-align: top;
+  margin-right: 20px;
+  float: left;
+  margin-top: 16px;
+}
 </style>
 

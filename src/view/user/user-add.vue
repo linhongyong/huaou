@@ -27,14 +27,14 @@
     <div class="" style="min-height: 200px;">
     	<div class=""  style="min-height: 100px; clear: both;padding: 0 20px; font-size: 18px;">
         <div class="" style="float: left;"  v-if="roleSelectedList.length > 0"> 已选角色 ：</div>
-        <div class="" v-for="(item, index) in roleSelectedList" style="float: left; padding-right: 20px;" v-on:click="reduceRole(index)">
+        <div class="" v-for="(item, index) in roleSelectedList" style="float: left; padding-right: 20px;" v-on:click="reduceRole(index)" :key="item">
           <span class="">{{ item.roleName }}</span><Icon class="add-icon" type="md-remove" />
         </div>
       </div>
       
       <div class=""  style="min-height: 100px; clear: both;padding: 0 20px; font-size: 18px;">
         <div class="" style="float: left;" v-if="roleList.length > 0">可选角色 ：</div>
-        <div class="" v-for="(item, index) in roleList" style="float: left; padding-right: 20px;" v-on:click="addRole(index)">
+        <div class="" v-for="(item, index) in roleList" style="float: left; padding-right: 20px;" v-on:click="addRole(index)" :key="item">
           <span class="">{{ item.roleName }}</span><Icon class="add-icon" type="md-add"/>
         </div>
       </div>
