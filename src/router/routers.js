@@ -1,5 +1,5 @@
-import Main from '@/view/main'
-import parentView from '@/components/parent-view'
+import Main from '@/view/main';
+import parentView from '@/components/parent-view';
 
 /**
  * iview-admin中meta除了原生参数外可配置的参数:
@@ -44,7 +44,8 @@ export default [
     ]
   },
   //--------------------------------------------hong----------------------------------------start
-  {//旁站记录
+  {
+    //旁站记录
     path: '/pangzhan',
     name: 'pangzhan',
     meta: {
@@ -71,7 +72,7 @@ export default [
               icon: 'ios-list-box',
               title: '旁站管理'
             },
-             component: () => import('@/view/pangzhan/jxgz/jxgz.vue')
+            component: () => import('@/view/pangzhan/jxgz/jxgz.vue')
           },
           {
             path: 'jxgztmpl',
@@ -81,11 +82,12 @@ export default [
               title: '模板管理'
             },
              component: () => import('@/view/pangzhan/jxgz-tmpl/jxgz-tmpl.vue')
+
           }
         ]
-       
       },
-      {//水泥搅拌
+      {
+        //水泥搅拌
         path: 'snjb',
         name: 'snjb',
         meta: {
@@ -103,7 +105,7 @@ export default [
               icon: 'ios-list-box',
               title: '旁站管理'
             },
-             component: () => import('@/view/pangzhan/snjb/snjb.vue')
+            component: () => import('@/view/pangzhan/snjb/snjb.vue')
           },
           {
             path: 'snjbtmpl',
@@ -113,12 +115,13 @@ export default [
               title: '模板管理'
             },
              component: () => import('@/view/pangzhan/snjb-tmpl/snjb-tmpl.vue')
+
           }
         ]
-       
-      },
+      }
     ]
   },
+
 //{//旁站老
 //  path: '/JxZkGzZpjl',
 //  name: 'JxZkGzZpjl',
@@ -149,6 +152,7 @@ export default [
 //  ]
 //},
   {// 用户管理
+
     path: '/user',
     name: 'user',
     meta: {
@@ -168,8 +172,9 @@ export default [
       }
     ]
   },
-  
-  {// 项目管理
+
+  {
+    // 项目管理
     path: '/project',
     name: 'project',
     meta: {
@@ -189,7 +194,8 @@ export default [
       }
     ]
   },
-	{// 用户管理
+  {
+    // 用户管理
     path: '/sys',
     name: 'sys',
     meta: {
@@ -224,25 +230,34 @@ export default [
           title: '菜单管理'
         },
         component: () => import('@/view/menu/menu.vue')
+      },
+      {
+        path: '/menu_manage',
+        name: 'menu_manage',
+        meta: {
+          icon: 'ios-list-box',
+          title: '菜单管理(新)'
+        },
+        component: () => import('@/view/menu/menuManage/index.vue')
       }
     ]
-  },
-//{
-//  path: '/JxZkGzZpjl',
-//  name: '旁站监理',
-//  component: Main,
-//  children: [
-//    {
-//      path: 'tables_page',
-//      name: 'tables_page',
-//      meta: {
-//        icon: 'md-grid',
-//        title: '旁站监理记录'
-//      },
-//      component: () => import('@/view/JxZkGzZpjl/tables.vue')
-//    }	
-// ]
-//},
+  }
+  //{
+  //  path: '/JxZkGzZpjl',
+  //  name: '旁站监理',
+  //  component: Main,
+  //  children: [
+  //    {
+  //      path: 'tables_page',
+  //      name: 'tables_page',
+  //      meta: {
+  //        icon: 'md-grid',
+  //        title: '旁站监理记录'
+  //      },
+  //      component: () => import('@/view/JxZkGzZpjl/tables.vue')
+  //    }
+  // ]
+  //},
   //----------------------------------------------------------------------------------------end
   /*{
     path: '',
@@ -544,4 +559,4 @@ export default [
     },
     component: () => import('@/view/error-page/404.vue')
   }*/
-]
+];
