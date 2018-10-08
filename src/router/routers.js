@@ -118,7 +118,31 @@ export default [
 
           }
         ]
+      },
+      {
+
+        path: 'commom',
+        name: 'commom',
+        meta: {
+          icon: 'md-folder',
+          showAlways: true,
+          title: '通用旁站'
+        },
+        component: parentView,
+        children: [
+         {
+            path: 'commomlist',
+            name: 'commomlist',
+            meta: {
+              icon: 'ios-list-box',
+              title: '通用旁站'
+            },
+             component: () => import('@/view/pangzhan/common/common.vue')
+      
+          }
+        ]
       }
+      
     ]
   },
 
