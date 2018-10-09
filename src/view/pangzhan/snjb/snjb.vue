@@ -44,8 +44,8 @@ export default {
       role: {},
       columns2: [
         { title: "模板名称", key: "templateName" },
-        { title: "模板备注", key: "remark" },
-        { title: "供应单位", key: "supplier" },
+        { title: "开始桩号", key: "pileStartNum" },
+        { title: "结束桩号", key: "pileEndNum" },
         { title: "搅拌机型号", key: "blenderModel" },
         {
           title: "操作",
@@ -130,16 +130,16 @@ export default {
     // 获取列表的方法名统一改为getList，为了在选择工程的时候 刷新页面
     getList() {
       console.log(this.ROLE);
-      snjbApi.getSnjbList(
+      snjbApi.getSnjbListByProjectId(
         {
-          pageIndex: this.pageSize * (this.pageIndex - 1) + 1,
-          pageSize: this.pageSize,
+//        pageIndex: this.pageSize * (this.pageIndex - 1) + 1,
+//        pageSize: this.pageSize,
           data: this.ROLE.projectId-0
         },
         data => {
           console.log(data);
-          this.snjbList = data.result.list;
-          this.total = data.result.total;
+          this.snjbList = data.result;
+          this.total = data.resultlength;
         }
       );
     },

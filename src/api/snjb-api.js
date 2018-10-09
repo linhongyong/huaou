@@ -36,7 +36,20 @@ obj.getSnjbList = (data, fnOk, fnError) => {
     }
   })
 }
-
+obj.getSnjbListByProjectId = (data, fnOk, fnError) => {
+  return axios.request({
+    url: `/snJbjPzjl/listProject`,
+    method: 'post',
+    data
+  }).then(res => {
+    console.log(res)
+    if(res.data.code != "Success"){
+      fnError(res.data) 
+    }else{
+      fnOk(res.data)
+    }
+  })
+}
 obj.getSnjbTemplate = (data, fnOk, fnError) => {
   return axios.request({
     url: `snJbjPzjl/getTemplate?id=${data.id}`,
