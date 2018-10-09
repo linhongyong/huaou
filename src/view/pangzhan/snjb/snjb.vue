@@ -133,7 +133,8 @@ export default {
       snjbApi.getSnjbList(
         {
           pageIndex: this.pageSize * (this.pageIndex - 1) + 1,
-          pageSize: this.pageSize
+          pageSize: this.pageSize,
+          data: this.ROLE.projectId-0
         },
         data => {
           console.log(data);

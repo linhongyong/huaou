@@ -66,6 +66,38 @@ project.getProjects = (data, fnOk, fnError) => {
       }
     });
 };
+project.getProjects2 = (data, fnOk, fnError) => {
+  axios
+    .request({
+      url: `/project/listOwn`,
+      method: 'get',
+      data
+    })
+    .then((res) => {
+      console.log(res);
+      if (res.data.code != 'Success') {
+        fnError(res.data);
+      } else {
+        fnOk(res.data);
+      }
+    });
+};
+project.setTmplOrange = (data, fnOk, fnError) => {
+  axios
+    .request({
+      url: `/jxZkGzzPzjlTemplate/setGzzTplRange`,
+      method: 'post',
+      data
+    })
+    .then((res) => {
+      console.log(res);
+      if (res.data.code != 'Success') {
+        fnError(res.data);
+      } else {
+        fnOk(res.data);
+      }
+    });
+};
 project.getProjectDetail = (data, fnOk, fnError) => {
   axios
     .request({

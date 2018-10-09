@@ -17,25 +17,35 @@
         <Add @addModalClose="addModalClose"></Add>
       </div>
     </Modal>
+    <Modal v-model="setModal.show" title="设置模板范围" :footer-hide="true" width="60%">
+      <div id="" style="width:80%, margin:0 auto">
+        <TmplSet @setModalClose="setModalClose" :propsObj="propsObj"></TmplSet>
+      </div>
+    </Modal>
   </div>
 </template>
-<script>
 
+<script>
 import Tables from '_c/tables'
 import Edit from './project-edit.vue'
 import Add from './project-add.vue'
+import TmplSet from './tmpl-set.vue'
 import projectApi from '@/api/project-api'
 
 export default {
   components: {
-    Tables, Edit, Add
+    Tables, Edit, Add,TmplSet
   },
   data () {
     return {
+      propsObj: {},
       editModal: {
         show: false
       },
       addModal: {
+        show: false
+      },
+      setModal: {
         show: false
       },
       project:{},
@@ -63,7 +73,7 @@ export default {
                 on: {
                   'click': (e) => {
                     
-                    projectApi.getProjectDetail({id:this.userList[params.index].id}, (data) => {
+                    projectApi.getProjectDetail({id:this.userList[params.index].projectId}, (data) => {
                       console.log(data);
                       for(let i=0; i<data.result.userRoleDTOS.length; i++){
                         this.addhooks(data.result.userRoleDTOS[i].roleName, data.result.userRoleDTOS[i]);
@@ -88,6 +98,21 @@ export default {
                   marginRight: '5px'
                 }
               }, '修改'),
+              h('Button', {
+                props: {
+                  type: 'success',
+                  size: 'small'
+                },
+                on: {
+                  'click': (e) => {
+                    this.propsObj.projectId = this.userList[params.index].projectId
+                    this.setModal.show = true
+                  }
+                },
+                style: {
+                  marginRight: '5px'
+                }
+              }, '设置模板范围'),
               h('Poptip', {
                 props: {
                   confirm: true,
@@ -133,30 +158,36 @@ export default {
     addModalClose () {
       
       this.addModal.show = false
-      this.getProjects()
+      this.getProjects2()
+    },
+    setModalClose () {
+      
+      this.setModal.show = false
+      this.getProjects2()
     },
     editModalClose () {
       this.hooks = []
       this.roleTypeList = []
       this.editModal.show = false
-      this.getProjects()
+      this.getProjects2()
     },
-    getProjects () {
-      projectApi.getProjects({pageIndex: this.pageSize*(this.pageIndex - 1)+1, pageSize: this.pageSize}, (data) => {
+//  pageIndex: this.pageSize*(this.pageIndex - 1)+1, pageSize: this.pageSize
+    getProjects2 () {
+      projectApi.getProjects2({}, (data) => {
         console.log(data)
-        this.userList = data.result.list
-        this.total =  data.result.total
+        this.userList = data.result
+        this.total =  data.result.length
       })
     },
     pageChange (pageIndex) {
       console.log(pageIndex)
       this.pageIndex = pageIndex
-      this.getProjects()
+      this.getProjects2()
     },
     pageSizeChange(pageSize){
       console.log(pageSize)
       this.pageSize = parseInt(pageSize);
-      this.getProjects()
+      this.getProjects2()
     },
     onCancelEditModal(){
       this.hooks = []
@@ -164,7 +195,7 @@ export default {
     }
   },
   mounted () {
-    this.getProjects()
+    this.getProjects2()
   }
 }
 </script>
