@@ -25,7 +25,8 @@ obj.addSnjb = (data, fnOk, fnError) => {
 obj.getSnjbList = (data, fnOk, fnError) => {
   return axios.request({
     url: `snJbjPzjl/list?pageIndex=${data.pageIndex}&pageSize=${data.pageSize}`,
-    method: 'post'
+    method: 'post',
+    data
   }).then(res => {
     console.log(res)
     if(res.data.code != "Success"){

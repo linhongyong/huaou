@@ -34,8 +34,10 @@ import Detail from "./detail.vue";
 //import expandRow from './table-expand.vue'
 
 import jxgzApi from "@/api/jxgz-api";
+import MIXIN_ROLE from "@/mixin/ROLE";
 export default {
   name: "tables_page",
+  mixins: [MIXIN_ROLE], 
   components: {
     Tables,
     Edit,
@@ -44,23 +46,12 @@ export default {
   data() {
     return {
       columns: [
-        //      {
-        //        type: 'expand',
-        //        searchable: false,
-        //        key: 'expand',
-        //        width: 50,
-        //        render: (h, params) => {
-        //          return h(expandRow, {
-        //            props: {
-        //              row: params.row
-        //            }
-        //          })
-        //        }
-        //      },
-        { title: "天气", key: "weather" },
-        { title: "施工单位", key: "buildCompany" },
-        { title: "楼栋号", key: "building" },
         { title: "桩号", key: "pile" },
+        { title: "桩径", key: "pileDiameter" },
+        { title: "楼栋号", key: "building" },
+        { title: "强度等级", key: "concreteStrongLevel" },
+        { title: "开孔时间", key: "startTime" },
+        { title: "终孔时间", key: "endTime" },
         /*        {title: '监理开始时间', key: 'startTime'},
         {title: '监理结束时间', key: 'endTime'},
         {title: '钻机型号', key: 'drillModel'},
@@ -154,28 +145,12 @@ export default {
                   on: {
                     "on-ok": () => {
                       console.log(params);
-                      //                  roleApi.deleteRole({id:this.roleList[params.index].id}, () => {
-                      //                      this.roleList.splice(params.index, 1)
-                      //                      this.$Message.success("删除成功！");
-                      //                      this.total = this.total - 1
-                      //                  })
                       jxgzApi
                         .deleteJxZkGzzPzjl(this.tableData[params.index].id)
                         .then(res => {
                           this.tableData.splice(params.index, 1);
                           this.$Message.success("删除成功！");
-                          //                      this.total = this.total - 1
-                          //                    console.log(res)
-                          //                    if (res.data.code === 'Success') {
-                          //                      that.tableData = this.tableData.filter((item, index) => index !== params.row.initRowIndex)
-                          //                    }
                         });
-                      //                  console.warn(params.index);
-                      //                  jxgzApi.deleteRole({id:this.roleList[params.index].id}, () => {
-                      //                    this.roleList.splice(params.index, 1)
-                      //                    this.$Message.success("删除成功！");
-                      //                    this.total = this.total - 1
-                      //                  })
                     }
                   }
                 },
@@ -241,7 +216,7 @@ export default {
     },
     getDetai(obj, okfn) {
       let tempobj = {
-        projectId: 35,
+        projectId: this.ROLE.projectId,
         buildingNum: obj.building,
         pileNum: obj.pile
       };
@@ -271,11 +246,12 @@ export default {
       });
     },
     getJxgzs() {
-      //    jxgzApi.getJxZkGzzPzjlList({pageIndex: this.pageSize*(this.pageIndex - 1)+1, pageSize: this.pageSize, data:35}).then(res => {
-      jxgzApi.getJxZkGzzPzjlList({ data: 35 }).then(res => {
+      console.log(this.ROLE)
+      jxgzApi.getJxZkGzzPzjlList({data: this.ROLE.projectId}).then(res => {
+//    jxgzApi.getJxZkGzzPzjlList({ data: this.ROLE.projectId }).then(res => {
         console.log(res);
         this.tableData = res.data.result;
-        this.total = res.result.total;
+        this.total = res.data.result.length;
       });
     },
     pageChange(pageIndex) {

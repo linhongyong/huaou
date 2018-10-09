@@ -85,11 +85,11 @@
                   { validator: validateRemark, trigger: 'blur' }
                 ]
               },*/
-        obj: {
-          roleName: '',
-          remark: '',
-          type: "0"
-        },
+//      obj: {
+//        roleName: '',
+//        remark: '',
+//        type: "0"
+//      },
 
       }
     },
