@@ -225,14 +225,14 @@ export default {
           "--------------------------------------------------------------"
         );
         console.log(res.data);
-        if (res.data.result.actualDeepImg === "") {
+        if (!res.data.result.actualDeepImg) {
           res.data.result.actualDeepImg = [];
         } else {
           res.data.result.actualDeepImg = JSON.parse(
             res.data.result.actualDeepImg
           );
         }
-        if (res.data.result.barCageCountImg === "") {
+        if (!res.data.result.barCageCountImg) {
           res.data.result.barCageCountImg = [];
         } else {
           res.data.result.barCageCountImg = JSON.parse(
@@ -245,7 +245,7 @@ export default {
         okfn && okfn();
       });
     },
-    getJxgzs() {
+    getList() {
       console.log(this.ROLE)
       jxgzApi.getJxZkGzzPzjlList({data: this.ROLE.projectId}).then(res => {
 //    jxgzApi.getJxZkGzzPzjlList({ data: this.ROLE.projectId }).then(res => {
@@ -257,16 +257,16 @@ export default {
     pageChange(pageIndex) {
       console.log(pageIndex);
       this.pageIndex = pageIndex;
-      this.getJxgzs();
+      this.getList();
     },
     pageSizeChange(pageSize) {
       console.log(pageSize);
       this.pageSize = parseInt(pageSize);
-      this.getJxgzs();
+      this.getList();
     }
   },
   mounted() {
-    this.getJxgzs();
+  
   }
 };
 </script>

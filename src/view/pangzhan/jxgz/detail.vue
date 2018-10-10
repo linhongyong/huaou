@@ -6,7 +6,7 @@
     <div class="flex" >
       <div class="flex-6 padding-v-5">当日气候：{{ obj.weather }}</div><div class="flex-6 padding-v-5">施工单位：{{ obj.buildCompany }}</div>
     </div>
-    <div class="flex padding-v-5">旁站的部位或工序：</div>
+    <div class="flex padding-v-5">旁站的部位或工序：{{ obj.building }}楼 {{ obj.pile }}栋</div>
 
     <div class="flex" >
       <div class="flex-6 padding-v-5">旁站监理开始时间：{{ obj.startTime }}</div><div class="flex-6 padding-v-5">旁站监理结束时间：{{ obj.endTime }} </div>
@@ -55,8 +55,8 @@
        </div>
        <div class="padding-v-5 padding-left-40">
         <div class="flex">
-             <div class="flex-3">开孔时间 : {{ obj.openTime }}</div>
-             <div class="flex-3">终孔时间 : {{ obj.stopTime }}</div>
+             <div class="flex-3">开孔时间 : {{ obj.startTime }}</div>
+             <div class="flex-3">终孔时间 : {{ obj.endTime }}</div>
              <div class="flex-3">实际孔深 : {{ obj.actualDeep }}</div>
              <div class="flex-3">有效桩长  : {{ obj.validPileLength }}</div>
         </div>
@@ -70,7 +70,7 @@
       <div class="padding-v-5 padding-left-40">
         <div class="flex">
              <div class="flex-3">灌注开始时间 : {{ obj.perfusionStartTime }}</div>
-             <div class="flex-3">灌注结束时间 : {{ obj.perfusionEndTime }}</div>
+<!--             <div class="flex-3">灌注结束时间 : {{ obj.perfusionEndTime }}</div>-->
           </div>
        </div>
        <div class="padding-v-5 padding-left-40">

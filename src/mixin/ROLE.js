@@ -1,17 +1,17 @@
-import {
-  mapState
-} from 'vuex'
+import { mapState } from 'vuex';
 
-
-export default ({
+export default {
   computed: {
     ...mapState({
-      ROLE: state => state.user.role
+      ROLE: (state) => state.user.role
     })
   },
   watch: {
     ROLE() {
-      this.getList()
+      this.getList();
     }
   },
-})
+  created() {
+    if (this.ROLE) this.getList();
+  }
+};
