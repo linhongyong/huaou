@@ -7,14 +7,19 @@
         <!--<Button style="" type="primary" shape="circle" icon="md-add" v-on:click="addModal.show = true"></Button>-->
       </div>
     </Card>
-    <Modal v-model="editModal.show" title="修改旁站数据" :footer-hide="true" width="60%"  :scrollable="true">
+    <Modal v-model="editModal.show" title="修改水泥旁站" :footer-hide="true" width="60%"  :scrollable="true">
       <div id="" style="width:80%, margin:0 auto">
-        <Edit :obj="role"  @editModalClose="editModalClose"></Edit>
+        <Edit :obj="detail"  @editModalClose="editModalClose"></Edit>
       </div>
     </Modal>
     <Modal v-model="addModal.show" title="添加模板" :footer-hide="true" width="60%"  :scrollable="true">
       <div id="" style="width:80%, margin:0 auto">
         <Add @addModalClose="addModalClose"></Add>
+      </div>
+    </Modal>
+    <Modal v-model="detailModal.show" title="水泥旁站详情" ok-text="确认" :footer-hide="true" width="60%" :scrollable="true">
+      <div id="">
+        <Detail  :obj="detail"></Detail>
       </div>
     </Modal>
   </div>
@@ -23,6 +28,7 @@
 import Tables from "_c/tables";
 import Edit from "./snjb-edit.vue";
 import Add from "./snjb-add.vue";
+import Detail from "./snjb-detail.vue";
 import snjbApi from "@/api/snjb-api";
 import MIXIN_ROLE from "@/mixin/ROLE";
 
@@ -31,7 +37,8 @@ export default {
   components: {
     Tables,
     Edit,
-    Add
+    Add,
+    Detail
   },
   data() {
     return {
@@ -41,12 +48,17 @@ export default {
       addModal: {
         show: false
       },
-      role: {},
+      detailModal:{
+        show: false
+      },
+      detail: {},
       columns2: [
-        { title: "模板名称", key: "templateName" },
-        { title: "开始桩号", key: "pileStartNum" },
-        { title: "结束桩号", key: "pileEndNum" },
-        { title: "搅拌机型号", key: "blenderModel" },
+//      { title: "模板名称", key: "templateName" },
+        { title: "桩号", key: "pileStartNum" },
+        { title: "成桩开始时间", key: "finishPileStartTime" },
+        { title: "成桩结束时间", key: "finishPileEndTime" },
+        { title: "日完成桩数", key: "dayFinishCount" },
+        { title: "日完成量", key: "dayFinishVolume" },
         {
           title: "操作",
           key: "action",
@@ -63,9 +75,35 @@ export default {
                   },
                   on: {
                     click: e => {
-                      this.editModal.show = true;
-                      this.role = this.snjbList[params.index];
-                      console.log(this.role);
+                      this.getDetail(this.snjbList[params.index], () => {
+                        this.detailModal.show = true;
+                      });
+//                    this.detailModal.show = true;
+//                    this.detail = this.snjbList[params.index];
+//                    console.log(this.detail);
+                    }
+                  },
+                  style: {
+                    marginRight: "5px"
+                  }
+                },
+                "查看"
+              ),
+              h(
+                "Button",
+                {
+                  props: {
+                    type: "warning",
+                    size: "small"
+                  },
+                  on: {
+                    click: e => {
+                      this.getDetail(this.snjbList[params.index], () => {
+                        this.editModal.show = true;
+                      });
+//                    this.editModal.show = true;
+//                    this.detail = this.snjbList[params.index];
+//                    console.log(this.detail);
                     }
                   },
                   style: {
@@ -127,6 +165,29 @@ export default {
       this.editModal.show = false;
       this.getList();
     },
+    detailModalClose() {
+      this.detailModal.show = false;
+      this.getList();
+    },
+    getDetail(obj, okfn) {
+//    let tempobj = {
+//      projectId: this.ROLE.projectId,
+//      pileNum: obj.pile
+//    };
+      snjbApi.getSnjbById({id: obj.id, okfn}, data =>{
+        console.log("--------------------------------------------------------------");
+        if (!data.result.tryDataUrl) {
+          data.result.tryDataUrl = [];
+        } else {
+          data.result.tryDataUrl = JSON.parse(
+            data.result.tryDataUrl
+          );
+        }
+        this.detail = data.result;
+        okfn && okfn();
+        //                    this.formItem.barCageCountImg = imgs2 && imgs2.length ? imgs2 : []
+      })
+    },
     // 获取列表的方法名统一改为getList，为了在选择工程的时候 刷新页面
     getList() {
       console.log(this.ROLE);
@@ -138,8 +199,17 @@ export default {
         },
         data => {
           console.log(data);
+          
+          this.total = data.result.length;
+          if (!data.result.tryDataUrl) {
+            data.result.tryDataUrl = [];
+          } else {
+              data.result.tryDataUrl = JSON.parse(
+              data.result.tryDataUrl
+            );
+          }
+
           this.snjbList = data.result;
-          this.total = data.resultlength;
         }
       );
     },

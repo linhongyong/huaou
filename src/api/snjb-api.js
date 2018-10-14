@@ -22,6 +22,20 @@ obj.addSnjb = (data, fnOk, fnError) => {
 /**
  * 查询
  */
+obj.getSnjbById = (data, fnOk, fnError) => {
+  return axios.request({
+    url: `/snJbjPzjl/getSnJbjPzjl?id=${data.id}`,
+    method: 'get',
+
+  }).then(res => {
+    console.log(res)
+    if(res.data.code != "Success"){
+      fnError(res.data) 
+    }else{
+      fnOk(res.data)
+    }
+  })
+}
 obj.getSnjbList = (data, fnOk, fnError) => {
   return axios.request({
     url: `snJbjPzjl/list?pageIndex=${data.pageIndex}&pageSize=${data.pageSize}`,

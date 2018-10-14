@@ -13,12 +13,12 @@
 
       </div>
     </Modal>-->
-    <Modal v-model="editModal.show" title="修改旁站灌注" ok-text="提交" :footer-hide="true" width="60%" :scrollable="true"  :styles="{top:'0px'}">
+    <Modal v-model="editModal.show" title="修改机械灌注旁站" ok-text="提交" :footer-hide="true" width="60%" :scrollable="true"  :styles="{top:'0px'}">
       <div id="" style="width:80%, margin:0 auto">
         <Edit  @editModalClose="editModalClose" :obj="formItem"></Edit>
       </div>
     </Modal>
-    <Modal v-model="detailModal.show" title="旁站灌注详情" ok-text="确认" :footer-hide="true" width="60%" :scrollable="true" :styles="{top:'0px'}">
+    <Modal v-model="detailModal.show" title="机械灌注旁站详情" ok-text="确认" :footer-hide="true" width="60%" :scrollable="true" :styles="{top:'0px'}">
       <div id="">
         <Detail  :obj="formItem"></Detail>
       </div>
@@ -46,12 +46,16 @@ export default {
   data() {
     return {
       columns: [
-        { title: "桩号", key: "pile" },
-        { title: "桩径", key: "pileDiameter" },
-        { title: "楼栋号", key: "building" },
-        { title: "强度等级", key: "concreteStrongLevel" },
+        { title: "楼栋号", key: "building", width: 60 },
+        { title: "桩号", key: "pile", width: 60 },
+        { title: "设计桩径", key: "pileDiameter", width: 60 },
+        { title: "强度等级", key: "concreteStrongLevel", width: 60 },
         { title: "开孔时间", key: "startTime" },
-        { title: "终孔时间", key: "endTime" },
+        { title: "二次清孔时间", key: "startTime" },
+        { title: "砼浇筑开始时间", key: "perfusionStartTime" },
+        { title: "砼实灌方量", key: "actualVolume", width: 60 },
+        { title: "桩长", key: "pileLength", width: 60 },
+        { title: "入岩深度", key: "deptRock", width: 60 },
         /*        {title: '监理开始时间', key: 'startTime'},
         {title: '监理结束时间', key: 'endTime'},
         {title: '钻机型号', key: 'drillModel'},
@@ -239,6 +243,13 @@ export default {
             res.data.result.barCageCountImg
           );
         }
+        if (!res.data.result.deptRockUrl) {
+          res.data.result.deptRockUrl = [];
+        } else {
+          res.data.result.deptRockUrl = JSON.parse(
+            res.data.result.deptRockUrl
+          );
+        }
         this.formItem = res.data.result;
         //                    this.formItem.barCageCountImg = imgs2 && imgs2.length ? imgs2 : []
 
@@ -272,4 +283,7 @@ export default {
 </script>
 
 <style>
+  .small-with{
+    width: 80px;
+  }
 </style>
