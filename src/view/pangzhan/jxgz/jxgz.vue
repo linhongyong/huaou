@@ -4,7 +4,7 @@
       <Table width="100%" border :columns="columns" :data="tableData"></Table>
       <div style="padding: 18px 10px 18px;text-align: right;clear: both;">
         <Page :total="total" show-total class="float-l" show-elevator show-sizer @on-change="pageChange" @on-page-size-change="pageSizeChange" :current="pageIndex"/>
-        <!--<Button style="" type="primary" shape="circle" icon="md-add" v-on:click="addModal.show = true"></Button>-->
+        <Button type="primary" @click="modal_export.show = true">导出Excel</Button>
       </div>
     </Card>
     <!--<Modal v-model="addModal.show" title="新增旁站灌注" ok-text="提交" :footer-hide="true" width="60%">
@@ -23,6 +23,7 @@
         <Detail  :obj="formItem"></Detail>
       </div>
     </Modal>
+    <modalExport v-model="modal_export.show" :roleData="ROLE"></modalExport>
   </div>
 </template>
 
@@ -31,17 +32,19 @@ import Tables from "_c/tables";
 //import Add from './add.vue'
 import Edit from "./edit.vue";
 import Detail from "./detail.vue";
+import modalExport from "./modal-export";
 //import expandRow from './table-expand.vue'
 
 import jxgzApi from "@/api/jxgz-api";
 import MIXIN_ROLE from "@/mixin/ROLE";
 export default {
   name: "tables_page",
-  mixins: [MIXIN_ROLE], 
+  mixins: [MIXIN_ROLE],
   components: {
     Tables,
     Edit,
-    Detail
+    Detail,
+    modalExport
   },
   data() {
     return {
@@ -192,7 +195,10 @@ export default {
       },
       total: 0,
       pageSize: 10,
-      pageIndex: 1
+      pageIndex: 1,
+      modal_export: {
+        show: false
+      }
     };
   },
   methods: {
@@ -246,9 +252,7 @@ export default {
         if (!res.data.result.deptRockUrl) {
           res.data.result.deptRockUrl = [];
         } else {
-          res.data.result.deptRockUrl = JSON.parse(
-            res.data.result.deptRockUrl
-          );
+          res.data.result.deptRockUrl = JSON.parse(res.data.result.deptRockUrl);
         }
         this.formItem = res.data.result;
         //                    this.formItem.barCageCountImg = imgs2 && imgs2.length ? imgs2 : []
@@ -257,9 +261,9 @@ export default {
       });
     },
     getList() {
-      console.log(this.ROLE)
-      jxgzApi.getJxZkGzzPzjlList({data: this.ROLE.projectId}).then(res => {
-//    jxgzApi.getJxZkGzzPzjlList({ data: this.ROLE.projectId }).then(res => {
+      console.log(this.ROLE);
+      jxgzApi.getJxZkGzzPzjlList({ data: this.ROLE.projectId }).then(res => {
+        //    jxgzApi.getJxZkGzzPzjlList({ data: this.ROLE.projectId }).then(res => {
         console.log(res);
         this.tableData = res.data.result;
         this.total = res.data.result.length;
@@ -276,14 +280,12 @@ export default {
       this.getList();
     }
   },
-  mounted() {
-  
-  }
+  mounted() {}
 };
 </script>
 
 <style>
-  .small-with{
-    width: 80px;
-  }
+.small-with {
+  width: 80px;
+}
 </style>

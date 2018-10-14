@@ -1,4 +1,5 @@
 import axios from '@/libs/api.request'
+import httpClient from '@/api/httpClient';
 
 let obj = new Object();
 /**
@@ -73,6 +74,11 @@ obj.downloadWord = (id) => {
     method: 'post'
   })
 }
+
+obj.export = (data) => httpClient.post({
+  url: '/jxZkGzzPzjl/exportExcel',
+  data
+})
 
 
 export default obj
