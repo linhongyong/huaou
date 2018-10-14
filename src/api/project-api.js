@@ -148,5 +148,28 @@ project.addUserRole = (data, fnOk, fnError) => {
     });
 };
 
-project.getOwnList = (data) => httpClient.get({ url: '/project/listOwn', data });
+project.getOwnList = (data) => httpClient.get({
+  url: '/project/listOwn',
+  data
+});
+
+project.addProjectByName = (data) => httpClient.post({
+  url: '/project/addByName',
+  data
+})
+
+project.addBuild = (data) => httpClient.post({
+  url: '/building/add',
+  data
+})
+
+project.getBuildList = (data) => httpClient.get({
+  url: '/project/getBuildingList',
+  data
+})
+
+project.updateBuild = (data) => httpClient.post({
+  url: '/building/setBuildingData',
+  data
+})
 export default project;
