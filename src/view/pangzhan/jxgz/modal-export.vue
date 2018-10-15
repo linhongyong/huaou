@@ -1,5 +1,5 @@
 <template>
-   <Modal v-model="show" title="导出旁站信息" width="80%" >
+   <Modal v-model="show" title="导出旁站信息" width="60%" >
        <Form :model="query" ref="form" :rule="ruleValidate">
             <FormItem label="楼栋名" :label-width="80" prop="buildingId">
                 <Select v-model="query.buildingId">
@@ -7,6 +7,11 @@
                 </Select>
             </FormItem>
        </Form>
+       <!-- <form method="post" action="http://47.98.132.165:18088/jxZkGzzPzjl/exportExcel">
+          <input name="projectId" type="number" v-model.number="roleData.projectId" hidden />
+          <input name="buildingId" type="number" v-model.number="query.buildingId" hidden />
+          <input class="btn" type="submit" value="导出excel" />
+        </form> -->
        <template slot="footer">
             <Button type="primary" ghost @click="handleOk">确定</Button>
             <Button type="primary" ghost @click="handleCancel">取消</Button>
@@ -80,12 +85,34 @@ export default {
       this.$refs.form.validate(valid => {
         if (valid) {
           this.$emit("input", false);
-          apiJxgz.export({
+          const reqData = {
             projectId: Number(this.roleData.projectId),
             buildingId: this.query.buildingId
-          });
+          };
+          this.exportExcel(
+            "http://47.98.132.165:18088/jxZkGzzPzjl/exportExcel",
+            reqData
+          );
         }
       });
+    },
+    exportExcel(url, data) {
+      const form = document.createElement("form");
+      form.style.display = "none";
+      form.action = url;
+      form.method = "post";
+      document.body.appendChild(form);
+
+      for (let key in data) {
+        let input = document.createElement("input");
+        input.type = "hidden";
+        input.name = key;
+        input.value = data[key];
+        form.appendChild(input);
+      }
+
+      form.submit();
+      form.remove();
     },
     handleCancel() {
       this.$emit("input", false);
@@ -93,4 +120,16 @@ export default {
   }
 };
 </script>
+
+<style scoped>
+.btn {
+  float: right;
+  background-color: #1890ff;
+  outline: none;
+  border: none;
+  padding: 5px;
+  color: white;
+}
+</style>
+
     
