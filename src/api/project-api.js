@@ -69,7 +69,7 @@ project.getProjects = (data, fnOk, fnError) => {
 project.getProjects2 = (data, fnOk, fnError) => {
   axios
     .request({
-      url: `/project/listOwn`,
+      url: `/project/getJoinedList`,
       method: 'get',
       data
     })

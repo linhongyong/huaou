@@ -90,7 +90,7 @@ export default {
             buildingId: this.query.buildingId
           };
           this.exportExcel(
-            "http://47.98.132.165:18088/jxZkGzzPzjl/exportExcel",
+            "http://47.98.132.165:18088/jxZkGzzPzjl/exprotExcel",
             reqData
           );
         }

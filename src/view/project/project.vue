@@ -68,20 +68,16 @@ export default {
         show: false
       },
       project: {},
-      hooks: [],
+      hooks: {},
       roleTypeList: [],
       columns2: [
         {
           title: "工程名",
           key: "projectName"
-          //  width: 100,
-          //  fixed: 'left'
         },
         {
           title: "Action",
           key: "action",
-          //  fixed: 'right',
-          //  width: 120,
           render: (h, params) => {
             return h("div", [
               h(
@@ -134,8 +130,10 @@ export default {
                   on: {
                     click: e => {
                       projectApi.getProjectDetail(
-                        { id: this.userList[params.index].projectId },
+                        { id: this.userList[params.index].id },
                         data => {
+                          this.hooks = {};
+                          this.roleTypeList = [];
                           console.log(data);
                           for (
                             let i = 0;

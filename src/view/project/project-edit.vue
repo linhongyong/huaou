@@ -63,7 +63,7 @@ export default {
         if (valid) {
           projectApi.updateProject(
             {
-              id: this.obj.projectId,
+              id: this.obj.id,
               projectName: this.obj.projectName
             },
             data => {

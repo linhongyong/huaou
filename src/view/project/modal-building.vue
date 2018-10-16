@@ -110,14 +110,17 @@ export default {
       this.$emit("input", val);
     },
     data(val) {
-      this.getBuildList();
+      if(this.data.isModalBuildingShow){
+        this.getBuildList();
+      }
+      
     }
   },
   methods: {
     // 获取楼栋信息
     getBuildList() {
       apiProject
-        .getBuildList({ projectId: Number(this.data.projectId) })
+        .getBuildList({ projectId: Number(this.data.id) })
         .then(data => {
           this.buildList = data;
         })
