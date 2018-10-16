@@ -2,7 +2,7 @@
   <Form :model="obj" ref="obj" :rules="ruleCustom">
     <Row  type="flex" style="font-size:16px; margin-bottom:20px">
       <Col span="12">
-       <p>当前项目名称: {{obj.projectName}}</p>
+       <p> {{obj.projectName}}</p>
       </Col>
     </Row>
     <Row  type="flex"  justify="space-around" class="border">
@@ -40,8 +40,8 @@
       </Row>
     </div>
     <FormItem style="text-align: right;">
-      <Button type="primary" @click="handleSubmit('obj')">确定</Button>
-      <Button style="margin-left: 8px"  @click="handleReset('obj')">取消</Button>
+      <Button type="primary" @click="handleSubmit()">确定</Button>
+      <Button style="margin-left: 8px"  @click="handleReset()">取消</Button>
     </FormItem>
   </Form>
   
@@ -73,16 +73,6 @@ export default {
           { validator: validateCurrentRoleIndex, trigger: "blur" }
         ]
       },
-      //    obj: {
-      //      projectName: '',
-      //      userName: '',
-      //      project:{
-      //        projectName: '',
-      //      },
-      //      userRoles: []
-      //    },
-      //    hooks: [],
-      //    roleTypeList:[], //已选角色
       roleList: [],
       userList: [],
       currentRoleIndex: -1,
@@ -180,40 +170,14 @@ export default {
     /**
      * 修改标题事件
      */
-    handleSubmit(obj) {
-      let that = this;
-      console.log(this.obj.userRoles);
-      this.$refs[obj].validate(valid => {
-        if (valid) {
-          projectApi.updateProject(
-            { id: this.obj.project.id, projectName: this.obj.projectName },
-            data => {
-              console.log(data);
-              this.$refs[obj].resetFields();
-              this.obj.hooks = [];
-              this.obj.roleTypeList = [];
-              this.$Message.success({
-                content: "修改成功！",
-                onClose: () => {
-                  this.$emit("editModalClose", true);
-                }
-              });
-            },
-            data => {
-              this.$Message.error(data.message);
-            }
-          );
-        } else {
-          this.$Message.error("提交失败!");
-        }
-      });
+    handleSubmit() {
+      this.$emit('modalAction', {type:"close", name:"isProjectStaffsRoleSetShow"})
     },
     //重置
     handleReset(obj) {
-      this.$refs[obj].resetFields();
       this.obj.hooks = [];
       this.obj.roleTypeList = [];
-      this.$emit("editModalClose", true);
+      this.$emit('modalAction', {type:"close", name:"isProjectStaffsRoleSetShow"})
     }
   },
   mounted() {

@@ -16,7 +16,7 @@
       <Col span="12">
         <div class="" style="padding-left: 20px;">
           <FormItem label="是否项目角色 :">
-            <RadioGroup v-model="obj.type">
+            <RadioGroup v-model="obj.type+''">
               <Radio label="1">是</Radio>
               <Radio label="0">否</Radio>
             </RadioGroup>
@@ -58,13 +58,6 @@ export default {
           { validator: validateRemark, trigger: 'blur' }
         ]
       },
-//    obj: {
-//      roleName: '',
-//      remark: '',
-//      type: "0"
-//    },
-
-      
     }
   },
   props: {

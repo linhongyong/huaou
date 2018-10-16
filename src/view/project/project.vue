@@ -22,9 +22,9 @@
         <TmplSet @setModalClose="setModalClose" :propsObj="propsObj"></TmplSet>
       </div>
     </Modal>
-    <Modal v-model="setRoleModal.show" title="设置角色" :footer-hide="true" width="60%">
+    <Modal v-model="isProjectStaffsRoleSetShow" title="设置项目人员和角色" :footer-hide="true" width="60%">
       <div id="" style="width:80%, margin:0 auto">
-        <setRole @modalClose="setRoleModalClose" :obj="project"></setRole>
+        <setRole @modalAction="onModalAction" :obj="project"></setRole>
       </div>
     </Modal>
     <modalBuilding v-model="modal_building.show" :data="project"></modalBuilding>
@@ -51,6 +51,7 @@ export default {
   },
   data() {
     return {
+      isProjectStaffsRoleSetShow: false,
       propsObj: {},
       editModal: {
         show: false
@@ -153,7 +154,7 @@ export default {
                           data.result.projectName =
                             data.result.project.projectName;
                           this.project = data.result;
-                          this.setRoleModal.show = true;
+                          this.isProjectStaffsRoleSetShow = true;
                           console.log(this.project);
                         },
                         data => {
@@ -166,7 +167,7 @@ export default {
                     marginRight: "5px"
                   }
                 },
-                "设置项目用户"
+                "设置项目用户和角色"
               ),
               h(
                 "Button",
@@ -177,6 +178,7 @@ export default {
                   },
                   on: {
                     click: e => {
+                      params.row.isModalBuildingShow = true;
                       this.project = params.row;
                       this.modal_building.show = true;
                     }
@@ -232,6 +234,17 @@ export default {
     };
   },
   methods: {
+    onModalAction (e){
+      console.log(e);
+      if(e.type == "close"){
+        this[e.name] = false;
+      }else if(e.type == "show"){
+        this[e.name] = true;
+      }else{
+        console.error("不存在这种模态框行为")
+      }
+      this.getProjects2();
+    },
     addhooks: function(type, hook) {
       //
       var hooks = this.hooks[type];

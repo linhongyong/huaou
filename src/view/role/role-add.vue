@@ -22,8 +22,6 @@
             </RadioGroup>
           </FormItem>
         </div>
-        
-        
       </Col>
     </Row>
     <FormItem style="text-align: right;">

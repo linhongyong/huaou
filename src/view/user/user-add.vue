@@ -24,25 +24,7 @@
         </FormItem>
       </Col>-->
     </Row>
-    <div class="" style="min-height: 200px;">
-    	<div class=""  style="min-height: 100px; clear: both;padding: 0 20px; font-size: 18px;">
-        <div class="" style="float: left;"  v-if="roleSelectedList.length > 0"> 已选角色 ：</div>
-        <div class="" v-for="(item, index) in roleSelectedList" style="float: left; padding-right: 20px;" v-on:click="reduceRole(index)" >
-          <span class="">{{ item.roleName }}</span><Icon class="add-icon" type="md-remove" />
-        </div>
-      </div>
-      
-      <div class=""  style="min-height: 100px; clear: both;padding: 0 20px; font-size: 18px;">
-        <div class="" style="float: left;" v-if="roleList.length > 0">可选角色 ：</div>
-        <div class="" v-for="(item, index) in roleList" style="float: left; padding-right: 20px;" v-on:click="addRole(index)" >
-          <span class="">{{ item.roleName }}</span><Icon class="add-icon" type="md-add"/>
-        </div>
-      </div>
-    </div>
-    
-    
-      
-      
+
     <FormItem style="text-align: right;">
       <Button type="primary" @click="handleSubmit('obj')">保存</Button>
       <Button style="margin-left: 8px"  @click="handleReset('obj')">取消</Button>
@@ -89,37 +71,18 @@ export default {
       obj: {
         userName: '',
         mobile: '',
-        password: '',
-        job: 'job',
-        department: '人事部'
+        password: ''
       },
-
-      roleList: [],
-      roleSelectedList: []
     }
   },
   props: {
   },
   methods: {
-    addRole (index){
-      this.roleSelectedList.push(this.roleList[index])
-      this.roleList.splice(index, 1)
-      console.log(this.roleSelectedList);
-    },
-    reduceRole (index){
-      this.roleList.push(this.roleSelectedList[index])
-      this.roleSelectedList.splice(index, 1)
-      console.log(this.roleSelectedList);
-    },
     handleSubmit (obj) {
       let that = this
-      let userRoles = []
-      for(let i=0; i<this.roleSelectedList.length; i++ ){
-        userRoles.push({ roleId:this.roleSelectedList[i].id})
-      }
       this.$refs[obj].validate((valid) => {
         if (valid) {
-          userApi.addUser({user:this.obj, userRoles:userRoles }, (data) => {
+          userApi.addUser({user:this.obj, userRoles:null }, (data) => {
             console.log(data); 
             this.$refs[obj].resetFields();
             this.$Message.success({
@@ -140,8 +103,6 @@ export default {
     handleReset (obj) {
       this.$refs[obj].resetFields();
       this.$emit('addModalClose', true)
-//    this.roleList = []
-//    this.roleSelectedList = []
     }
   },
   mounted () {

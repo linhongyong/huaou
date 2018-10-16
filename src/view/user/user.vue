@@ -17,6 +17,11 @@
         <Add @addModalClose="addModalClose"></Add>
       </div>
     </Modal>
+    <Modal v-model="isUserRoleSetModalShow" title="设置用户角色" :footer-hide="true" width="60%">
+      <div id="" style="width:80%, margin:0 auto">
+        <SetUserRole :obj="user"  @modalAction="onModalAction"></SetUserRole>
+      </div>
+    </Modal>
   </div>
 </template>
 <script>
@@ -24,15 +29,17 @@
 import Tables from '_c/tables'
 import Edit from './user-edit.vue'
 import Add from './user-add.vue'
+import SetUserRole from './user-setUserRole.vue'
 import userApi from '@/api/user-api'
 import roleApi from '@/api/role-api'
-
+import tools from "_u/tools.js";
 export default {
   components: {
-    Tables, Edit, Add
+    Tables, Edit, Add, SetUserRole
   },
   data () {
     return {
+      isUserRoleSetModalShow:false,
       editModal: {
         show: false
       },
@@ -53,7 +60,7 @@ export default {
           //  width: 100
         },
         {
-          title: '密码',
+          title: '密码(加密后)',
           key: 'password'
           //  width: 100
         },
@@ -72,29 +79,8 @@ export default {
                 on: {
                   'click': (e) => {
                     userApi.getUserById({id:this.userList[params.index].id}, (data) => {
-                      data.result.user.roleSelectedList = []
-                      data.result.user.roleList = []
-                      this.user = data.result.user
-                      this.user.roleSelectedList = data.result.userRoleDTOList
-                      let tempSelectedRoleList = data.result.userRoleDTOList
-                      roleApi.getRolesByType({type: 0}, (data2) => {
-                        console.log(data2)
-                        let tempList = []
-                        for(let i=0; i<data2.result.length; i++){
-                          let count = 0;
-                          for(let j=0; j<tempSelectedRoleList.length; j++){
-                            if(data2.result[i].roleName != tempSelectedRoleList[j].roleName){
-                               count ++
-                            }
-                          }
-                          if(count == tempSelectedRoleList.length){
-                            tempList.push(data2.result[i])
-                          }
-                        }
-                        this.user.roleList = tempList
-                        console.log(this.user)   
-                        this.editModal.show = true
-                      })                      
+                      this.user = Object.assign({}, this.user, data.result.user)
+                      this.editModal.show = true;
                     })
                   }
                 },
@@ -102,6 +88,28 @@ export default {
                   marginRight: '5px'
                 }
               }, '修改'),
+              h('Button', {
+                props: {
+                  type: 'success',
+                  size: 'small'
+                },
+                on: {
+                  'click': (e) => {
+                    userApi.getUserById({id:this.userList[params.index].id}, (data) => {
+                      let user = data.result.user
+                      user.roleSelectedList = data.result.userRoleDTOList
+                      roleApi.getRolesByType({type: 0}, (data2) => {//获得所有非项目角色
+                        user.roleList = tools.getRemainFromTwoArrayByProp(data2.result, data.result.userRoleDTOList, 'roleName');
+                        this.isUserRoleSetModalShow = true;
+                        this.user = Object.assign(this.user, user)
+                      })
+                    })
+                  }
+                },
+                style: {
+                  marginRight: '5px'
+                }
+              }, '设置用户角色'),
               h('Poptip', {
                 props: {
                   confirm: true,
@@ -109,7 +117,7 @@ export default {
                 },
                 on: {
                   'on-ok': () => {
-                    console.warn(params.index);
+                    console.log(params.index);
                     userApi.deleteUser({id:this.userList[params.index].id}, (data) => {
                       this.userList.splice(params.index, 1)
                       this.total = this.total - 1
@@ -136,6 +144,17 @@ export default {
     }
   },
   methods: {
+    onModalAction (e){
+      console.log(e);
+      if(e.type == "close"){
+        this[e.name] = false;
+      }else if(e.type == "show"){
+        this[e.name] = true;
+      }else{
+        console.error("不存在这种模态框行为")
+      }
+      this.getUsers();
+    },
     addModalClose () {
       this.addModal.show = false
       this.getUsers()
