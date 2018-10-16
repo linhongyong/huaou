@@ -80,5 +80,11 @@ obj.export = (data) => httpClient.post({
   data
 })
 
+// 根据项目id楼栋id获得混泥土量
+obj.getSoilVolume = (data) => httpClient.get({
+  url: '/building/getSoilVolume',
+  data
+})
+
 
 export default obj

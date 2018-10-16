@@ -1,5 +1,12 @@
-import { login, logout, getUserInfo } from '@/api/user';
-import { setToken, getToken } from '@/libs/util';
+import {
+  login,
+  logout,
+  getUserInfo
+} from '@/api/user';
+import {
+  setToken,
+  getToken
+} from '@/libs/util';
 
 export default {
   state: {
@@ -28,20 +35,25 @@ export default {
       setToken(token);
     },
     setRole(state, role) {
-      state.role = role;
+      state.role = Object.assign(state.role, role);
     }
   },
   actions: {
     // 登录
-    handleLogin({ commit }, { userName, password }) {
+    handleLogin({
+      commit
+    }, {
+      userName,
+      password
+    }) {
       userName = userName.trim();
       return new Promise((resolve, reject) => {
         // commit('setToken', 'super_admin')
         // resolve()
         login({
-          userName,
-          password
-        })
+            userName,
+            password
+          })
           .then((data) => {
             // const data = res.data
             commit('setToken', data.result);
@@ -53,7 +65,10 @@ export default {
       });
     },
     // 退出登录
-    handleLogOut({ state, commit }) {
+    handleLogOut({
+      state,
+      commit
+    }) {
       return new Promise((resolve, reject) => {
         logout(state.token)
           .then(() => {
@@ -71,7 +86,10 @@ export default {
       });
     },
     // 获取用户相关信息
-    getUserInfo({ state, commit }) {
+    getUserInfo({
+      state,
+      commit
+    }) {
       return new Promise((resolve, reject) => {
         let data = {
           avator: '',

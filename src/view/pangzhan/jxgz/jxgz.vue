@@ -4,6 +4,7 @@
       <Table width="100%" border :columns="columns" :data="tableData"></Table>
       <div style="padding: 18px 10px 18px;text-align: right;clear: both;">
         <Page :total="total" show-total class="float-l" show-elevator show-sizer @on-change="pageChange" @on-page-size-change="pageSizeChange" :current="pageIndex"/>
+        <p>{{word}}</p>
         <Button type="primary" @click="modal_export.show = true">导出Excel</Button>
       </div>
     </Card>
@@ -198,8 +199,16 @@ export default {
       pageIndex: 1,
       modal_export: {
         show: false
-      }
+      },
+      SoilVolume: 0
     };
+  },
+  computed: {
+    word() {
+      return `当前项目：${this.ROLE.projectName}，当前楼栋：${
+        this.ROLE.buildingName
+      }，当前水泥总量：${this.SoilVolume}`;
+    }
   },
   methods: {
     exportExcel() {
@@ -268,6 +277,7 @@ export default {
         this.tableData = res.data.result;
         this.total = res.data.result.length;
       });
+      this.getSoilVolume();
     },
     pageChange(pageIndex) {
       console.log(pageIndex);
@@ -278,6 +288,19 @@ export default {
       console.log(pageSize);
       this.pageSize = parseInt(pageSize);
       this.getList();
+    },
+    getSoilVolume() {
+      jxgzApi
+        .getSoilVolume({
+          projectId: Number(this.ROLE.projectId),
+          buildingId: this.ROLE.buildingId
+        })
+        .then(data => {
+          this.SoilVolume = data;
+        })
+        .catch(() => {
+          this.$Message.error("获得水泥总数失败");
+        });
     }
   },
   mounted() {}
