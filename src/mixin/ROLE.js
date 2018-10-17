@@ -17,14 +17,12 @@ export default {
     PROJECT: {
       deep: true,
       handler(project) {
-        console.log(`project发生改变: ${project}`);
         this.getList();
       }
     },
     BUILDING: {
       deep: true,
       handler(building) {
-        console.log(`building发生改变: ${building}`);
         this.buildingChange();
       }
     }

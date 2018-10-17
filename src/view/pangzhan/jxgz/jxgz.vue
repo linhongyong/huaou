@@ -225,7 +225,6 @@ export default {
       });
     },
     getList() {
-      console.log(this.ROLE);
       jxgzApi.getJxZkGzzPzjlList({ data: this.ROLE.projectId }).then(res => {
         console.log(res);
         this.tableData = res.data.result;
