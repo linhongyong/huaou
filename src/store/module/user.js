@@ -15,7 +15,12 @@ export default {
     avatorImgPath: '',
     token: getToken(),
     access: '',
-    role: {}
+    role: {
+      projectId: '',
+      projectName: '',
+      buildingId: '',
+      buildingName: ''
+    }
   },
   mutations: {
     setAvator(state, avatorPath) {
