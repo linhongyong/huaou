@@ -1,225 +1,184 @@
-<template>
-  <div>
-    <Card>
-      <Table width="100%" border :columns="columns2" :data="menuList"></Table>
-      <div style="padding: 18px 10px 18px;text-align: right;clear: both;">
-        <Button class="button-add" type="primary" shape="circle" icon="md-add" v-on:click="addModal.show = true"></Button>
-      </div>
-    </Card>
-    <Modal v-model="editModal.show" title="修改菜单信息" :footer-hide="true" width="60%">
-      <div id="" style="width:80%, margin:0 auto">
-        <Edit :obj="menu" @editModalClose="editModalClose"></Edit>
-      </div>
-    </Modal>
-    <Modal v-model="addModal.show" title="添加菜单" :footer-hide="true" width="60%">
-      <div id="" style="width:80%, margin:0 auto">
-        <Add @addModalClose="addModalClose" :parentMenus="menu"></Add>
-      </div>
-    </Modal>
-  </div>
+  <template>
+    <div class="">
+    	<Card>
+        <Row>
+          <Col span="6">
+            <Tree :data="menutree"></Tree>
+            
+          </Col>
+          <Col span="18">
+            <div class="">
+             	<Dropdown  trigger="click" @on-click="onSelectParent">
+                <a href="javascript:void(0)">
+                             选择父级
+                    <Icon type="ios-arrow-down"></Icon>
+                    
+                </a>
+                <DropdownMenu  slot="list">
+                  <div  v-for="item in menutree">
+                  	<DropdownItem v-if="!item.children.length" :name="item.id">{{ item.title }}</DropdownItem>
+                    <Dropdown placement="right-start"   trigger="click" v-else>
+                      <DropdownItem :name="item.id">
+                        {{ item.title }}
+                        <Icon type="ios-arrow-forward"></Icon>
+                      </DropdownItem>
+                      <DropdownMenu slot="list">
+                        <div  v-for="item2 in item.children">
+                        	<DropdownItem v-if="!item2.children.length" :name="item2.id">{{ item2.title }}</DropdownItem>
+                        	<Dropdown  placement="right-start"   trigger="click" v-else>
+                        	  <DropdownItem :name="item2.id">
+                              {{ item2.title }}
+                              <Icon type="ios-arrow-forward"></Icon>
+                            </DropdownItem>
+                        	  <DropdownMenu slot="list">
+                        	    <DropdownItem v-for="item3 in item2.children" :name="item3.id">{{ item3.title }}</DropdownItem>
+                              <!--<div  v-for="item2 in item.children">
+                                <DropdownItem v-if="!item2.children.length">{{ item2.title }}</DropdownItem>
+                                <Dropdown v-else>
+                                  <DropdownItem>
+                                    {{ item2.title }}
+                                    <Icon type="ios-arrow-forward"></Icon>
+                                  </DropdownItem>
+                                  
+                                </Dropdown>
+                              </div>-->
+                            </DropdownMenu>
+                        	</Dropdown>
+                        </div>
+                      </DropdownMenu>
+                    </Dropdown>
+                  </div>
+                </DropdownMenu>
+              </Dropdown>
+              : 选择的父id: {{ obj.parentId }}
+              <div class="">
+                             名称：
+                <Input placeholder="" style="width: auto" v-model="obj.menuName"/>
+              </div>
+              <div class="">
+                              代码：
+                <Input placeholder="Enter name" style="width: auto"  v-model="obj.url"/>
+              </div>
+              <div class="">
+              	<RadioGroup v-model="obj.type" >
+                  <Radio label="0">
+                      <span>菜单</span>
+                  </Radio>
+                  <Radio label="1">
+                      <span>按钮</span>
+                  </Radio>
+                </RadioGroup>
+              </div>
+              <div class="">
+                <RadioGroup v-model="obj.status">
+                  <Radio label="1">
+                      <span>是</span>
+                  </Radio>
+                  <Radio label="0">
+                      <span>否</span>
+                  </Radio>
+                </RadioGroup>
+              </div>
+              <div class="">
+                              序号
+                <Slider v-model="obj.orderNum"></Slider>
+              </div>
+              <div class="">
+                              备注
+                <Input placeholder="Enter name" style="width: auto"  v-model="obj.perms"/>
+              </div>
+             </div>
+            
+          </Col>
+         </Row>
+         <Button type="primary" @click="handleSubmit()">保存</Button>
+      </Card>
+    </div>
 </template>
+
 <script>
-  import Tables from "_c/tables";
-  import Edit from "./menu-edit.vue";
-  import Add from "./menu-add.vue";
   import menuApi from "@/api/menu-api";
-  import subMenu from "./subMenu.vue";
-
   export default {
-    components: {
-      Tables,
-      Edit,
-      Add,
-      subMenu
-    },
-    data() {
+    data () {
       return {
-        editModal: {
-          show: false
-        },
-        addModal: {
-          show: false,
-          data: {}
-        },
-        menu: {},
-        columns2: [
-          {
-            type: "expand",
-            width: 50,
-            render: (h, params) => {
-              return h(subMenu, {
-                props: {
-                  row: params.row
-                },
-                on: {
-                  'add-menu': (menu) => {
-                    this.addModalShow(menu);
-                  },
-                  'edit-menu': (menu) => {
-                    this.editModalShow(menu);
-                  },
-                  'delete-menu': (menu) => {
-                    this.deleteMenu(menu);
-                  },
-
-                }
-              });
-            }
-          },
-          {
-            title: "菜单名称",
-            key: "menuName"
-          },
-          {
-            title: "权限标识",
-            key: "perms"
-            //  width: 100,
-            //  fixed: 'left'
-          },
-          {
-            title: "资源url",
-            key: "url"
-            //  width: 100,
-            //  fixed: 'left'
-          },
-          {
-            title: "类型 0菜单 /1按钮",
-            key: "type"
-            //  width: 100,
-            //  fixed: 'left'
-          },
-          {
-            title: "排序",
-            key: "orderNum"
-            //  width: 100,
-            //  fixed: 'left'
-          },
-          {
-            title: "Action",
-            key: "action",
-            //  fixed: 'right',
-            width: 200,
-            render: (h, params) => {
-              return h("div", [
-                h(
-                  "Button",
-                  {
-                    props: {
-                      type: "success",
-                      size: "small"
-                    },
-                    on: {
-                      click: e => {
-                        this.editModalShow(params.row);
-                        // this.editModal.show = true;
-                        // this.menu = this.menuList[params.index];
-                      }
-                    },
-                    style: {
-                      marginRight: "5px"
-                    }
-                  },
-                  "修改"
-                ),
-                h(
-                  "Button",
-                  {
-                    props: {
-                      type: "success",
-                      size: "small"
-                    },
-                    on: {
-                      click: e => {
-                        this.addModalShow(params.row);
-                      }
-                    },
-                    style: {
-                      marginRight: "5px"
-                    }
-                  },
-                  "新增"
-                ),
-                h(
-                  "Poptip",
-                  {
-                    props: {
-                      confirm: true,
-                      title: "你确定要删除吗?"
-                    },
-                    on: {
-                      "on-ok": () => {
-                        menuApi.deleteMenu(
-                          { id: this.menuList[params.index].id },
-                          () => {
-                            this.menuList.splice(params.index, 1);
-                            this.$Message.success("删除成功！");
-                            this.total = this.total - 1;
-                          }
-                        );
-                      }
-                    }
-                  },
-                  [
-                    h(
-                      "Button",
-                      {
-                        props: {
-                          type: "error",
-                          size: "small"
-                        }
-                      },
-                      "删除"
-                    )
-                  ]
-                )
-              ]);
-            }
-          }
-        ],
-        menuList: [],
-      };
+        menutree: [],
+        obj:{
+          icon:"+",
+          parentId:null
+        }
+      }
     },
-    methods: {
-      addModalShow(menu) {
-        this.menu = menu;
-        this.addModal.show = true;
+    methods:{
+      onSelectParent: function (id) {
+      	console.log(id);
+      	this.obj.parentId = id
       },
-      addModalClose() {
-        this.addModal.show = false;
-        this.getMenus();
-      },
-      editModalShow(menu) {
-        this.menu = menu;
-        this.editModal.show = true;
-      },
-      editModalClose() {
-        this.editModal.show = false;
-        this.getMenus();
-      },
-      deleteMenu(menu) {
-        const { id } = menu;
-        menuApi.deleteMenu({ id }, () => {
-          this.$Message.success("删除成功！");
+      handleSubmit: function(){
+         console.log(this.obj);
+        menuApi.addMenu(this.obj).then( data => {
+          console.log(data);
+          this.$Message.success("操作成功");
           this.getMenus();
         })
+       
       },
-
       getMenus() {
         menuApi.getMenus(null
           ,
           data => {
+            console.log(data);
             this.menuList = data.result.list;
+            this.machiningMenus(data.result.list)
           }
         );
+      },
+      machiningMenus: function(menuList){
+        var result = [];
+        (function traverse(node, result) {//???
+          node.forEach(i => {
+          if(false){  return; }
+            let n = {
+                  title: i.menuName,
+                  id: i.id,
+              }
+              if(i.childMenus){
+                n.children = []
+                traverse(i.childMenus, n.children)
+              }
+              
+              result.push(n);
+          })
+        })(menuList, result);
+        
+        this.menutree = result;
       }
     },
     mounted() {
       this.getMenus();
+/*      console.log(this.$router.options.routes);
+      let routes = this.$router.options.routes;
+      var result = [];    // 存放结果
+      (function traverse(node, result) {
+        node.forEach(i => {
+          if(i.meta.hideInMenu){  return; }
+          let n = {
+                title: i.meta.title,
+            }
+            if(i.children){
+              n.children = []
+              traverse(i.children, n.children)
+            }
+            
+            result.push(n);
+        })
+      })(routes, result);
+      this.menutree = result
+      console.log(result);*/
+      
     }
-  };
-</script>
-<style scoped>
-  .float-l {
-    float: left;
   }
+  
+</script>
+
+<style>
 </style>

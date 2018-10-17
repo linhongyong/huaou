@@ -1,6 +1,6 @@
 import axios from '@/libs/api.request';
-
-const client = (method) => ({ url, data }) =>
+import defaultData from "./mock/default";
+const client = (method) => ({ url, data, defaultValue }) =>
   new Promise((resolve, reject) => {
     const config = { url, method };
     if (method == 'post') {
@@ -15,7 +15,7 @@ const client = (method) => ({ url, data }) =>
         else reject(res.data);
       })
       .catch((err) => {
-        reject(err);
+        reject(defaultValue ? defaultData[defaultValue] : err);
       });
   });
 export default {

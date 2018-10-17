@@ -17,6 +17,11 @@
         <Add @addModalClose="addModalClose"></Add>
       </div>
     </Modal>
+    <Modal v-model="isRoleMenuSetShow" title="设置角色资源" :footer-hide="true" width="60%">
+      <div id="" style="width:80%, margin:0 auto">
+        <SetRoleMenu @modalAction="onModalAction" :obj="role"></SetRoleMenu>
+      </div>
+    </Modal>
   </div>
 </template>
 <script>
@@ -24,21 +29,24 @@
 import Tables from '_c/tables'
 import Edit from './role-edit.vue'
 import Add from './role-add.vue'
+import SetRoleMenu from './role-setRoleMenu.vue'
 import roleApi from '@/api/role-api'
+import menuApi from "@/api/menu-api";
 
 export default {
   components: {
-    Tables, Edit, Add
+    Tables, Edit, Add, SetRoleMenu
   },
   data () {
     return {
+      isRoleMenuSetShow: false,
       editModal: {
         show: false
       },
       addModal: {
         show: false
       },
-      role:{},
+      role:{ownerMenus:[]},
       columns2: [
         {
           title: '角色',
@@ -71,7 +79,7 @@ export default {
                 on: {
                   'click': (e) => {
                     this.editModal.show = true
-                    this.role = this.roleList[params.index]
+                    this.role = Object.assign({},this.role, this.roleList[params.index]) 
                     console.log(this.role)
                   }
                 },
@@ -79,6 +87,23 @@ export default {
                   marginRight: '5px'
                 }
               }, '修改'),
+              h('Button', {
+                props: {
+                  type: 'success',
+                  size: 'small'
+                },
+                on: {
+                  'click': (e) => {
+                    this.isRoleMenuSetShow = true
+                    this.role = Object.assign({},this.role, this.roleList[params.index]) 
+                    this.getMenusByRoleId(this.role.id);
+                    console.log(this.role)
+                  }
+                },
+                style: {
+                  marginRight: '5px'
+                }
+              }, '设置角色资源'),
               h('Poptip', {
                 props: {
                   confirm: true,
@@ -113,6 +138,16 @@ export default {
     }
   },
   methods: {
+    onModalAction (e){
+      console.log(e);
+      if(e.type == "close"){
+        this[e.name] = false;
+      }else if(e.type == "show"){
+        this[e.name] = true;
+      }else{
+        console.error("不存在这种模态框行为")
+      }
+    },
     addModalClose () {
       this.addModal.show = false
       this.getRoles()
@@ -126,6 +161,12 @@ export default {
         console.log(data)
         this.roleList = data.result.list
         this.total =  data.result.total
+      })
+    },
+    getMenusByRoleId (id) {
+      menuApi.getMenusByRoleId({roleId: id}).then( data => {
+         this.role.ownerMenus = data;
+        console.log(data);
       })
     },
     pageChange (pageIndex) {

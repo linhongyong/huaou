@@ -145,60 +145,7 @@ export default [
       
     ]
   },
-
-//{//旁站老
-//  path: '/JxZkGzZpjl',
-//  name: 'JxZkGzZpjl',
-//  meta: {
-//    icon: 'md-menu',
-//    title: '旁站监理'
-//  },
-//  component: Main,
-//  children: [
-//    {
-//      path: 'JxZkGzZpjl_1',
-//      name: 'JxZkGzZpjl_1',
-//      meta: {
-//        icon: 'md-grid',
-//        title: '旁站监理记录'
-//      },
-//      component: () => import('@/view/JxZkGzZpjl/tables.vue')
-//    },
-//    {
-//      path: 'level_2_3',
-//      name: '旁站监理模板列表',
-//      meta: {
-//        icon: 'md-grid',
-//        title: '旁站监理模板列表'
-//      },
-//      component: () => import('@/view/jxZkGzzPzjlTemplate/tables.vue')
-//    }
-//  ]
-//},
-  {// 用户管理
-
-    path: '/user',
-    name: 'user',
-    meta: {
-      icon: 'ios-podium',
-      title: '用户管理'
-    },
-    component: Main,
-    children: [
-      {
-        path: '/user_list',
-        name: 'user_list',
-        meta: {
-          icon: 'ios-list-box',
-          title: '用户管理'
-        },
-        component: () => import('@/view/user/user.vue')
-      }
-    ]
-  },
-
   {
-    // 项目管理
     path: '/project',
     name: 'project',
     meta: {
@@ -219,7 +166,6 @@ export default [
     ]
   },
   {
-    // 用户管理
     path: '/sys',
     name: 'sys',
     meta: {
@@ -228,6 +174,15 @@ export default [
     },
     component: Main,
     children: [
+      {
+        path: '/user_list',
+        name: 'user_list',
+        meta: {
+          icon: 'ios-podium',
+          title: '用户管理'
+        },
+        component: () => import('@/view/user/user.vue')
+      },
       {
         path: '/role_list',
         name: 'role_list',
