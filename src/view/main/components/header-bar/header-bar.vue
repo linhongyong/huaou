@@ -56,6 +56,7 @@ export default {
     this.getProjectList();
   },
   methods: {
+    ...mapMutations(["setProject", "setBuilding"]),
     handleCollpasedChange(state) {
       this.$emit("on-coll-change", state);
     },
@@ -71,8 +72,10 @@ export default {
           );
           // 默认选择第一个项目
           if (this.projectList.length > 0) {
-            this.projectId = this.projectList[0].projectId;
-            this.$store.commit("setRole", this.projectList[0]);
+            const { projectId, projectName } = this.projectList[0];
+            this.projectId = projectId;
+            // 提交mutation
+            this.setProject({ projectId, projectName });
           }
         })
         .catch(err => {
@@ -88,19 +91,19 @@ export default {
           buildingName
         }));
         if (this.buildList.length > 0) {
-          this.buildingId = this.buildList[0].value;
-          this.$store.commit("setRole", this.buildList[0]);
+          const { buildingId, buildingName } = this.buildList[0];
+          this.buildingId = buildingId;
+          // 提交mutation
+          this.setBuilding({ buildingId, buildingName });
         }
       });
     },
+    // 选择项目时触发
     handleSelectChange(id) {
-      this.$store.commit(
-        "setRole",
-        this.projectList.find(item => item.id === id)
-      );
+      this.setProject(this.projectList.find(item => item.projectId === id));
     },
     handleBuildingIdChange(id) {
-      this.$store.commit("setRole");
+      this.setBuilding(this.buildList.find(item => item.buildingId === id));
     }
   }
 };
