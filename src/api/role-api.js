@@ -1,5 +1,5 @@
 import axios from '@/libs/api.request'
-
+import httpClient from './httpClient';
 let role = new Object();
 
 role.addRole = (data, fnOk, fnError) => {
@@ -69,5 +69,7 @@ role.getRolesByType = (data, fnOk, fnError) => {
     }
   })
 }
+
+role.setRoleMenu = (data) => httpClient.post({ url: `/roleMenu/add`, data });
 
 export default role

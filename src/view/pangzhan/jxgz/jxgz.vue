@@ -30,6 +30,7 @@
 
 <script>
 import Tables from "_c/tables";
+
 //import Add from './add.vue'
 import Edit from "./edit.vue";
 import Detail from "./detail.vue";
@@ -45,13 +46,13 @@ export default {
     Tables,
     Edit,
     Detail,
-    modalExport
+    modalExport,
   },
   data() {
     return {
       columns: [
-        { title: "楼栋号", key: "building", width: 60 },
-        { title: "桩号", key: "pile", width: 60 },
+        { title: "楼栋号", key: "pileCode", width: 60 },
+        { title: "桩号", key: "pileCode", width: 60 },
         { title: "设计桩径", key: "pileDiameter", width: 60 },
         { title: "强度等级", key: "concreteStrongLevel", width: 60 },
         { title: "开孔时间", key: "startTime" },
@@ -60,42 +61,6 @@ export default {
         { title: "砼实灌方量", key: "actualVolume", width: 60 },
         { title: "桩长", key: "pileLength", width: 60 },
         { title: "入岩深度", key: "deptRock", width: 60 },
-        /*        {title: '监理开始时间', key: 'startTime'},
-        {title: '监理结束时间', key: 'endTime'},
-        {title: '钻机型号', key: 'drillModel'},
-        {title: '钻机工作状态', key: 'workState'},
-        {title: '主钢筋', key: 'mainBar'},
-        {title: '箍钢筋', key: 'circularBar'},
-        {title: '加强钢筋', key: 'strongBar'},
-        {title: '钢筋笼数量（节）', key: 'barCageCount'},
-        {title: '钢筋长度', key: 'length'},
-        {title: '吊筋长度', key: 'suspensionBarLength'},
-        {title: '焊接结论', key: 'weldingResult'},
-        {title: '桩径', key: 'pileDiameter'},
-        {title: '桩长', key: 'pileLength'},
-        {title: '钻地面标高', key: 'groundLevel'},
-        {title: '设计桩顶标高', key: 'pileTopHeight'},
-        {title: '开孔时间', key: 'openTime'},
-        {title: '终孔时间', key: 'stopTime'},
-        {title: '实际孔深', key: 'actualDeep'},
-        {title: '有效桩长', key: 'validPileLength'},
-        {title: '下钢筋笼时间起', key: 'dropCageStartTime'},
-        {title: '下钢筋笼时间止', key: 'dropCageEndTime'},
-        {title: '二次清孔时间起', key: 'secondCleanStartTime'},
-        {title: '二次清孔时间止', key: 'secondCleanEndTime'},
-        {title: '沉渣厚度', key: 'sedimentHeight'},
-        {title: '泥浆比重', key: 'slurryProp'},
-        {title: '砼强度等级', key: 'concreteStrongLevel'},
-        {title: '灌注时间起', key: 'perfusionStartTime'},
-        {title: '灌注时间止', key: 'perfusionEndTime'},
-        {title: '设计坍落度', key: 'designSlump'},
-        {title: '实测坍落度', key: 'actualSlump'},
-        {title: '砼理论方量', key: 'theoryVolume'},
-        {title: '砼实灌方量', key: 'actualVolume'},
-        {title: '充盈系数', key: 'fillingCoefficient'},
-        {title: '试块制作组数', key: 'sampleMaking'},
-        {title: '发现的问题及处理情况', key: 'problemContent'},
-        {title: '站旁监理人员id', key: 'superId'}, */
         {
           title: "操作",
           key: "handle",
@@ -272,7 +237,6 @@ export default {
     getList() {
       console.log(this.ROLE);
       jxgzApi.getJxZkGzzPzjlList({ data: this.ROLE.projectId }).then(res => {
-        //    jxgzApi.getJxZkGzzPzjlList({ data: this.ROLE.projectId }).then(res => {
         console.log(res);
         this.tableData = res.data.result;
         this.total = res.data.result.length;
