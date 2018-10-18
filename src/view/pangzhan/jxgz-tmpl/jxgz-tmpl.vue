@@ -9,7 +9,7 @@
     </Card>
     <Modal v-model="editModal.show" title="修改模板" :footer-hide="true" width="60%"  :scrollable="true"  :styles="{top:'0px'}">
       <div id="" style="width:80%, margin:0 auto">
-        <Edit :obj="role"  @editModalClose="editModalClose"></Edit>
+        <Edit :obj="obj"  @editModalClose="editModalClose"></Edit>
       </div>
     </Modal>
     <Modal v-model="addModal.show" title="添加模板" :footer-hide="true" width="60%"  :scrollable="true"  :styles="{top:'0px'}">
@@ -38,12 +38,12 @@ export default {
       addModal: {
         show: false
       },
-      role:{},
+      obj:{},
       columns2: [
         {title: '模板名称', key: 'templateName'},
         {title: '模板备注', key: 'remark'},
-        {title: '建筑单位', key: 'buildCompany'},
-        {title: '负荷', key: 'workState'},
+        {title: '施工单位', key: 'buildCompany'},
+        {title: '工作状态', key: 'workState'},
         {
           title: '操作',
           key: 'action',
@@ -59,8 +59,11 @@ export default {
                 on: {
                   'click': (e) => {
                     this.editModal.show = true
-                    this.role = this.tmplList[params.index]
-                    console.log(this.role)
+                    this.obj = this.tmplList[params.index]
+                      //处理特殊字段
+                    this.obj.mainBarNum = this.obj.mainBar && this.obj.mainBar.split("φ")[0]
+                    this.obj.mainBarType= this.obj.mainBar && this.obj.mainBar.split("φ")[1]
+                    console.log(this.obj)
                   }
                 },
                 style: {
