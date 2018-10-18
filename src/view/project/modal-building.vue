@@ -135,7 +135,7 @@ export default {
           apiProject
             .addBuild(
               Object.assign(this.buildData, {
-                projectId: Number(this.data.projectId)
+                projectId: Number(this.data.id)
               })
             )
             .then(() => {
@@ -156,7 +156,7 @@ export default {
           apiProject
             .updateBuild(
               Object.assign(this.buildData, {
-                projectId: Number(this.data.projectId)
+                projectId: Number(this.data.id)
               })
             )
             .then(() => {

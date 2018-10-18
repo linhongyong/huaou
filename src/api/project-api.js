@@ -66,7 +66,7 @@ project.getProjects = (data, fnOk, fnError) => {
       }
     });
 };
-project.getProjects2 = (data, fnOk, fnError) => {
+project.getJoinedList = (data, fnOk, fnError) => {
   axios
     .request({
       url: `/project/getJoinedList`,
@@ -74,7 +74,6 @@ project.getProjects2 = (data, fnOk, fnError) => {
       data
     })
     .then((res) => {
-      console.log(res);
       if (res.data.code != 'Success') {
         fnError(res.data);
       } else {

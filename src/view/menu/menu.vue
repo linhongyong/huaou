@@ -1,22 +1,26 @@
   <template>
     <div class="">
     	<Card>
-        <Row>
-          <Col span="6">
-            <Tree :data="menutree"></Tree>
+        <Row  type="flex"  justify="space-between">
+          <Col span="4">
+            <div class="el-tree" style="">
+            	<Tree :data="menutree"  @on-select-change="getRoleDetail"></Tree>
+            </div>
+            
             
           </Col>
-          <Col span="18">
-            <div class="">
+          <Col span="19">
+            <Card>
+            <div class="" style="padding: 20px 20px 80px;">
+                      父级：
              	<Dropdown  trigger="click" @on-click="onSelectParent">
-                <a href="javascript:void(0)">
-                             选择父级
+                <a class="dropdown display-flex-center-between" href="javascript:void(0)">
+                                  请选择父级
                     <Icon type="ios-arrow-down"></Icon>
-                    
                 </a>
                 <DropdownMenu  slot="list">
                   <div  v-for="item in menutree">
-                  	<DropdownItem v-if="!item.children.length" :name="item.id">{{ item.title }}</DropdownItem>
+                  	<DropdownItem v-if="!item.children.length" :name="item.id"  style="padding: 5px 20px">{{ item.title }}</DropdownItem>
                     <Dropdown placement="right-start"   trigger="click" v-else>
                       <DropdownItem :name="item.id">
                         {{ item.title }}
@@ -50,16 +54,17 @@
                   </div>
                 </DropdownMenu>
               </Dropdown>
-              : 选择的父id: {{ obj.parentId }}
-              <div class="">
+              <!--: 请选择父级id: {{ obj.parentId }}-->
+              <div class="" style="margin-top: 40px;">
                              名称：
-                <Input placeholder="" style="width: auto" v-model="obj.menuName"/>
+                <Input placeholder="" style="width: 80%" v-model="obj.menuName"/>
               </div>
-              <div class="">
+              <div class="" style="margin-top: 40px;">
                               代码：
-                <Input placeholder="Enter name" style="width: auto"  v-model="obj.url"/>
+                <Input placeholder="" style="width: 80%"  v-model="obj.url"/>
               </div>
-              <div class="">
+              <div class="" style="margin-top: 40px;">
+                            类型：
               	<RadioGroup v-model="obj.type" >
                   <Radio label="0">
                       <span>菜单</span>
@@ -69,7 +74,7 @@
                   </Radio>
                 </RadioGroup>
               </div>
-              <div class="">
+              <!--<div class="" style="margin-top: 20px;">
                 <RadioGroup v-model="obj.status">
                   <Radio label="1">
                       <span>是</span>
@@ -78,18 +83,23 @@
                       <span>否</span>
                   </Radio>
                 </RadioGroup>
+              </div>-->
+              <div class="display-flex-center" style="margin-top: 40px;">
+                              序号：
+                 <div class="" style="width: 80%; padding-left: 10px;">
+                 	<Slider v-model="obj.orderNum" ></Slider>
+                 </div>
+                              
+               
               </div>
-              <div class="">
-                              序号
-                <Slider v-model="obj.orderNum"></Slider>
-              </div>
-              <div class="">
-                              备注
-                <Input placeholder="Enter name" style="width: auto"  v-model="obj.perms"/>
+              <div class="" style="margin-top: 40px;">
+                              备注：
+                <Input placeholder="" style="width: 80%"  v-model="obj.perms"/>
               </div>
              </div>
-            
+            </Card>
           </Col>
+          
          </Row>
          <Button type="primary" @click="handleSubmit()">保存</Button>
       </Card>
@@ -112,6 +122,7 @@
       onSelectParent: function (id) {
       	console.log(id);
       	this.obj.parentId = id
+
       },
       handleSubmit: function(){
          console.log(this.obj);
@@ -121,6 +132,10 @@
           this.getMenus();
         })
        
+      },
+      getRoleDetail(roles ){
+        console.log(roles)
+        this.obj = roles[0];
       },
       getMenus() {
         menuApi.getMenus(null
@@ -136,11 +151,12 @@
         var result = [];
         (function traverse(node, result) {//???
           node.forEach(i => {
-          if(false){  return; }
-            let n = {
-                  title: i.menuName,
-                  id: i.id,
-              }
+//          let n = {
+//                title: i.menuName,
+//                id: i.id,
+//            }
+          let n = i
+          n.title = i.menuName
               if(i.childMenus){
                 n.children = []
                 traverse(i.childMenus, n.children)
@@ -155,30 +171,26 @@
     },
     mounted() {
       this.getMenus();
-/*      console.log(this.$router.options.routes);
-      let routes = this.$router.options.routes;
-      var result = [];    // 存放结果
-      (function traverse(node, result) {
-        node.forEach(i => {
-          if(i.meta.hideInMenu){  return; }
-          let n = {
-                title: i.meta.title,
-            }
-            if(i.children){
-              n.children = []
-              traverse(i.children, n.children)
-            }
-            
-            result.push(n);
-        })
-      })(routes, result);
-      this.menutree = result
-      console.log(result);*/
-      
     }
   }
   
 </script>
 
 <style>
+.dropdown{
+  border: 1px solid #d1dbe5;
+  padding: 5px 10px;
+  width: 200px;
+  border-radius: 5px;
+  color: inherit;
+}
+a:hover{
+  color: inherit;
+}
+.el-tree {
+    cursor: default;
+    background: #fff;
+    border: 1px solid #d1dbe5;
+    padding: 10px 20px;
+}
 </style>

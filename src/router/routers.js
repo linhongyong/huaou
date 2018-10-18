@@ -206,7 +206,7 @@ export default [
         name: 'menu_list',
         meta: {
           icon: 'ios-list-box',
-          title: '菜单管理'
+          title: '资源管理'
         },
         component: () => import('@/view/menu/menu.vue')
       },

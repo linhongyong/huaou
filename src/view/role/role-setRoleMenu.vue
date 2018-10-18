@@ -1,14 +1,13 @@
 <template>
-  <div>
+  <div style="min-height: 500px;">
     <Row>
       <Col span="12">
         <Tree :data="menutree" show-checkbox @on-check-change="updateSelectedMenu"></Tree>
       </Col>
     </Row>
-    <div id="">
+    <div id="" style="text-align: right; position: absolute; bottom: 20px; right: 20px;">
     	 <Button type="primary" @click="handleSubmit()">保存</Button>
-      <Button style="margin-left: 8px"  @click="handleReset()">取消</Button>
-
+       <Button style="margin-left: 8px"  @click="handleReset()">取消</Button>
     </div>
      
   </div>

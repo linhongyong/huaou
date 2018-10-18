@@ -1,189 +1,157 @@
 <template>
-  <Form :model="obj" ref="obj" :rules="ruleCustom">
-    <Row  type="flex"  justify="center">
-      <Col span="12">
-        <FormItem label="楼号" prop="buildingNum">
-          <Input v-model="obj.buildingNum" placeholder=""></Input>
-        </FormItem>
-      </Col>
-    </Row>
-    <Row  type="flex"  justify="space-around" class="border">
-      <Col span="11">
-         <FormItem label="选择模板" prop="currentIndex">
-            <Select @on-change="onRoleChange">
-              <Option v-bind:value="index" v-for="(item, index) in firstList" :key="index">{{ item.templateName }}</Option>
+  <Form >
+    <Row  type="flex"  justify="space-around">
+      <Col span="3">
+        <FormItem label="选择楼栋" prop="building">
+            <Select @on-change="onSelectedChange">
+              <Option v-bind:value="'buildingId-'+item.id+'-'+item.buildingCode" v-for="(item, index) in buildList" :key="index">{{ item.buildingCode }}</Option>
             </Select>
         </FormItem>
       </Col>
-      <Col span="11">
-        <FormItem label="搜输入模板范围（如：1-100，102,103）">
-          <Input @on-change="searchUser"  v-model="obj.pileRange"></Input>
+      <Col span="4">
+         <FormItem label="选择旁站类型" prop="currentIndex">
+            <Select  @on-change="onSelectedChange">
+              <Option value="type-0001-机械灌注桩" label="机械灌注桩"></Option>
+              <Option value="type-0002-水泥搅拌桩" label="水泥搅拌桩"></Option>
+              <Option value="type-0003-预应力搅拌桩" label="预应力搅拌桩"></Option>
+            </Select>
         </FormItem>
       </Col>
+      <Col span="4">
+         <FormItem label="选择模板" prop="currentIndex">
+            <Select  @on-change="onSelectedChange">
+              <Option v-bind:value="'templateId-'+item.id+'-'+item.templateName" v-for="(item, index) in tmplList" :key="index">{{ item.templateName }}</Option>
+            </Select>
+        </FormItem>
+      </Col>
+      <Col span="6">
+        <FormItem label="模板范围 如：1-100，102,103">
+          <Input   v-model="bodyObj.pileRange"></Input>
+        </FormItem>
+      </Col>
+      <Col>
+        <FormItem label="              ">
+          <Button type="primary" @click="handleSubmit()">保存</Button>
+        </FormItem>
+        
+      </Col>
     </Row>
-    <div class="" style="min-height: 150px;">
-      <Row class="menber-row"  type="flex"  v-for="(item,index) in roleTypeList" :key="index">
-        	<span class="" style="font-size: 18px;">{{ item }} : </span>
-          <span>
-            <span class=""  v-for="(itemU, index) in hooks[item]" style="padding-left:20px; font-size: 18px;" :key="index">
-              {{ itemU.userName }}（{{ itemU.mobile }} ） 
-              <div class="" style="display: inline; color: red; font-size: 12px;cursor: pointer;" :data-index="index" :data-roletype="item" v-on:click="removeRoleUser">删除</div>;
-            </span>
+    <div class="" style="min-height: 300px; padding: 10px 20px;">
+    	<div class="" v-if="labelObj.buildingId && labelObj.type">
+    	  <h3 class="">{{labelObj.buildingId }}号楼，{{labelObj.type }}模板使用情况</h3>
+    	  <div class="between"  style="padding-right: 20px; margin-top: 10px;">
+    	  	<span v-for="item in pangzhanTmplMapList"  style="padding-right: 30px; padding-top: 16px;">
+            <span>{{item.pileCode}}号桩</span> : <span>{{item.templateName}}</span>
           </span>
-      </Row>
+    	  </div>
+    		
+    	</div>
     </div>
     <FormItem style="text-align: right;">
-      <Button type="primary" @click="handleSubmit('obj')">保存</Button>
-      <Button style="margin-left: 8px"  @click="handleReset('obj')">取消</Button>
+      <Button type="primary" @click="handleReset()">确定</Button>
+      <Button style="margin-left: 8px"  @click="handleReset()">取消</Button>
     </FormItem>
   </Form>
   
 </template>
 <script>
 import tools from "_u/tools.js";
-import projectApi from "@/api/project-api";
-import roleApi from "@/api/role-api";
-import userApi from "@/api/user-api";
+import pangzhanTmplApi from "@/api/pangzhan-tmpl-api";
 import jxgzTmplApi from '@/api/jxgz-tmpl-api'
 
 
 export default {
   data() {
-    const validateProjectName = (rule, value, callback) => {
-//    if (value === "") {
-//      callback(new Error("必填"));
-//    }
-      callback();
-    };
-    const validateCurrentRoleIndex = (rule, value, callback) => {
-//    if (value === -1) {
-//      callback(new Error("必填"));
-//    }
-      callback();
-    };
     return {
-      ruleCustom: {
-        projectName: [{ validator: validateProjectName, trigger: "blur" }],
-        currentIndex: [
-          { validator: validateCurrentRoleIndex, trigger: "blur" }
-        ]
-      },
-      obj: {
-        buildingNum: null,
-        templateId: null,
+      tmplList:[],
+      userList: [],
+      pangzhanTmplMapList:[],
+      currentIndex: -1,
+      searchKey: "",
+      bodyObj:{
         pileRange: null
       },
-      hooks: [],
-      roleTypeList: [], //已选角色
-      firstList: [],
-      userList: [],
-      currentIndex: -1,
-      searchKey: ""
+      labelObj:{}
     };
   },
   props: {
-    propsObj: {
+    obj: {
       type: Object,
       default () {
-        return {
-          
-        }
+        return {}
+      }
+    },
+    buildList:{
+      type:Array,
+      default () {
+        return []
       }
     }
   },
-  methods: {
-    removeRoleUser: function(e) {
-      console.log(e);
-      this.hooks[e.target.dataset.roletype].splice(e.target.dataset.index, 1);
-      console.log(this.hooks[e.target.dataset.roletype]);
-      //    this.$set(this.hooks, e.target.dataset.roletype, this.hooks[e.target.dataset.roletype])
-      this.hooks = Object.assign({}, this.hooks);
-      this.roleTypeList = [];
-      for (var prop in this.hooks) {
-        if (this.hooks[prop].length == 0) {
-          delete this.hooks[prop];
-        } else {
-          this.roleTypeList.push(prop);
-        }
+  methods: { 
+    onSelectedChange: function(keyValueStr){
+      let keyValueArray = keyValueStr.split('-');
+      this.bodyObj[keyValueArray[0]] = keyValueArray[1];
+      this.labelObj[keyValueArray[0]] = keyValueArray[2];
+      
+      if(keyValueArray[0] == 'type'){
+        this.getTmplListByTmplType()
       }
-      console.log(this.roleTypeList);
-      console.log(this.hooks[e.target.dataset.roletype]);
-      console.log(this.hooks);
+      if(keyValueArray[0] == 'buildingId' || keyValueArray[0] == 'type'){
+        this.getPangzhanTmplInfo();
+      }
+      console.log(this.bodyObj)
     },
-    selectUser: function(index) {
-      console.log(index);
-
-      if (this.currentIndex == -1) {
-        this.$Message.error("请选择角色!");
+    getPangzhanTmplInfo: function(){
+      let temp = {
+        projectId: this.obj.id,
+        buildingId: this.bodyObj.buildingId,
+        type: this.bodyObj.type,
+//      pageIndex: 1,
+//      pageSize: 100,
+      }
+      if(!(temp.projectId && temp.buildingId && temp.type)){ return; }
+      
+      pangzhanTmplApi.getPangzhanTmplInfo(temp)
+      .then(data => {
+        console.log(data)
+        this.pangzhanTmplMapList = data.list;
+      })
+    },
+    getTmplListByTmplType: function(){
+      jxgzTmplApi.getJxgzTmplList({pageIndex: 1, pageSize: 100}, (data) => {
+        console.log(data)
+        this.tmplList = data.result.list
+      })
+    },
+    handleSubmit() {
+      this.bodyObj.projectId = this.obj.id;
+      if(!(this.bodyObj.buildingId && this.bodyObj.pileRange && this.bodyObj.type && this.bodyObj.templateId && this.bodyObj.projectId) ){
+        this.$Message.error("请填写完整信息");
         return;
       }
-      this.obj.userRoles.push({
-        userId: this.userList[index].id,
-        roleId: this.firstList[this.currentIndex].id
-      });
-
-      console.log(
-        this.firstList[this.currentIndex].roleName,
-        this.userList[index].userName
-      );
-      this.hooks = tools.addhooks(
-        this.hooks,
-        this.firstList[this.currentIndex].roleName,
-        this.userList[index]
-      );
-      this.roleTypeList = [];
-      for (var prop in this.hooks) {
-        this.roleTypeList.push(prop);
-      }
-      this.userList = [];
-      this.searchKey = "";
-      console.log(this.hooks);
-      console.log(this.obj.userRoles);
-    },
-    onRoleChange: function(index) {
-      console.log(index);
-      this.obj.templateId = this.firstList[index].id;
-    },
-    searchUser: function(e) {
-      console.log(e.data);
-      userApi.searchUsers({ searchStr: e.data }, data => {
-        console.log(data.result);
-        if (data.result.length > 3) {
-          data.result.length = 3;
-        }
-        this.userList = data.result;
-      });
-    },
-    handleSubmit(obj) {
-      this.obj.projectId = this.propsObj.projectId;
-      console.log(this.obj);
-      let that = this;
-      projectApi.setTmplOrange(this.obj, (data) => {
-        this.$Message.success({
-          content: '修改成功！',
-          onClose: () => {
-             this.$emit('setModalClose', true)
-          }
-        });
+      pangzhanTmplApi.setTmplusedRange(this.bodyObj)
+      .then(data => {
+        console.log(data);
+        this.$Message.success("操作成功");
+        this.getPangzhanTmplInfo();
+        this.bodyObj.pileRange = null;
+      })
+      .catch(err =>{
+        console.log(err)
+        this.$Message.error(err.message);
       })
 
     },
     handleReset(obj) {
-      this.$refs[obj].resetFields();
-      this.hooks = [];
-      this.roleTypeList = [];
-      this.$emit("setModalClose", true);
+      this.bodyObj.pileRange = null;
+      this.$emit('modalAction', {type:"close", name:"isPangzhanTmplSetShow"})
     },
     getList(role) {
-      jxgzTmplApi.getJxgzTmplList({pageIndex: 1, pageSize: 100}, (data) => {
-        console.log(data)
-        this.firstList = data.result.list
-        this.total =  data.result.total
-      })
+      
     }
   },
   mounted() {
-    this.getList();
   }
 };
 </script>

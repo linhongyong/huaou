@@ -1,7 +1,7 @@
 <template>
   <div class="">
     <Card>
-      <Table width="100%" border :columns="columns2" :data="userList"></Table>
+      <Table width="100%" border :columns="columns2" :data="joinedList"></Table>
       <div style="padding: 18px 10px 18px;text-align: right;clear: both;">
         <Page :total="total" show-total class="float-l" show-elevator show-sizer @on-change="pageChange" @on-page-size-change="pageSizeChange" :current="pageIndex"/>
         <Button style="" type="primary" shape="circle" icon="md-add" v-on:click="addModal.show = true"></Button>
@@ -17,14 +17,14 @@
         <Add @addModalClose="addModalClose"></Add>
       </div>
     </Modal>
-    <Modal v-model="setModal.show" title="设置模板范围" :footer-hide="true" width="60%">
+    <Modal v-model="isPangzhanTmplSetShow" :title="'设置'+'旁站模板'" :footer-hide="true" width="60%">
       <div id="" style="width:80%, margin:0 auto">
-        <TmplSet @setModalClose="setModalClose" :propsObj="propsObj"></TmplSet>
+        <TmplSet @modalAction="onModalAction" :obj="obj" :buildList="buildList"></TmplSet>
       </div>
     </Modal>
     <Modal v-model="isProjectStaffsRoleSetShow" title="设置项目人员和角色" :footer-hide="true" width="60%">
       <div id="" style="width:80%, margin:0 auto">
-        <setRole @modalAction="onModalAction" :obj="project"></setRole>
+        <setRole @modalAction="onModalAction" :obj="obj"></setRole>
       </div>
     </Modal>
     <modalBuilding v-model="modal_building.show" :data="project"></modalBuilding>
@@ -51,8 +51,9 @@ export default {
   },
   data() {
     return {
+      isPangzhanTmplSetShow: false,
       isProjectStaffsRoleSetShow: false,
-      propsObj: {},
+      obj: {},
       editModal: {
         show: false
       },
@@ -109,17 +110,16 @@ export default {
                   },
                   on: {
                     click: e => {
-                      this.propsObj.projectId = this.userList[
-                        params.index
-                      ].projectId;
-                      this.setModal.show = true;
+                      this.obj = Object.assign({}, this.obj, this.joinedList[params.index]) 
+                      this.getBuildList(this.obj.id);
+                      this.isPangzhanTmplSetShow = true;
                     }
                   },
                   style: {
                     marginRight: "5px"
                   }
                 },
-                "设置模板范围"
+                "设置旁站模板"
               ),
               h(
                 "Button",
@@ -130,32 +130,27 @@ export default {
                   },
                   on: {
                     click: e => {
-                      projectApi.getProjectDetail(
-                        { id: this.userList[params.index].id },
+                      projectApi.getProjectDetail( { id: this.joinedList[params.index].id },
                         data => {
                           this.hooks = {};
                           this.roleTypeList = [];
                           console.log(data);
-                          for (
-                            let i = 0;
-                            i < data.result.userRoleDTOS.length;
-                            i++
-                          ) {
+                          for (let i = 0; i < data.result.userRoleDTOS.length; i++) {
+                            // userRoleDTOS 保存着项目人员信息
                             this.addhooks(
                               data.result.userRoleDTOS[i].roleName,
                               data.result.userRoleDTOS[i]
                             );
                           }
-                          for (var prop in this.hooks) {
+                          for (var prop in this.hooks) {//获得角色类别数组
                             this.roleTypeList.push(prop);
                           }
                           data.result.hooks = this.hooks;
                           data.result.roleTypeList = this.roleTypeList;
-                          data.result.projectName =
-                            data.result.project.projectName;
-                          this.project = data.result;
+                          data.result.projectName = data.result.project.projectName;
+                          this.obj = data.result;
                           this.isProjectStaffsRoleSetShow = true;
-                          console.log(this.project);
+                          console.log(this.obj);
                         },
                         data => {
                           this.$Message.error(data.message);
@@ -200,9 +195,9 @@ export default {
                     "on-ok": () => {
                       console.warn(params.index);
                       projectApi.deleteProject(
-                        { id: this.userList[params.index].id },
+                        { id: this.joinedList[params.index].id },
                         () => {
-                          this.userList.splice(params.index, 1);
+                          this.joinedList.splice(params.index, 1);
                           this.total = this.total - 1;
                           this.$Message.success("删除成功！");
                         }
@@ -227,7 +222,8 @@ export default {
           }
         }
       ],
-      userList: [],
+      joinedList: [],
+      buildList: [],
       pageIndex: 1,
       pageSize: 10,
       total: 0
@@ -243,10 +239,9 @@ export default {
       }else{
         console.error("不存在这种模态框行为")
       }
-      this.getProjects2();
+      this.getJoinedList();
     },
     addhooks: function(type, hook) {
-      //
       var hooks = this.hooks[type];
       if (!hooks) {
         hooks = [];
@@ -256,35 +251,40 @@ export default {
     },
     addModalClose() {
       this.addModal.show = false;
-      this.getProjects2();
-    },
-    setModalClose() {
-      this.setModal.show = false;
-      this.getProjects2();
+      this.getJoinedList();
     },
     editModalClose() {
       this.hooks = [];
       this.roleTypeList = [];
       this.editModal.show = false;
-      this.getProjects2();
+      this.getJoinedList();
     },
-    //  pageIndex: this.pageSize*(this.pageIndex - 1)+1, pageSize: this.pageSize
-    getProjects2() {
-      projectApi.getProjects2({}, data => {
+    getJoinedList() {//获取用户参与的所有项目
+      projectApi.getJoinedList({}, data => {
         console.log(data);
-        this.userList = data.result;
+        this.joinedList = data.result;
         this.total = data.result.length;
       });
+    },
+    getBuildList(id) { //通过ProjectId获得楼栋信息
+      projectApi
+        .getBuildList({ projectId: id })
+        .then(data => {
+          this.buildList = data;
+        })
+        .catch(err => {
+          this.$Message.error("获取楼栋数据失败");
+        });
     },
     pageChange(pageIndex) {
       console.log(pageIndex);
       this.pageIndex = pageIndex;
-      this.getProjects2();
+      this.getJoinedList();
     },
     pageSizeChange(pageSize) {
       console.log(pageSize);
       this.pageSize = parseInt(pageSize);
-      this.getProjects2();
+      this.getJoinedList();
     },
     onCancelEditModal() {
       this.hooks = [];
@@ -292,11 +292,11 @@ export default {
     },
     setRoleModalClose() {
       this.setRoleModal.show = false;
-      this.propsObj = {};
+      this.obj = {};
     }
   },
   mounted() {
-    this.getProjects2();
+    this.getJoinedList();
   }
 };
 </script>

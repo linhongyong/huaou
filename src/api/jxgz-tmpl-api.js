@@ -1,4 +1,5 @@
-import axios from '@/libs/api.request'
+import axios from '@/libs/api.request';
+import httpClient from './httpClient';
 
 /**
  * 添加
