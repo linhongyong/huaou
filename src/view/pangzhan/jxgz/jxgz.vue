@@ -46,7 +46,7 @@ export default {
     Tables,
     Edit,
     Detail,
-    modalExport,
+    modalExport
   },
   data() {
     return {
@@ -118,12 +118,10 @@ export default {
                   on: {
                     "on-ok": () => {
                       console.log(params);
-                      jxgzApi
-                        .deleteJxZkGzzPzjl(this.tableData[params.index].id)
-                        .then(res => {
-                          this.tableData.splice(params.index, 1);
-                          this.$Message.success("删除成功！");
-                        });
+                      jxgzApi.deleteJxZkGzzPzjl(this.tableData[params.index].id).then(res => {
+                        this.tableData.splice(params.index, 1);
+                        this.$Message.success("删除成功！");
+                      });
                     }
                   }
                 },
@@ -170,9 +168,7 @@ export default {
   },
   computed: {
     word() {
-      return `当前项目：${this.ROLE.projectName}，当前楼栋：${
-        this.ROLE.buildingName
-      }，当前水泥总量：${this.SoilVolume}`;
+      return `当前项目：${this.ROLE.projectName}，当前楼栋：${this.ROLE.buildingName}，当前水泥总量：${this.SoilVolume}`;
     }
   },
   methods: {
@@ -205,23 +201,17 @@ export default {
         pileNum: obj.pile
       };
       jxgzApi.getJxgzByCondition(tempobj).then(res => {
-        console.log(
-          "--------------------------------------------------------------"
-        );
+        console.log("--------------------------------------------------------------");
         console.log(res.data);
         if (!res.data.result.actualDeepImg) {
           res.data.result.actualDeepImg = [];
         } else {
-          res.data.result.actualDeepImg = JSON.parse(
-            res.data.result.actualDeepImg
-          );
+          res.data.result.actualDeepImg = JSON.parse(res.data.result.actualDeepImg);
         }
         if (!res.data.result.barCageCountImg) {
           res.data.result.barCageCountImg = [];
         } else {
-          res.data.result.barCageCountImg = JSON.parse(
-            res.data.result.barCageCountImg
-          );
+          res.data.result.barCageCountImg = JSON.parse(res.data.result.barCageCountImg);
         }
         if (!res.data.result.deptRockUrl) {
           res.data.result.deptRockUrl = [];
@@ -235,12 +225,13 @@ export default {
       });
     },
     getList() {
-      console.log(this.ROLE);
       jxgzApi.getJxZkGzzPzjlList({ data: this.ROLE.projectId }).then(res => {
         console.log(res);
         this.tableData = res.data.result;
         this.total = res.data.result.length;
       });
+    },
+    buildingChange() {
       this.getSoilVolume();
     },
     pageChange(pageIndex) {
@@ -260,7 +251,7 @@ export default {
           buildingId: this.ROLE.buildingId
         })
         .then(data => {
-          this.SoilVolume = data;
+          this.SoilVolume = data || 0;
         })
         .catch(() => {
           this.$Message.error("获得水泥总数失败");

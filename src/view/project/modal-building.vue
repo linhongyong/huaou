@@ -69,11 +69,7 @@ export default {
                   },
                   on: {
                     click: e => {
-                      const {
-                        buildingName,
-                        buildingCode,
-                        pileNum
-                      } = params.row;
+                      const { buildingName, buildingCode, pileNum } = params.row;
                       this.buildData = Object.assign({}, params.row);
                       this.buttonType = 1;
                     }
@@ -110,10 +106,9 @@ export default {
       this.$emit("input", val);
     },
     data(val) {
-      if(this.data.isModalBuildingShow){
+      if (this.data.isModalBuildingShow) {
         this.getBuildList();
       }
-      
     }
   },
   methods: {

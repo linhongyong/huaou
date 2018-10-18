@@ -1,26 +1,34 @@
 import {
-  mapState
+  mapState,
+  mapGetters
 } from 'vuex';
 
 export default {
   computed: {
     ...mapState({
-      ROLE: (state) => state.user.role,
-      PROJECT_ID: (state) => state.user.role.projectId,
+      PROJECT: (state) => state.user.project,
+      BUILDING: (state) => state.user.building
+    }),
+    ...mapGetters({
+      ROLE: 'role'
     })
   },
   watch: {
-    ROLE: {
+    PROJECT: {
       deep: true,
-      handler() {
+      handler(project) {
         this.getList();
       }
     },
-    PROJECT_ID() {
-      this.getList();
+    BUILDING: {
+      deep: true,
+      handler(building) {
+        this.buildingChange();
+      }
     }
   },
   created() {
-    if (this.ROLE.projectId) this.getList();
+    if (this.PROJECT.id) this.getList();
+    if (this.BUILDING.id) this.buildingChange();
   }
 };

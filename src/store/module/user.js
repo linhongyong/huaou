@@ -15,12 +15,24 @@ export default {
     avatorImgPath: '',
     token: getToken(),
     access: '',
-    role: {
-      projectId: '',
-      projectName: '',
-      buildingId: '',
-      buildingName: ''
+
+    project: {
+      id: '',
+      name: '',
+    },
+    building: {
+      id: '',
+      name: '',
     }
+
+  },
+  getters: {
+    role: (state) => ({
+      projectName: state.project.name,
+      projectId: state.project.id,
+      buildingName: state.building.name,
+      buildingId: state.building.id,
+    })
   },
   mutations: {
     setAvator(state, avatorPath) {
@@ -39,9 +51,20 @@ export default {
       state.token = token;
       setToken(token);
     },
-    setRole(state, role) {
-      state.role = Object.assign(state.role, role);
-    }
+    setProject(state, {
+      projectId,
+      projectName
+    }) {
+      state.project.id = Number(projectId);
+      state.project.name = projectName;
+    },
+    setBuilding(state, {
+      buildingId,
+      buildingName
+    }) {
+      state.building.id = Number(buildingId);
+      state.building.name = buildingName;
+    },
   },
   actions: {
     // 登录

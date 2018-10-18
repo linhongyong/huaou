@@ -2,8 +2,6 @@
 // (runtime-only or standalone) has been set in webpack.base.conf with an alias.
 import Vue from 'vue'
 import App from './App'
-
-
 import router from './router'
 import store from './store'
 import iView from 'iview'
@@ -24,10 +22,7 @@ import tools from "_u/tools.js";
 
 Vue.use(iView, {
   i18n: (key, value) => i18n.t(key, value)
-})
-
-
-
+})  
 Vue.config.productionTip = false
 /**
  * @description 全局注册应用配置
