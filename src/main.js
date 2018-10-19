@@ -15,6 +15,8 @@ import '@/assets/icons/iconfont.css'
 import '@/assets/styles/display.css'
 
 import tools from "_u/tools.js";
+import math from "_u/math.js";
+
 // import '@/mock'
 // 实际打包时应该不引入mock
 /* eslint-disable */

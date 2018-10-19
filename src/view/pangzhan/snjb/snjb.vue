@@ -2,7 +2,7 @@
   <div class="">
     <Card>
       <Table width="100%" border :columns="columns2" :data="snjbList"></Table>
-      <div style="padding: 18px 10px 18px;text-align: right;clear: both;">
+      <div style="padding: 18px 10px 40px;text-align: right;clear: both;">
         <Page :total="total" show-total class="float-l" show-elevator show-sizer @on-change="pageChange" @on-page-size-change="pageSizeChange" :current="pageIndex"/>
         <!--<Button style="" type="primary" shape="circle" icon="md-add" v-on:click="addModal.show = true"></Button>-->
       </div>
@@ -190,28 +190,14 @@ export default {
     },
     // 获取列表的方法名统一改为getList，为了在选择工程的时候 刷新页面
     getList() {
-      console.log(this.ROLE);
-      snjbApi.getSnjbListByProjectId(
-        {
-//        pageIndex: this.pageSize * (this.pageIndex - 1) + 1,
-//        pageSize: this.pageSize,
-          data: this.ROLE.projectId-0
-        },
-        data => {
-          console.log(data);
-          
-          this.total = data.result.length;
-          if (!data.result.tryDataUrl) {
-            data.result.tryDataUrl = [];
-          } else {
-              data.result.tryDataUrl = JSON.parse(
-              data.result.tryDataUrl
-            );
-          }
-
-          this.snjbList = data.result;
-        }
-      );
+      snjbApi.getListByCondition({ projectId: this.ROLE.projectId, buildingId: this.ROLE.buildingId}).then(data => {
+        console.log(data);
+        this.snjbList = data;
+        this.total = data.length;
+      });
+    },
+    buildingChange() {
+      this.getList();
     },
     pageChange(pageIndex) {
       console.log(pageIndex);

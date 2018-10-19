@@ -39,7 +39,7 @@ import TmplSet from "./tmpl-set.vue";
 import setRole from "./setProjectRole.vue";
 import projectApi from "@/api/project-api";
 import modalBuilding from "./modal-building";
-
+import userApi from '@/api/user-api'
 export default {
   components: {
     Tables,
@@ -304,6 +304,13 @@ export default {
   },
   mounted() {
     this.getJoinedList();
+    userApi.getMenusOwn()
+    .then( data => {
+      console.log(data);
+      console.log(this.$router.options.routes);
+      this.$router.options.routes[2].meta.hideInMenu = true;
+      console.log(this.$router.options.routes);
+    })
   }
 };
 </script>

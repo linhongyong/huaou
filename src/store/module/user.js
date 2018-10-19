@@ -7,7 +7,7 @@ import {
   setToken,
   getToken
 } from '@/libs/util';
-
+import userApi from '@/api/user-api'
 export default {
   state: {
     userName: '',
@@ -78,20 +78,22 @@ export default {
     }) {
       userName = userName.trim();
       return new Promise((resolve, reject) => {
-        // commit('setToken', 'super_admin')
-        // resolve()
-        login({
-            userName,
-            password
+
+        login({userName, password})
+        .then((data) => {
+          commit('setToken', data.result);
+          resolve();
+        })
+        .then( data => {
+          userApi.getMenusOwn()
+          .then( data => {
+            console.log(data);
+            console.log(this.$router);
           })
-          .then((data) => {
-            // const data = res.data
-            commit('setToken', data.result);
-            resolve();
-          })
-          .catch((err) => {
-            reject(err);
-          });
+        })
+        .catch((err) => {
+          reject(err);
+        });
       });
     },
     // 退出登录

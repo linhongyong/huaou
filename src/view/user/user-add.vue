@@ -82,7 +82,7 @@ export default {
       let that = this
       this.$refs[obj].validate((valid) => {
         if (valid) {
-          userApi.addUser({user:this.obj, userRoles:null }, (data) => {
+          userApi.addUser({user:this.obj, userRoles:[] }, (data) => {
             console.log(data); 
             this.$refs[obj].resetFields();
             this.$Message.success({

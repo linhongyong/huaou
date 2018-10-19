@@ -1,6 +1,10 @@
 import axios from '@/libs/api.request'
-
+import httpClient from './httpClient';
 let user = new Object();
+
+//获得用户菜单
+user.getMenusOwn = (data) => httpClient.get({ url: '/menu/getMenusOwn', data });
+
 user.login = ({ userName, password }) => {
   const data = {
     userName,

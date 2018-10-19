@@ -131,7 +131,7 @@
       <div class="padding-v-5 padding-left-40">
         <div class="flex">
              <div class="flex-3">灌注开始时间 : <Input v-model="obj.perfusionStartTime" placeholder="" clearable :maxlength="200" style="width: 200px" /></div>
-             <div class="flex-3">灌注结束时间 : <Input v-model="obj.perfusionEndTime" placeholder="" clearable :maxlength="200" style="width: 200px" /></div>
+             <!--<div class="flex-3">灌注结束时间 : <Input v-model="obj.perfusionEndTime" placeholder="" clearable :maxlength="200" style="width: 200px" /></div>-->
           </div>
        </div>
        <div class="padding-v-5 padding-left-40">
@@ -173,11 +173,24 @@
        </div>
     </div>
     <div class="flex">
+      <span class="padding-left-40">孔深照片：</span>
+      <img  v-for="(item, index) in obj.actualDeepImg" v-bind:key="index" :src="item" width="100" height="100"/>
+      
+    </div>
+    <div class="flex">
+      <span class="padding-left-40">钢筋笼照片组：</span>
+      <img  v-for="(item, index) in obj.barCageCountImg" v-bind:key="index" :src="item" width="100" height="100"/>
+    </div>
+    <div class="flex">
+      <span class="padding-left-40">岩样照片：</span>
+      <img  v-for="(item, index) in obj.deptRockUrl" v-bind:key="index" :src="item" width="100" height="100"/>
+    </div>
+    <!--<div class="flex">
             孔深照片：
       <img :src="obj.actualDeepImg[0]" v-if="obj.actualDeepImg.length > 0" width="100" height="100"/>
       <span class="padding-left-40">钢筋笼照片组：</span>
       <img  v-for="(item, index) in obj.barCageCountImg" v-bind:key="item" :src="item" width="100" height="100" v-if="index<5"/>
-    </div>
+    </div>-->
     <div class="" style="margin-top: 30px;">
       <div class="" style="min-height: 100px;">
          发现问题及处理情况：
@@ -226,7 +239,8 @@ export default {
   methods: {
       handleSubmit () {
         this.obj.mainBar = `${this.obj.mainBarNum}φ${this.obj.mainBarType}`
-        jxgzApi.updateJxZkGzzPzjl(this.obj).then(res => {
+        let data = this.obj;
+        jxgzApi.updateJxZkGzzPzjl(data).then(res => {
         console.log(res)
         if (res.data.code === 'Success') {
           this.$Message.success({

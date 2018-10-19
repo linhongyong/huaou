@@ -39,6 +39,7 @@ import modalExport from "./modal-export";
 
 import jxgzApi from "@/api/jxgz-api";
 import MIXIN_ROLE from "@/mixin/ROLE";
+import math from "_u/math.js";
 export default {
   name: "tables_page",
   mixins: [MIXIN_ROLE],
@@ -150,7 +151,8 @@ export default {
       },
       timeToSubmit: false,
       formItem: {
-        actualDeepImg: []
+        actualDeepImg: [],
+        problemContent: null,
       },
       total: 0,
       pageSize: 10,
@@ -178,21 +180,17 @@ export default {
     addModalClose() {
       console.log("handleModalClose");
       this.addModal.show = false;
-      jxgzApi.getJxZkGzzPzjlList().then(res => {
-        this.tableData = res.data.result.list;
-      });
+      this.getList();
     },
     editModalClose() {
       console.log("editModalClose");
       this.editModal.show = false;
-      jxgzApi.getJxZkGzzPzjlList().then(res => {
-        this.tableData = res.data.result.list;
-      });
+      this.getList();
     },
     getDetai(id, okfn) {
       jxgzApi.getDetailById({id}) 
       .then( data => {
-        console.log(data);
+        
         if (!data.actualDeepImg) {
           data.actualDeepImg = [];
         } else {
@@ -208,9 +206,12 @@ export default {
         } else {
           data.deptRockUrl = JSON.parse(data.deptRockUrl);
         }
+        this.formItem = Object.assign({},this.formItem,data);
         this.formItem.mainBarNum = data.mainBar && data.mainBar.split("φ")[0]
         this.formItem.mainBarType= data.mainBar && data.mainBar.split("φ")[1]
-        this.formItem = data;
+        this.formItem.fillingCoefficient = math.accDiv(data.actualVolume, data.theoryVolume, 2)
+        
+        console.log(this.formItem);
         okfn && okfn()
       })
 //    jxgzApi.getJxgzByCondition(tempobj).then(res => {

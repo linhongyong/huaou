@@ -1,5 +1,5 @@
 import axios from '@/libs/api.request'
-
+import httpClient from '@/api/httpClient';
 /**
  * 添加
  */
@@ -36,6 +36,10 @@ obj.getSnjbById = (data, fnOk, fnError) => {
     }
   })
 }
+/**
+ * 通过projectId、BuildingId获得旁站列表
+ */
+obj.getListByCondition = (data) => httpClient.post({ url: `/snJbjPzjl/getListByCondition`, data})
 obj.getSnjbList = (data, fnOk, fnError) => {
   return axios.request({
     url: `snJbjPzjl/list?pageIndex=${data.pageIndex}&pageSize=${data.pageSize}`,

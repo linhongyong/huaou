@@ -16,7 +16,7 @@
     <div class="flex  padding-left-40">
     <div class=" padding-v-5">一、机械设备：</div>
       <div class="flex">
-        <div class=" padding-v-5">钻机型号{{ obj.drillModel }}</div> <div class="padding-v-5">工作状态{{ obj.workState }}</div>
+        <div class=" padding-v-5">钻机型号：{{ obj.drillModel }}</div> <div class="padding-v-5 padding-left-40">工作状态：{{ obj.workState }}</div>
       </div>
     </div>
     <div class="padding-left-40">
@@ -49,7 +49,7 @@
        <div class="padding-v-5 padding-left-40">
            <div class="flex">
              <div class="flex-3">设计桩径  : {{ obj.pileDiameter }}mm</div>
-            <div class="flex-3">设计桩长 : {{ obj.pileLength }}m</div>
+            <div class="flex-3">设计桩长 : {{ obj.designPileLength }}m</div>
              <div class="flex-3">平台标高/护筒标高 :{{ obj.platformElevation }}m</div>
              <div class="flex-3">桩顶标高 : {{ obj.pileTopHeight }}m</div>
            </div>
@@ -59,7 +59,7 @@
              <div class="flex-3">开孔时间 : {{ obj.startTime }}</div>
              <div class="flex-3">终孔时间 : {{ obj.endTime }}</div>
              <div class="flex-3">实际孔深 : {{ obj.actualDeep }}</div>
-             <div class="flex-3">有效桩长  : {{ obj.validPileLength }}</div>
+             <!--<div class="flex-3">有效桩长  : {{ obj.validPileLength }}</div>-->
         </div>
        </div>
      </div>
@@ -82,7 +82,7 @@
              <div class="flex-3">砼实灌方量  : {{ obj.actualVolume }}m³</div>
         </div>
         <div class="padding-v-5 flex">
-             <div class="flex-3">充盈系数 : {{ obj.fillingCoefficient }} m³ </div>
+             <div class="flex-3">充盈系数 : {{ obj.fillingCoefficient }}  </div>
             <div class="flex-3">试块制作组数  : {{ obj.sampleMaking }}组</div>
             <div class="flex-3"></div>
             <div class="flex-3"></div>
