@@ -59,6 +59,7 @@
         this.$emit("input", val);
       },
       roleData(val) {
+        console.log("坚挺到roledata变化")
         this.getBuildList();
       }
     },

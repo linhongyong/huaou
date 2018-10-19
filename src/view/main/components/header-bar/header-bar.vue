@@ -84,17 +84,18 @@ export default {
     },
     getBuildList(projectId) {
       apiProject.getBuildList({ projectId }).then(data => {
-        this.buildList = data.map(({ buildingName, id }) => ({
+        this.buildList = data.map(({ buildingName, id, buildingCode }) => ({
           label: buildingName,
           value: id,
           buildingId: id,
-          buildingName
+          buildingName,
+          buildingCode
         }));
         if (this.buildList.length > 0) {
-          const { buildingId, buildingName } = this.buildList[0];
+          const { buildingId, buildingName, buildingCode } = this.buildList[0];
           this.buildingId = buildingId;
           // 提交mutation
-          this.setBuilding({ buildingId, buildingName });
+          this.setBuilding({ buildingId, buildingName, buildingCode });
         }
       });
     },

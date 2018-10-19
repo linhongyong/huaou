@@ -60,10 +60,12 @@ export default {
     },
     setBuilding(state, {
       buildingId,
-      buildingName
+      buildingName,
+      buildingCode
     }) {
       state.building.id = Number(buildingId);
       state.building.name = buildingName;
+      state.building.buildingCode = buildingCode;
     },
   },
   actions: {

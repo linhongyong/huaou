@@ -4,13 +4,14 @@
       <input class="btn" type="submit" value="导出word" style=""/>
     </form>
     <div class="flex" >
-      <div class="flex-6 padding-v-5">当日气候：{{ obj.weather }}</div><div class="flex-6 padding-v-5">施工单位：{{ obj.buildCompany }}</div>
+      <div class="flex-6 padding-v-5">当日气候：{{ obj.weather }}</div>
+      <!--<div class="flex-6 padding-v-5">施工单位：{{ obj.buildCompany }}</div>-->
     </div>
-    <div class="flex padding-v-5">旁站的部位或工序：{{ obj.building }}楼 {{ obj.pile }}栋</div>
+    <!--<div class="flex padding-v-5">旁站的部位或工序：{{ obj.building }}楼 {{ obj.pile }}栋</div>-->
 
-    <div class="flex" >
+    <!--<div class="flex" >
       <div class="flex-6 padding-v-5">旁站监理开始时间：{{ obj.startTime }}</div><div class="flex-6 padding-v-5">旁站监理结束时间：{{ obj.endTime }} </div>
-    </div>
+    </div>-->
 
     <div class="flex  padding-left-40">
     <div class=" padding-v-5">一、机械设备：</div>
@@ -24,14 +25,14 @@
         <div class="">
           <div class="">钢筋笼配筋：</div>
           <div class="padding-v-5 flex padding-left-40">
-            <div class="flex-3">主筋 : {{ obj.mainBar }}</div>
-            <div class="flex-3">箍筋 : {{ obj.circularBar }}</div>
-            <div class="flex-3">加强箍 : {{ obj.strongBar }}</div>
+            <div class="flex-3">主筋 : {{ obj.mainBarNum }}φ{{ obj.mainBarType }}</div>
+            <div class="flex-3">箍筋 : φ{{ obj.circularBar }}</div>
+            <div class="flex-3">加强箍 : φ{{ obj.strongBar }}</div>
           </div>
           <div class="padding-v-5 flex padding-left-40">
             <div class="flex-3">钢筋笼数量 : {{ obj.barCageCount }}</div>
-            <div class="flex-3">钢筋长度 : {{ obj.length }}</div>
-            <div class="flex-3">吊筋长度 : {{ obj.suspensionBarLength }}</div>
+            <!--<div class="flex-3">钢筋长度 : {{ obj.length }}</div>-->
+            <!--<div class="flex-3">吊筋长度 : {{ obj.suspensionBarLength }}</div>-->
           </div>
         </div>
         <div class="padding-v-5 flex">
@@ -47,10 +48,10 @@
        <div class="">三、施工情况：</div>
        <div class="padding-v-5 padding-left-40">
            <div class="flex">
-             <div class="flex-3">设计桩径  : {{ obj.pileDiameter }}</div>
-            <div class="flex-3">设计桩长 : {{ obj.pileLength }}</div>
-             <div class="flex-3">地面标高 : {{ obj.groundLevel }}</div>
-             <div class="flex-3">设计桩顶标高 : {{ obj.pileTopHeight }}</div>
+             <div class="flex-3">设计桩径  : {{ obj.pileDiameter }}mm</div>
+            <div class="flex-3">设计桩长 : {{ obj.pileLength }}m</div>
+             <div class="flex-3">平台标高/护筒标高 :{{ obj.platformElevation }}m</div>
+             <div class="flex-3">桩顶标高 : {{ obj.pileTopHeight }}m</div>
            </div>
        </div>
        <div class="padding-v-5 padding-left-40">
@@ -65,7 +66,7 @@
      <div class="  padding-left-40">
        <div class="">四、灌注情况：</div>
        <div class="padding-v-5 padding-left-40">
-         <div class="">砼强度等级 : {{ obj.concreteStrongLevel }}</div>
+         <div class="">砼强度等级 : C{{ obj.concreteStrongLevel }}</div>
        </div>
       <div class="padding-v-5 padding-left-40">
         <div class="flex">
@@ -75,13 +76,13 @@
        </div>
        <div class="padding-v-5 padding-left-40">
         <div class="flex">
-             <div class="flex-3">设计坍落度 : {{ obj.designSlump }}</div>
-             <div class="flex-3">实测坍落度 : {{ obj.actualSlump }}</div>
-             <div class="flex-3">砼理论方量 : {{ obj.theoryVolume }}</div>
-             <div class="flex-3">砼实灌方量  : {{ obj.actualVolume }}</div>
+             <div class="flex-3">设计坍落度 : {{ obj.designSlump }}mm</div>
+             <div class="flex-3">实测坍落度 : {{ obj.actualSlump }}mm</div>
+             <div class="flex-3">砼理论方量 : {{ obj.theoryVolume }}m³</div>
+             <div class="flex-3">砼实灌方量  : {{ obj.actualVolume }}m³</div>
         </div>
         <div class="padding-v-5 flex">
-             <div class="flex-3">充盈系数 : {{ obj.fillingCoefficient }} M3 </div>
+             <div class="flex-3">充盈系数 : {{ obj.fillingCoefficient }} m³ </div>
             <div class="flex-3">试块制作组数  : {{ obj.sampleMaking }}组</div>
             <div class="flex-3"></div>
             <div class="flex-3"></div>

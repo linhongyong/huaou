@@ -16,6 +16,9 @@ obj.addJxZkGzzPzjl = (data) => {
 /**
  * 查询
  */
+
+obj.getDetailById = (data) => httpClient.get({ url: `/jxZkGzzPzjl/getJxZkGzzPzjl`, data})
+
 obj.getJxZkGzzPzjlList = (data) => {
   return axios.request({
     url: '/jxZkGzzPzjl/listProject',
@@ -24,12 +27,14 @@ obj.getJxZkGzzPzjlList = (data) => {
   })
 }
 
-obj.getJxZkGzzPzjl = (id) => {
-  return axios.request({
-    url: `jxZkGzzPzjl/getJxZkGzzPzjl?id=${id}`,
-    method: 'get'
-  })
-}
+//obj.getJxZkGzzPzjl = (id) => {
+//return axios.request({
+//  url: `jxZkGzzPzjl/getJxZkGzzPzjl?id=${id}`,
+//  method: 'get'
+//})
+//}
+obj.getJxZkGzzPzjl = (data) => httpClient.get({ url: `jxZkGzzPzjl/getJxZkGzzPzjl?id=${data.id}`, data})
+
 obj.getJxgzByCondition = (data) => {
   return axios.request({
     url: `/jxZkGzzPzjl/getGzzByCondition`,
@@ -37,6 +42,7 @@ obj.getJxgzByCondition = (data) => {
     data
   })
 }
+obj.getListByCondition = (data) => httpClient.post({ url: `/jxZkGzzPzjl/getListByCondition`, data})
 /**
  * 删除
  */

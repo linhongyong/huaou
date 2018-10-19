@@ -1,9 +1,14 @@
 import axios from '@/libs/api.request'
+import httpClient from './httpClient';
+
 
 /**
  * 添加
  */
 let obj = new Object();
+
+obj.getTmplList = (data) => httpClient.post({ url: `/snJbjPzjlTemplate/list?pageIndex=${data.pageIndex}&pageSize=${data.pageSize}`, data });
+
 obj.addSnjbTmpl = (data, fnOk, fnError) => {
   return axios.request({
     url: 'snJbjPzjlTemplate/addTemplate',

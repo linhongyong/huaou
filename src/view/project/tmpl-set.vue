@@ -58,7 +58,7 @@
 import tools from "_u/tools.js";
 import pangzhanTmplApi from "@/api/pangzhan-tmpl-api";
 import jxgzTmplApi from '@/api/jxgz-tmpl-api'
-
+import snjbTmplApi from '@/api/snjb-tmpl-api'
 
 export default {
   data() {
@@ -93,14 +93,15 @@ export default {
       let keyValueArray = keyValueStr.split('-');
       this.bodyObj[keyValueArray[0]] = keyValueArray[1];
       this.labelObj[keyValueArray[0]] = keyValueArray[2];
-      
+      console.log(keyValueArray)
+      console.log(this.bodyObj)
       if(keyValueArray[0] == 'type'){
         this.getTmplListByTmplType()
       }
       if(keyValueArray[0] == 'buildingId' || keyValueArray[0] == 'type'){
         this.getPangzhanTmplInfo();
       }
-      console.log(this.bodyObj)
+      
     },
     getPangzhanTmplInfo: function(){
       let temp = {
@@ -119,10 +120,21 @@ export default {
       })
     },
     getTmplListByTmplType: function(){
-      jxgzTmplApi.getJxgzTmplList({pageIndex: 1, pageSize: 100}, (data) => {
-        console.log(data)
-        this.tmplList = data.result.list
-      })
+      if(this.bodyObj.type == "0001"){
+        jxgzTmplApi.getJxgzTmplList({pageIndex: 1, pageSize: 100}, (data) => {
+          console.log(data)
+          this.tmplList = data.result.list
+        })
+      }else if(this.bodyObj.type == "0002"){
+        snjbTmplApi.getTmplList({pageIndex: 1, pageSize: 100})
+        .then( data => {
+          console.log(data)
+          this.tmplList = data.list//接口不统一
+        })
+      }else if(this.bodyObj.type == "0003"){
+        this.tmplList = [];
+      }
+      
     },
     handleSubmit() {
       this.bodyObj.projectId = this.obj.id;

@@ -15,17 +15,16 @@
               <span>雨</span>
           </Radio>
         </RadioGroup>
-      
       </div>
       
       <div class="flex-6 padding-v-5">施工单位：<Input v-model="obj.buildCompany" placeholder="" clearable :maxlength="200" style="width: 200px" /></div>
     </div>
-    <div class="flex padding-v-5">旁站的部位或工序：</div>
+    <!--<div class="flex padding-v-5">旁站的部位或工序：</div>-->
 
-    <div class="flex" >
+    <!--<div class="flex" >
       <div class="flex-6 padding-v-5">旁站监理开始时间：<Input v-model="obj.startTime" placeholder="" clearable :maxlength="200" style="width: 250px" /></div>
       <div class="flex-6 padding-v-5">旁站监理结束时间：<Input v-model="obj.endTime" placeholder="" clearable :maxlength="200" style="width: 250px" /> </div>
-    </div>
+    </div>-->
 
     <div class="flex  padding-left-40">
       <div class=" padding-v-5">一、机械设备：</div>
@@ -40,14 +39,33 @@
         <div class="">
           <div class="">钢筋笼配筋：</div>
           <div class="padding-v-5 flex padding-left-40">
-            <div class="flex-3">主筋 : <Input v-model="obj.mainBar" placeholder="" clearable :maxlength="200" style="width: 100px" /></div>
-            <div class="flex-3">箍筋 : <Input v-model="obj.circularBar" placeholder="" clearable :maxlength="200" style="width: 100px" /></div>
-            <div class="flex-3">加强箍 : <Input v-model="obj.strongBar" placeholder="" clearable :maxlength="200" style="width: 100px" /></div>
+            <div class="flex-3">主筋数量 : 
+              <Input v-model="obj.mainBarNum" placeholder="" clearable :maxlength="200" style="width: 100px" />
+            </div>
+            <div class="flex-3">主筋类型 : 
+              <Input class="" v-model="obj.mainBarType" placeholder="" clearable :maxlength="200" style="width: 100px" >
+                <span slot="prefix" style="line-height: 30px;">φ</span>
+              </Input>
+            </div>
+            <div class="flex-3">箍筋 : 
+              <Input class="" v-model="obj.circularBar" placeholder="" clearable :maxlength="200" style="width: 100px" >
+                <span slot="prefix" style="line-height: 30px;">φ</span>
+              </Input>
+            </div>
+            <div class="flex-3">加强箍 : 
+              <Input class="" v-model="obj.strongBar" placeholder="" clearable :maxlength="200" style="width: 100px" >
+                <span slot="prefix" style="line-height: 30px;">φ</span>
+              </Input>
+            </div>
           </div>
           <div class="padding-v-5 flex padding-left-40">
-            <div class="flex-3">钢筋笼数量 : <Input v-model="obj.barCageCount" placeholder="" clearable :maxlength="200" style="width: 100px" /></div>
-            <div class="flex-3">钢筋长度 : <Input v-model="obj.length" placeholder="" clearable :maxlength="200" style="width: 100px" /></div>
-            <div class="flex-3">吊筋长度 : <Input v-model="obj.suspensionBarLength" placeholder="" clearable :maxlength="200" style="width: 100px" /></div>
+            <div class="flex-3">钢筋笼数量 : 
+              <Input class="" v-model="obj.barCageCount" placeholder=""  :maxlength="200" style="width: 100px" >
+                <span slot="suffix" style="line-height: 30px;">个</span>
+              </Input>
+            </div>
+            <!--<div class="flex-3">钢筋长度 : <Input v-model="obj.length" placeholder="" clearable :maxlength="200" style="width: 100px" /></div>-->
+            <!--<div class="flex-3">吊筋长度 : <Input v-model="obj.suspensionBarLength" placeholder="" clearable :maxlength="200" style="width: 100px" /></div>-->
           </div>
         </div>
         <div class="padding-v-5 flex">
@@ -59,10 +77,29 @@
        <div class="">三、施工情况：</div>
        <div class="padding-v-5 padding-left-40">
            <div class="flex">
-             <div class="flex-3">设计桩径  : <Input v-model="obj.pileDiameter" placeholder="" clearable :maxlength="200" style="width: 80px" /></div>
-            <div class="flex-3">设计桩长 : <Input v-model="obj.pileLength" placeholder="" clearable :maxlength="200" style="width: 80px" /></div>
-             <div class="flex-3">地面标高 : <Input v-model="obj.pileLength" placeholder="" clearable :maxlength="200" style="width: 80px" /></div>
-             <div class="flex-3">设计桩顶标高 : <Input v-model="obj.pileTopHeight" placeholder="" clearable :maxlength="200" style="width: 80px" /></div>
+              <div class="flex-3 padding-v-5">设计桩径  : 
+                <Input class="" v-model="obj.pileDiameter" placeholder="" :maxlength="200" style="width: 100px" >
+                  <span slot="suffix" style="line-height: 30px;">mm</span>
+                </Input>
+               </div>
+              <div class="flex-3">设计桩长 : 
+                <Input class="" v-model="obj.designPileLength" placeholder="" :maxlength="200" style="width: 100px" >
+                  <span slot="suffix" style="line-height: 30px;">m</span>
+                </Input>
+              </div>
+            </div>
+            <div class="flex padding-v-5">
+             <div class="flex-3">平台标高/护筒标高 : 
+              <Input class="" v-model="obj.platformElevation" placeholder="" :maxlength="200" style="width: 100px" >
+                <span slot="suffix" style="line-height: 30px;">m</span>
+              </Input>
+             </div>
+             
+             <div class="flex-3">桩顶标高 : 
+              <Input class="" v-model="obj.pileTopHeight" placeholder="" :maxlength="200" style="width: 100px" >
+                <span slot="suffix" style="line-height: 30px;">m</span>
+              </Input>
+             </div>
            </div>
        </div>
        <div class="padding-v-5 padding-left-40">
@@ -72,8 +109,17 @@
              
         </div>
         <div class="flex padding-v-5">  
-             <div class="flex-3">实际孔深 : <Input v-model="obj.actualDeep" placeholder="" clearable :maxlength="200" style="width: 100px" /></div>
-             <div class="flex-3">有效桩长  : <Input v-model="obj.validPileLength" placeholder="" clearable :maxlength="200" style="width: 100px" /></div>
+          <div class="flex-3">实际孔深 : 
+            <Input class="" v-model="obj.actualDeep" placeholder="" :maxlength="200" style="width: 100px" >
+              <span slot="suffix" style="line-height: 30px;">m</span>
+            </Input>
+          </div> 
+
+          <div class="flex-3">有效桩长  :
+            <Input class="" v-model="obj.validPileLength" placeholder="" :maxlength="200" style="width: 100px" >
+              <span slot="suffix" style="line-height: 30px;">m</span>
+            </Input>
+          </div>
         </div>
        </div>
      </div>
@@ -90,14 +136,37 @@
        </div>
        <div class="padding-v-5 padding-left-40">
         <div class="padding-v-5 flex">
-             <div class="flex-3">设计坍落度 : <Input v-model="obj.designSlump" placeholder="" clearable :maxlength="200" style="width: 100px" /></div>
-             <div class="flex-3">实测坍落度 : <Input v-model="obj.actualSlump" placeholder="" clearable :maxlength="200" style="width: 100px" /></div>
-             <div class="flex-3">砼理论方量 : <Input v-model="obj.theoryVolume" placeholder="" clearable :maxlength="200" style="width: 100px" /></div>
-             <div class="flex-3">砼实灌方量  : <Input v-model="obj.actualVolume" placeholder="" clearable :maxlength="200" style="width: 100px" /></div>
+             <div class="flex-3">设计坍落度 : 
+               <Input class="" v-model="obj.designSlump" placeholder="" :maxlength="200" style="width: 100px" >
+                <span slot="suffix" style="line-height: 30px;">mm</span>
+              </Input>
+
+             </div>
+             <div class="flex-3">实测坍落度 : 
+               <Input class="" v-model="obj.actualSlump" placeholder="" :maxlength="200" style="width: 100px" >
+                <span slot="suffix" style="line-height: 30px;">m³</span>
+              </Input>
+
+             </div>
+             <div class="flex-3">砼理论方量 : 
+               <Input class="" v-model="obj.theoryVolume" placeholder="" :maxlength="200" style="width: 100px" >
+                <span slot="suffix" style="line-height: 30px;">m³</span>
+              </Input>
+
+             </div>
+             
         </div>
         <div class="padding-v-5 flex">
-             <div class="flex-5">充盈系数 : <Input v-model="obj.fillingCoefficient" placeholder="" clearable :maxlength="200" style="width: 100px" /> M3 </div>
-            <div class="flex-5 margin-l-10">试块制作组数  : <Input v-model="obj.sampleMaking" placeholder="" clearable :maxlength="200" style="width: 100px" /> 组</div>
+             <div class="flex-3">砼实灌方量  : 
+               <Input class="" v-model="obj.actualVolume" placeholder="" :maxlength="200" style="width: 100px" >
+                <span slot="suffix" style="line-height: 30px;">m³</span>
+              </Input>
+             </div>
+            <div class="flex-5 margin-l-10">试块制作组数  : 
+              <Input class="" v-model="obj.sampleMaking" placeholder="" clearable :maxlength="200" style="width: 100px" >
+                <span slot="suffix" style="line-height: 30px;">组</span>
+              </Input>
+            </div>
             <div class="flex-1"></div>
             <div class="flex-1"></div>
         </div>
@@ -156,6 +225,7 @@ export default {
   },
   methods: {
       handleSubmit () {
+        this.obj.mainBar = `${this.obj.mainBarNum}φ${this.obj.mainBarType}`
         jxgzApi.updateJxZkGzzPzjl(this.obj).then(res => {
         console.log(res)
         if (res.data.code === 'Success') {

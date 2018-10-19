@@ -50,10 +50,10 @@ project.updateProject = (data, fnOk, fnError) => {
       }
     });
 };
-project.getProjects = (data, fnOk, fnError) => {
+project.getList = (data, fnOk, fnError) => {
   axios
     .request({
-      url: `/project/list?pageIndex=${data.pageIndex}&pageSize=${data.pageSize}`,
+      url: `/project/list`,
       method: 'post',
       data
     })

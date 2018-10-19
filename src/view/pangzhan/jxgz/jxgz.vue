@@ -51,16 +51,12 @@ export default {
   data() {
     return {
       columns: [
-        { title: "楼栋号", key: "pileCode", width: 60 },
-        { title: "桩号", key: "pileCode", width: 60 },
-        { title: "设计桩径", key: "pileDiameter", width: 60 },
-        { title: "强度等级", key: "concreteStrongLevel", width: 60 },
-        { title: "开孔时间", key: "startTime" },
-        { title: "二次清孔时间", key: "startTime" },
-        { title: "砼浇筑开始时间", key: "perfusionStartTime" },
-        { title: "砼实灌方量", key: "actualVolume", width: 60 },
-        { title: "桩长", key: "pileLength", width: 60 },
-        { title: "入岩深度", key: "deptRock", width: 60 },
+//      { title: "楼栋号", key: "pileCode" },
+        { title: "桩号", key: "pileCode" },
+        { title: "设计坍落度", key: "designSlump" },
+        { title: "砼理论方量", key: "theoryVolume" },
+        { title: "砼实灌方量", key: "actualVolume" },
+        { title: "使用模板", key: "perfusionStartTime" },
         {
           title: "操作",
           key: "handle",
@@ -76,8 +72,7 @@ export default {
                   on: {
                     click: e => {
                       console.log(this.tableData[params.index]);
-
-                      this.getDetai(this.tableData[params.index], () => {
+                      this.getDetai(this.tableData[params.index].id, () => {
                         this.detailModal.show = true;
                       });
                     }
@@ -97,7 +92,7 @@ export default {
                   },
                   on: {
                     click: e => {
-                      this.getDetai(this.tableData[params.index], () => {
+                      this.getDetai(this.tableData[params.index].id, () => {
                         this.editModal.show = true;
                       });
                     }
@@ -194,41 +189,41 @@ export default {
         this.tableData = res.data.result.list;
       });
     },
-    getDetai(obj, okfn) {
-      let tempobj = {
-        projectId: this.ROLE.projectId,
-        buildingNum: obj.building,
-        pileNum: obj.pile
-      };
-      jxgzApi.getJxgzByCondition(tempobj).then(res => {
-        console.log("--------------------------------------------------------------");
-        console.log(res.data);
-        if (!res.data.result.actualDeepImg) {
-          res.data.result.actualDeepImg = [];
+    getDetai(id, okfn) {
+      jxgzApi.getDetailById({id}) 
+      .then( data => {
+        console.log(data);
+        if (!data.actualDeepImg) {
+          data.actualDeepImg = [];
         } else {
-          res.data.result.actualDeepImg = JSON.parse(res.data.result.actualDeepImg);
+          data.actualDeepImg = JSON.parse(data.actualDeepImg);
         }
-        if (!res.data.result.barCageCountImg) {
-          res.data.result.barCageCountImg = [];
+        if (!data.barCageCountImg) {
+          data.barCageCountImg = [];
         } else {
-          res.data.result.barCageCountImg = JSON.parse(res.data.result.barCageCountImg);
+          data.barCageCountImg = JSON.parse(data.barCageCountImg);
         }
-        if (!res.data.result.deptRockUrl) {
-          res.data.result.deptRockUrl = [];
+        if (!data.deptRockUrl) {
+          data.deptRockUrl = [];
         } else {
-          res.data.result.deptRockUrl = JSON.parse(res.data.result.deptRockUrl);
+          data.deptRockUrl = JSON.parse(data.deptRockUrl);
         }
-        this.formItem = res.data.result;
-        //                    this.formItem.barCageCountImg = imgs2 && imgs2.length ? imgs2 : []
+        this.formItem.mainBarNum = data.mainBar && data.mainBar.split("φ")[0]
+        this.formItem.mainBarType= data.mainBar && data.mainBar.split("φ")[1]
+        this.formItem = data;
+        okfn && okfn()
+      })
+//    jxgzApi.getJxgzByCondition(tempobj).then(res => {
+//      console.log(res.data);
 
-        okfn && okfn();
-      });
+//      okfn && okfn();
+//    });
     },
     getList() {
-      jxgzApi.getJxZkGzzPzjlList({ data: this.ROLE.projectId }).then(res => {
-        console.log(res);
-        this.tableData = res.data.result;
-        this.total = res.data.result.length;
+      jxgzApi.getListByCondition({ projectId: this.ROLE.projectId, buildingNum: this.ROLE.buildingId}).then(data => {
+        console.log(data);
+        this.tableData = data;
+        this.total = data.length;
       });
     },
     buildingChange() {

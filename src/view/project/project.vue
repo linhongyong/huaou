@@ -260,7 +260,14 @@ export default {
       this.getJoinedList();
     },
     getJoinedList() {//获取用户参与的所有项目
-      projectApi.getJoinedList({}, data => {
+      projectApi.getList({}, data => {
+        console.log(data);
+        this.joinedList = data.result;
+        this.total = data.result.length;
+      });
+    },
+    getList() {//获取用户参与的所有项目
+      projectApi.getList({}, data => {
         console.log(data);
         this.joinedList = data.result;
         this.total = data.result.length;
