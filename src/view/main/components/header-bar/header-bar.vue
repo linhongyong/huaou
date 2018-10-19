@@ -41,6 +41,7 @@ export default {
   watch: {
     ROLE(val) {},
     projectId(id) {
+      console.log("监听到项目Id变化----------")
       this.getBuildList(id);
     }
   },

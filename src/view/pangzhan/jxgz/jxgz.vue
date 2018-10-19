@@ -228,6 +228,7 @@ export default {
     },
     buildingChange() {
       this.getSoilVolume();
+      this.getList();
     },
     pageChange(pageIndex) {
       console.log(pageIndex);
