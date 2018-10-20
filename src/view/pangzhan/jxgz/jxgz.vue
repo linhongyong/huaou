@@ -36,46 +36,47 @@
   import Detail from "./detail.vue";
   import modalExport from "./modal-export";
   //import expandRow from './table-expand.vue'
-import jxgzApi from "@/api/jxgz-api";
-import MIXIN_ROLE from "@/mixin/ROLE";
-import math from "_u/math.js";
-export default {
-  name: "tables_page",
-  mixins: [MIXIN_ROLE],
-  components: {
-    Tables,
-    Edit,
-    Detail,
-    modalExport
-  },
-  data() {
-    return {
-      columns: [
-//      { title: "楼栋号", key: "pileCode" },
-        { title: "桩号", key: "pileCode" },
-        { title: "设计坍落度", key: "designSlump" },
-        { title: "砼理论方量", key: "theoryVolume" },
-        { title: "砼实灌方量", key: "actualVolume" },
-        { title: "使用模板", key: "perfusionStartTime" },
-        {
-          title: "操作",
-          key: "handle",
-          render: (h, params) => {
-            return h("div", [
-              h(
-                "Button",
-                {
-                  props: {
-                    type: "success",
-                    size: "small"
-                  },
-                  on: {
-                    click: e => {
-                      console.log(this.tableData[params.index]);
-                      this.getDetai(this.tableData[params.index].id, () => {
-                        this.detailModal.show = true;
-                      });
-                    }
+  import jxgzApi from "@/api/jxgz-api";
+  import MIXIN_ROLE from "@/mixin/ROLE";
+  import math from "_u/math.js";
+  export default {
+    name: "tables_page",
+    mixins: [MIXIN_ROLE],
+    components: {
+      Tables,
+      Edit,
+      Detail,
+      modalExport
+    },
+    data() {
+      return {
+        columns: [
+          //      { title: "楼栋号", key: "pileCode" },
+          { title: "桩号", key: "pileCode" },
+          { title: "设计坍落度", key: "designSlump" },
+          { title: "砼理论方量", key: "theoryVolume" },
+          { title: "砼实灌方量", key: "actualVolume" },
+          { title: "使用模板", key: "perfusionStartTime" },
+          {
+            title: "操作",
+            key: "handle",
+            render: (h, params) => {
+              return h("div", [
+                h(
+                  "Button",
+                  {
+                    props: {
+                      type: "success",
+                      size: "small"
+                    },
+                    on: {
+                      click: e => {
+                        console.log(this.tableData[params.index]);
+                        this.getDetai(this.tableData[params.index].id, () => {
+                          this.detailModal.show = true;
+                        });
+                      }
+                    },
                   },
                   "查看"
                 ),
@@ -172,77 +173,45 @@ export default {
       addModalShow() {
         this.addModal.show = true;
       },
-
-      timeToSubmit: false,
-      formItem: {
-        actualDeepImg: [],
-        problemContent: null,
-
+      addModalClose() {
+        console.log("handleModalClose");
+        this.addModal.show = false;
+        this.getList();
       },
       editModalClose() {
         console.log("editModalClose");
         this.editModal.show = false;
-        jxgzApi.getJxZkGzzPzjlList().then(res => {
-          this.tableData = res.data.result.list;
-        });
+        this.getList();
       },
+      getDetai(id, okfn) {
+        jxgzApi.getDetailById({ id })
+          .then(data => {
 
-      SoilVolume: 0
-    };
-  },
-  computed: {
-    word() {
-      return `当前项目：${this.ROLE.projectName}，当前楼栋：${this.ROLE.buildingName}，当前水泥总量：${this.SoilVolume}`;
-    }
-  },
-  methods: {
-    exportExcel() {
-      this.$refs.tables.exportCsv({
-        filename: `table-${new Date().valueOf()}.csv`
-      });
-    },
-    addModalShow() {
-      this.addModal.show = true;
-    },
-    addModalClose() {
-      console.log("handleModalClose");
-      this.addModal.show = false;
-      this.getList();
-    },
-    editModalClose() {
-      console.log("editModalClose");
-      this.editModal.show = false;
-      this.getList();
-    },
-    getDetai(id, okfn) {
-      jxgzApi.getDetailById({id}) 
-      .then( data => {
-        
-        if (!data.actualDeepImg) {
-          data.actualDeepImg = [];
-        } else {
-          data.actualDeepImg = JSON.parse(data.actualDeepImg);
-        }
-        if (!data.barCageCountImg) {
-          data.barCageCountImg = [];
-        } else {
-          data.barCageCountImg = JSON.parse(data.barCageCountImg);
-        }
-        if (!data.deptRockUrl) {
-          data.deptRockUrl = [];
-        } else {
-          data.deptRockUrl = JSON.parse(data.deptRockUrl);
-        }
-        this.formItem = Object.assign({},this.formItem,data);
-        this.formItem.mainBarNum = data.mainBar && data.mainBar.split("φ")[0]
-        this.formItem.mainBarType= data.mainBar && data.mainBar.split("φ")[1]
-        this.formItem.fillingCoefficient = math.accDiv(data.actualVolume, data.theoryVolume, 2)
-        
-        console.log(this.formItem);
-        okfn && okfn()
-      })
-//    jxgzApi.getJxgzByCondition(tempobj).then(res => {
-//      console.log(res.data);
+            if (!data.actualDeepImg) {
+              data.actualDeepImg = [];
+            } else {
+              data.actualDeepImg = JSON.parse(data.actualDeepImg);
+            }
+            if (!data.barCageCountImg) {
+              data.barCageCountImg = [];
+            } else {
+              data.barCageCountImg = JSON.parse(data.barCageCountImg);
+            }
+            if (!data.deptRockUrl) {
+              data.deptRockUrl = [];
+            } else {
+              data.deptRockUrl = JSON.parse(data.deptRockUrl);
+            }
+            this.formItem = Object.assign({}, this.formItem, data);
+            this.formItem.mainBarNum = data.mainBar && data.mainBar.split("φ")[0]
+            this.formItem.mainBarType = data.mainBar && data.mainBar.split("φ")[1]
+            this.formItem.fillingCoefficient = math.accDiv(data.actualVolume, data.theoryVolume, 2)
+
+            console.log(this.formItem);
+            okfn && okfn()
+          })
+        //    jxgzApi.getJxgzByCondition(tempobj).then(res => {
+        //      console.log(res.data);
 
         //      okfn && okfn();
         //    });
