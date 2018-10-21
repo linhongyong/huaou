@@ -308,8 +308,8 @@ export default {
     .then( data => {
       console.log(data);
       console.log(this.$router.options.routes);
-      this.$router.options.routes[2].meta.hideInMenu = true;
-      console.log(this.$router.options.routes);
+//    this.$router.options.routes[2].meta.hideInMenu = true;
+//    console.log(this.$router.options.routes);
     })
   }
 };

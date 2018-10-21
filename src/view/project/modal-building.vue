@@ -9,7 +9,7 @@
             <FormItem label="楼栋名" :label-width="80" prop="buildingName" >
                 <Input v-model="buildData.buildingName"></Input>
             </FormItem>
-            <FormItem label="楼栋代码" :label-width="80" prop="buildingCode">
+            <FormItem label="楼栋编号" :label-width="80" prop="buildingCode">
                 <Input  v-model="buildData.buildingCode"></Input>
             </FormItem>
             <FormItem label="总桩数" :label-width="80">

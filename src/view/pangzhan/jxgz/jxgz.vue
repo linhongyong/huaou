@@ -11,7 +11,6 @@
     <!--<Modal v-model="addModal.show" title="新增旁站灌注" ok-text="提交" :footer-hide="true" width="60%">
       <div id="" style="width:80%, margin:0 auto">
         <Add  @addModalClose="addModalClose"></Add>
-
       </div>
     </Modal>-->
     <Modal v-model="editModal.show" title="修改机械灌注旁站" ok-text="提交" :footer-hide="true" width="60%" :scrollable="true" :styles="{top:'0px'}">
