@@ -71,7 +71,7 @@ export default {
       let that = this
       this.$refs[obj].validate((valid) => {
         if (valid) {
-          roleApi.addRole(this.obj, (data) => {
+          roleApi.addRole({role:this.obj, roleMenus:[]}, (data) => {
             console.log(data); 
             this.$refs[obj].resetFields();
             this.$Message.success({

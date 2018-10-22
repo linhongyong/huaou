@@ -76,7 +76,6 @@ export default {
             n.children = []
             traverse(i.childMenus, n.children)
           }
-          
           result.push(n);
         })
       })(menuList, result);

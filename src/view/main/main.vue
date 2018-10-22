@@ -76,7 +76,11 @@
         return this.tagNavList.length ? this.tagNavList.filter(item => !(item.meta && item.meta.notCache)).map(item => item.name) : []
       },
       menuList() {
-        return this.$store.getters.menuList
+				console.log("监听到menuList变化··········")
+				console.log(this.$store.state.app.menuList);
+        return this.$store.state.app.menuList
+// 				console.log(this.$store.getters.menuList);
+// 				return this.$store.getters.menuList
       },
       local() {
         return this.$store.state.app.local

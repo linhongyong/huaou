@@ -7,7 +7,9 @@ import {
   setToken,
   getToken
 } from '@/libs/util';
+
 import userApi from '@/api/user-api'
+
 export default {
   state: {
     userName: '',
@@ -77,19 +79,12 @@ export default {
       password
     }) {
       userName = userName.trim();
+      let that = this;
       return new Promise((resolve, reject) => {
-
         login({userName, password})
         .then((data) => {
           commit('setToken', data.result);
           resolve();
-        })
-        .then( data => {
-          userApi.getMenusOwn()
-          .then( data => {
-            console.log(data);
-            console.log(this.$router);
-          })
         })
         .catch((err) => {
           reject(err);
@@ -123,27 +118,27 @@ export default {
       commit
     }) {
       return new Promise((resolve, reject) => {
-        let data = {
-          avator: '',
-          user_name: 'admin',
-          user_id: 1,
-          access: ['super_admin']
-        };
-        commit('setAvator', data.avator);
-        commit('setUserName', data.user_name);
-        commit('setUserId', data.user_id);
-        commit('setAccess', data.access);
-        resolve(data);
-        //      getUserInfo(state.token).then(res => {
-        //        const data = res.data
-        //        commit('setAvator', data.avator)
-        //        commit('setUserName', data.user_name)
-        //        commit('setUserId', data.user_id)
-        //        commit('setAccess', data.access)
-        //        resolve(data)
-        //      }).catch(err => {
-        //        reject(err)
-        //      })
+//      let data = {
+//        avator: '',
+//        user_name: 'admin',
+//        user_id: 1,
+//        access: ['super_admin']
+//      };
+        userApi.getMenusOwn()
+        .then( data => {
+          resolve(data)
+        })
+//      getUserInfo(state.token).then(res => {
+//        const data = res.data
+//        commit('setAvator', data.avator)
+//        commit('setUserName', data.user_name)
+//        commit('setUserId', data.user_id)
+//        commit('setAccess', data.access)
+//        resolve(data)
+//      })
+        .catch(err => {
+          reject(err)
+        })
       });
     }
   }

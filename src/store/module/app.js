@@ -5,12 +5,16 @@ export default {
     breadCrumbList: [],
     tagNavList: [],
     homeRoute: getHomeRoute(routers),
-    local: ''
+    local: '',
+		menuList: []
   },
   getters: {
-    menuList: (state, getters, rootState) => getMenuByRouter(routers, rootState.user.access)
+    // menuList: (state, getters, rootState) => getMenuByRouter(routers, rootState.user.access)
   },
   mutations: {
+		setMenuList (state, menuList) {
+			state.menuList = menuList
+		},
     setBreadCrumb (state, routeMetched) {
       state.breadCrumbList = getBreadCrumbList(routeMetched, state.homeRoute)
     },

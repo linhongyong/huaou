@@ -17,7 +17,7 @@ export default [
     name: 'login',
     meta: {
       title: 'Login - 登录',
-      hideInMenu: true
+      hideInMenu: true,
     },
     component: () => import('@/view/login/login.vue')
   },
@@ -35,7 +35,6 @@ export default [
         path: '/home',
         name: 'home',
         meta: {
-          hideInMenu: true,
           title: '首页',
           notCache: true
         },
@@ -50,7 +49,8 @@ export default [
     name: 'pangzhan',
     meta: {
       icon: 'ios-folder-open',
-      title: '旁站'
+      title: '旁站',
+			showAlways: true,
     },
     component: Main,
     children: [
@@ -58,9 +58,8 @@ export default [
         path: 'jxgz',
         name: 'jxgz',
         meta: {
-          access: ['super_admin'],
+					hideInMenu: true,
           icon: 'md-folder',
-          showAlways: true,
           title: '机械灌注桩'
         },
         component: parentView,
@@ -69,6 +68,7 @@ export default [
             path: 'list',
             name: 'list',
             meta: {
+							
               icon: 'ios-list-box',
               title: '旁站管理'
             },
@@ -91,9 +91,8 @@ export default [
         path: 'snjb',
         name: 'snjb',
         meta: {
-          access: ['super_admin'],
+					hideInMenu: true,
           icon: 'md-folder',
-          showAlways: true,
           title: '水泥搅拌'
         },
         component: parentView,
@@ -124,8 +123,8 @@ export default [
         path: 'commom',
         name: 'commom',
         meta: {
+					hideInMenu: true,
           icon: 'md-folder',
-          showAlways: true,
           title: '通用旁站'
         },
         component: parentView,
@@ -155,7 +154,7 @@ export default [
     component: Main,
     children: [
       {
-        path: '/list',
+        path: '/project_list',
         name: 'project_list',
         meta: {
           icon: 'ios-list-box',
@@ -192,15 +191,6 @@ export default [
         },
         component: () => import('@/view/role/role.vue')
       },
-//    {
-//      path: '/dept_list',
-//      name: 'dept_list',
-//      meta: {
-//        icon: 'ios-list-box',
-//        title: '部门管理'
-//      },
-//      component: () => import('@/view/dept/dept.vue')
-//    },
       {
         path: '/menu_list',
         name: 'menu_list',

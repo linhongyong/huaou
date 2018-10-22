@@ -151,10 +151,6 @@
         var result = [];
         (function traverse(node, result) {//???
           node.forEach(i => {
-//          let n = {
-//                title: i.menuName,
-//                id: i.id,
-//            }
           let n = i
           n.title = i.menuName
               if(i.childMenus){
