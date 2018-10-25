@@ -63,8 +63,8 @@ export default {
                     this.editModal.show = true
                     this.obj = this.tmplList[params.index]
                       //处理特殊字段
-                    this.obj.mainBarNum = this.obj.mainBar && this.obj.mainBar.split("φ")[0]
-                    this.obj.mainBarType= this.obj.mainBar && this.obj.mainBar.split("φ")[1]
+                    // this.obj.mainBarNum = this.obj.mainBar && this.obj.mainBar.split("φ")[0]
+                    // this.obj.mainBarType= this.obj.mainBar && this.obj.mainBar.split("φ")[1]
                     console.log(this.obj)
                   }
                 },

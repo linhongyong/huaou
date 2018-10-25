@@ -40,21 +40,21 @@
           <div class="">钢筋笼配筋：</div>
           <div class="padding-v-5 flex padding-left-40">
             <div class="flex-3">主筋数量 : 
-              <Input v-model="obj.mainBarNum" placeholder="" clearable :maxlength="200" style="width: 100px" />
+              <Input v-model="obj.mainBarCount" placeholder="" clearable :maxlength="200" style="width: 100px" />
             </div>
             <div class="flex-3">主筋类型 : 
               <Input class="" v-model="obj.mainBarType" placeholder="" clearable :maxlength="200" style="width: 100px" >
-                <span slot="prefix" style="line-height: 30px;">φ</span>
+                <span slot="prefix" style="line-height: 30px;"></span>
               </Input>
             </div>
             <div class="flex-3">箍筋 : 
               <Input class="" v-model="obj.circularBar" placeholder="" clearable :maxlength="200" style="width: 100px" >
-                <span slot="prefix" style="line-height: 30px;">φ</span>
+                <span slot="prefix" style="line-height: 30px;"></span>
               </Input>
             </div>
             <div class="flex-3">加强箍 : 
               <Input class="" v-model="obj.strongBar" placeholder="" clearable :maxlength="200" style="width: 100px" >
-                <span slot="prefix" style="line-height: 30px;">φ</span>
+                <span slot="prefix" style="line-height: 30px;"></span>
               </Input>
             </div>
           </div>

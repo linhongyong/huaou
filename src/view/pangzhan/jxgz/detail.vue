@@ -25,9 +25,10 @@
         <div class="">
           <div class="">钢筋笼配筋：</div>
           <div class="padding-v-5 flex padding-left-40">
-            <div class="flex-3">主筋 : {{ obj.mainBarNum }}φ{{ obj.mainBarType }}</div>
-            <div class="flex-3">箍筋 : φ{{ obj.circularBar }}</div>
-            <div class="flex-3">加强箍 : φ{{ obj.strongBar }}</div>
+            <div class="flex-3">主筋数量 : {{ obj.mainBarCount }} </div>
+						<div class="flex-3">主筋类型:{{ obj.mainBarType }}</div>
+            <div class="flex-3">箍筋 : {{ obj.circularBar }}</div>
+            <div class="flex-3">加强箍 : {{ obj.strongBar }}</div>
           </div>
           <div class="padding-v-5 flex padding-left-40">
             <div class="flex-3">钢筋笼数量 : {{ obj.barCageCount }}</div>
@@ -56,8 +57,8 @@
        </div>
        <div class="padding-v-5 padding-left-40">
         <div class="flex">
-             <div class="flex-3">开孔时间 : {{ obj.startTime }}</div>
-             <div class="flex-3">终孔时间 : {{ obj.endTime }}</div>
+             <div class="flex-3">开孔时间 : {{ obj.openTime }}</div>
+             <div class="flex-3">终孔时间 : {{ obj.stopTime }}</div>
              <div class="flex-3">实际孔深 : {{ obj.actualDeep }}</div>
              <!--<div class="flex-3">有效桩长  : {{ obj.validPileLength }}</div>-->
         </div>

@@ -229,8 +229,8 @@
               data.deptRockUrl = JSON.parse(data.deptRockUrl);
             }
             this.formItem = Object.assign({}, this.formItem, data);
-            this.formItem.mainBarNum = data.mainBar && data.mainBar.split("φ")[0]
-            this.formItem.mainBarType = data.mainBar && data.mainBar.split("φ")[1]
+            // this.formItem.mainBarNum = data.mainBar && data.mainBar.split("φ")[0]
+            // this.formItem.mainBarType = data.mainBar && data.mainBar.split("φ")[1]
             this.formItem.fillingCoefficient = math.accDiv(data.actualVolume, data.theoryVolume, 2)
 
             console.log(this.formItem);
