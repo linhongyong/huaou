@@ -12,9 +12,12 @@
     <Layout>
       <Header class="header-con">
         <header-bar :collapsed="collapsed" @on-coll-change="handleCollapsedChange">
+					
           <user :user-avator="userAvator" />
+					<span style="padding-right: 5px;">{{userName}}</span>
           <!--<language @on-lang-change="setLocal" style="margin-right: 10px;" :lang="local"/>-->
           <fullscreen v-model="isFullscreen" style="margin-right: 10px;" />
+					
         </header-bar>
       </Header>
       <Content class="main-content-con">
@@ -72,11 +75,18 @@
       userAvator() {
         return this.$store.state.user.avatorImgPath
       },
+			userName() {
+        return this.$store.state.user.userName
+      },
       cacheList() {
         return this.tagNavList.length ? this.tagNavList.filter(item => !(item.meta && item.meta.notCache)).map(item => item.name) : []
       },
       menuList() {
 				console.log("监听到menuList变化··········")
+				if(!this.$store.state.app.menuList.length){
+					console.log(JSON.parse(localStorage.getItem("menuList")))
+					return JSON.parse(localStorage.getItem("menuList"))
+				}
 				console.log(this.$store.state.app.menuList);
         return this.$store.state.app.menuList
 // 				console.log(this.$store.getters.menuList);

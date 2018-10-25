@@ -4,20 +4,20 @@
       <Table width="100%" border :columns="columns2" :data="roleList"></Table>
       <div style="padding: 18px 10px 18px;text-align: right;clear: both;">
         <Page :total="total" show-total class="float-l" show-elevator show-sizer @on-change="pageChange" @on-page-size-change="pageSizeChange" :current="pageIndex"/>
-        <Button style="" type="primary" shape="circle" icon="md-add" v-on:click="addModal.show = true"></Button>
+        <Button style="" type="primary" shape="circle" icon="md-add" v-on:click="addModal.show = true" :disabled="!isAccessForButton('0021')"></Button>
       </div>
     </Card>
-    <Modal v-model="editModal.show" title="修改角色信息" :footer-hide="true" width="60%">
+    <Modal v-model="editModal.show" title="修改职务信息" :footer-hide="true" width="60%">
       <div id="" style="width:80%, margin:0 auto">
         <Edit :obj="role"  @editModalClose="editModalClose"></Edit>
       </div>
     </Modal>
-    <Modal v-model="addModal.show" title="添加角色" :footer-hide="true" width="60%">
+    <Modal v-model="addModal.show" title="添加职务" :footer-hide="true" width="60%">
       <div id="" style="width:80%, margin:0 auto">
         <Add @addModalClose="addModalClose"></Add>
       </div>
     </Modal>
-    <Modal v-model="isRoleMenuSetShow" title="设置角色资源" :footer-hide="true" width="60%">
+    <Modal v-model="isRoleMenuSetShow" title="设置职务资源" :footer-hide="true" width="60%">
       <div id="" style="width:80%, margin:0 auto">
         <SetRoleMenu @modalAction="onModalAction" :obj="role"></SetRoleMenu>
       </div>
@@ -49,7 +49,7 @@ export default {
       role:{ownerMenus:[]},
       columns2: [
         {
-          title: '角色',
+          title: '职务',
           key: 'roleName'
           //  width: 100,
           //  fixed: 'left'
@@ -60,7 +60,7 @@ export default {
           //  width: 100
         },
         {
-          title: '是否项目角色',
+          title: '是否项目职务',
           key: 'type'
           //  width: 100
         },
@@ -74,7 +74,8 @@ export default {
               h('Button', {
                 props: {
                   type: 'success',
-                  size: 'small'
+                  size: 'small',
+									disabled: !this.isAccessForButton("0022"),
                 },
                 on: {
                   'click': (e) => {
@@ -90,7 +91,8 @@ export default {
               h('Button', {
                 props: {
                   type: 'success',
-                  size: 'small'
+                  size: 'small',
+									disabled: !this.isAccessForButton("0023"),
                 },
                 on: {
                   'click': (e) => {
@@ -103,7 +105,7 @@ export default {
                 style: {
                   marginRight: '5px'
                 }
-              }, '设置角色资源'),
+              }, '设置职务资源'),
               h('Poptip', {
                 props: {
                   confirm: true,
@@ -111,19 +113,24 @@ export default {
                 },
                 on: {
                   'on-ok': () => {
-                    console.warn(params.index);
-                    roleApi.deleteRole({id:this.roleList[params.index].id}, () => {
-                      this.roleList.splice(params.index, 1)
-                      this.$Message.success("删除成功！");
-                      this.total = this.total - 1
-                    })
+                    console.log(params.index);
+										roleApi.deleteRole({id:this.roleList[params.index].id})
+										.then( data => {
+											this.roleList.splice(params.index, 1)
+											this.$Message.success("删除成功！");
+											this.total = this.total - 1
+										})
+										.catch( err => {
+											this.$Message.error(err.message);
+										})
                   }
                 }
               }, [
                 h('Button', {
                   props: {
                     type: 'error',
-                    size: 'small'
+                    size: 'small',
+										disabled: !this.isAccessForButton("0024"),
                   }
                 }, '删除')
               ])

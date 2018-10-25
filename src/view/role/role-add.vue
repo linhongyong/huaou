@@ -2,7 +2,7 @@
   <Form :model="obj" ref="obj" :rules="ruleCustom">
         <Row  type="flex"  justify="space-around">
       <Col span="11">
-        <FormItem label="角色" prop="roleName">
+        <FormItem label="职务" prop="roleName">
           <Input v-model="obj.roleName" placeholder=""></Input>
         </FormItem>
       </Col>
@@ -15,7 +15,7 @@
     <Row  type="flex"  >
       <Col span="12">
         <div class="" style="padding-left: 20px;">
-        	<FormItem label="是否项目角色 :">
+        	<FormItem label="是否项目职务 :">
             <RadioGroup v-model="obj.type">
               <Radio label="1">是</Radio>
               <Radio label="0">否</Radio>

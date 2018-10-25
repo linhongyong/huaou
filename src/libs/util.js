@@ -36,7 +36,7 @@ const showThisMenuEle = (item, access) => {
  * @returns {Array}
  */
 export const getMenuByRouter = (list, access) => {
-  console.log(access)
+  // console.log(access)
   let res = []
   forEach(list, item => {
     if (!item.meta || (item.meta && !item.meta.hideInMenu)) {
@@ -152,11 +152,13 @@ const hasAccess = (access, route) => {
  * @description 用户是否可跳转到该页
  */
 export const canTurnTo = (name, access, routes) => {
+	console.log(routes);
   const routePermissionJudge = (list) => {
     return list.some(item => {
       if (item.children && item.children.length) {
         return routePermissionJudge(item.children)
       } else if (item.name === name) {
+				console.log(item);
         return hasAccess(access, item)
       }
     })

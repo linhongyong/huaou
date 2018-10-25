@@ -1,10 +1,6 @@
 <template>
-    <Modal v-model="show" title="设置楼栋信息" width="80%" >
-        <Row  type="flex" style="font-size:16px; margin-bottom:20px">
-            <Col span="12">
-                <p>当前项目名称: {{data.projectName}}</p>
-            </Col>
-        </Row>
+    <Modal v-model="show" :title="'设置楼栋信息: '+data.projectName" width="80%" >
+
         <Form inline :model="buildData" ref="form" :rules="ruleValidate">
             <FormItem label="楼栋名" :label-width="80" prop="buildingName" >
                 <Input v-model="buildData.buildingName"></Input>
@@ -13,7 +9,7 @@
                 <Input  v-model="buildData.buildingCode"></Input>
             </FormItem>
             <FormItem label="总桩数" :label-width="80">
-                <InputNumber v-model="buildData.pileNum"></InputNumber>
+                <InputNumber v-model="buildData.pileNum" :min="0" :max="1000"></InputNumber>
             </FormItem>
              <FormItem :label-width="20">
                  <Button v-if="buttonType === 0" type="primary" @click="addBuildData">添加</Button>

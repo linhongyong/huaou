@@ -147,6 +147,11 @@ export default {
       
     }
   },
+	computed: {
+		projectId() {
+			return this.$store.getters.role.projectId
+		},
+	},
   props: {
   },
   methods: {
@@ -169,6 +174,7 @@ export default {
         return;
       }
       this.obj.mainBar = `${this.obj.mainBarNum}φ${this.obj.mainBarType}`
+			this.obj.projectId = this.projectId;
       jxgzTmplApi.addJxgzTmpl(this.obj, (data) => {
         console.log(data); 
         this.$Message.success({

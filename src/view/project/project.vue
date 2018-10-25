@@ -4,10 +4,10 @@
       <Table width="100%" border :columns="columns2" :data="joinedList"></Table>
       <div style="padding: 18px 10px 18px;text-align: right;clear: both;">
         <Page :total="total" show-total class="float-l" show-elevator show-sizer @on-change="pageChange" @on-page-size-change="pageSizeChange" :current="pageIndex"/>
-        <Button style="" type="primary" shape="circle" icon="md-add" v-on:click="addModal.show = true"></Button>
+        <Button style="" type="primary" shape="circle" icon="md-add" v-on:click="addModal.show = true" :disabled="!this.isAccessForButton('0013')"></Button>
       </div>
     </Card>
-    <Modal v-model="editModal.show" title="修改工程信息" :footer-hide="true" width="60%" @on-cancel="onCancelEditModal">
+    <Modal v-model="editModal.show" :title="'修改工程信息: '+obj.projectName" :footer-hide="true" width="60%" @on-cancel="onCancelEditModal">
       <div id="" style="width:80%, margin:0 auto">
         <Edit :obj="project"  @editModalClose="editModalClose"></Edit>
       </div>
@@ -17,12 +17,12 @@
         <Add @addModalClose="addModalClose"></Add>
       </div>
     </Modal>
-    <Modal v-model="isPangzhanTmplSetShow" :title="'设置'+'旁站模板'" :footer-hide="true" width="60%">
+    <Modal v-model="isPangzhanTmplSetShow" :title="'设置旁站模板：'+obj.projectName" :footer-hide="true" width="60%">
       <div id="" style="width:80%, margin:0 auto">
         <TmplSet @modalAction="onModalAction" :obj="obj" :buildList="buildList"></TmplSet>
       </div>
     </Modal>
-    <Modal v-model="isProjectStaffsRoleSetShow" title="设置项目人员和角色" :footer-hide="true" width="60%">
+    <Modal v-model="isProjectStaffsRoleSetShow" :title="'设置项目人员和职务: '+obj.projectName" :footer-hide="true" width="60%">
       <div id="" style="width:80%, margin:0 auto">
         <setRole @modalAction="onModalAction" :obj="obj"></setRole>
       </div>
@@ -75,7 +75,7 @@ export default {
       columns2: [
         {
           title: "工程名",
-          key: "projectName"
+          key: "projectName",
         },
         {
           title: "Action",
@@ -87,7 +87,8 @@ export default {
                 {
                   props: {
                     type: "success",
-                    size: "small"
+                    size: "small",
+										disabled: !this.isAccessForButton("0018"),
                   },
                   on: {
                     click: e => {
@@ -106,7 +107,8 @@ export default {
                 {
                   props: {
                     type: "success",
-                    size: "small"
+                    size: "small",
+										disabled: !this.isAccessForButton("0014"),
                   },
                   on: {
                     click: e => {
@@ -126,7 +128,8 @@ export default {
                 {
                   props: {
                     type: "success",
-                    size: "small"
+                    size: "small",
+										disabled: !this.isAccessForButton("0015"),
                   },
                   on: {
                     click: e => {
@@ -162,14 +165,15 @@ export default {
                     marginRight: "5px"
                   }
                 },
-                "设置项目用户和角色"
+                "设置项目用户和职务"
               ),
               h(
                 "Button",
                 {
                   props: {
                     type: "success",
-                    size: "small"
+                    size: "small",
+										disabled: !this.isAccessForButton("0016"),
                   },
                   on: {
                     click: e => {
@@ -211,7 +215,8 @@ export default {
                     {
                       props: {
                         type: "error",
-                        size: "small"
+                        size: "small",
+												disabled: !this.isAccessForButton("0017"),
                       }
                     },
                     "删除"
@@ -260,7 +265,7 @@ export default {
       this.getJoinedList();
     },
     getJoinedList() {//获取用户参与的所有项目
-      projectApi.getList({}, data => {
+      projectApi.getJoinedList({}, data => {
         console.log(data);
         this.joinedList = data.result;
         this.total = data.result.length;

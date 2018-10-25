@@ -37,6 +37,8 @@ obj.getJxgzTmplList = (data, fnOk, fnError) => {
   })
 }
 
+obj.getJxgzTmplListByProjectId = (data) => httpClient.post({ url: `/jxZkGzzPzjlTemplate/listByProjectId`, data });
+
 obj.getJxZkGzzPzjlTemplate = (data, fnOk, fnError) => {
   return axios.request({
     url: `jxZkGzzPzjlTemplate/getTemplate?id=${data.id}`,

@@ -4,7 +4,7 @@
       <Table width="100%" border :columns="columns2" :data="tmplList"></Table>
       <div style="padding: 18px 10px 18px;text-align: right;clear: both;">
         <Page :total="total" show-total class="float-l" show-elevator show-sizer @on-change="pageChange" @on-page-size-change="pageSizeChange" :current="pageIndex"/>
-        <Button style="" type="primary" shape="circle" icon="md-add" v-on:click="addModal.show = true"></Button>
+        <Button style="" type="primary" shape="circle" icon="md-add" v-on:click="addModal.show = true" :disabled="!isAccessForButton('0012')"></Button>
       </div>
     </Card>
     <Modal v-model="editModal.show" title="修改模板" :footer-hide="true" width="60%"  :scrollable="true"  :styles="{top:'0px'}">
@@ -54,7 +54,8 @@ export default {
               h('Button', {
                 props: {
                   type: 'success',
-                  size: 'small'
+                  size: 'small',
+									disabled: !this.isAccessForButton("0012"),
                 },
                 on: {
                   'click': (e) => {
@@ -86,7 +87,8 @@ export default {
                 h('Button', {
                   props: {
                     type: 'error',
-                    size: 'small'
+                    size: 'small',
+										disabled: !this.isAccessForButton("0011"),
                   }
                 }, '删除')
               ])

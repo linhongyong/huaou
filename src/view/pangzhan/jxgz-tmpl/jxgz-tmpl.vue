@@ -4,7 +4,7 @@
       <Table width="100%" border :columns="columns2" :data="tmplList"></Table>
       <div style="padding: 18px 10px 18px;text-align: right;clear: both;">
         <Page :total="total" show-total class="float-l" show-elevator show-sizer @on-change="pageChange" @on-page-size-change="pageSizeChange" :current="pageIndex"/>
-        <Button style="" type="primary" shape="circle" icon="md-add" v-on:click="addModal.show = true"></Button>
+        <Button style="" type="primary" shape="circle" icon="md-add" v-on:click="addModal.show = true" :disabled="!isAccessForButton('0004')"></Button>
       </div>
     </Card>
     <Modal v-model="editModal.show" title="修改模板" :footer-hide="true" width="60%"  :scrollable="true"  :styles="{top:'0px'}">
@@ -25,8 +25,9 @@ import Tables from '_c/tables'
 import Edit from './jxgz-tmpl-edit.vue'
 import Add from './jxgz-tmpl-add.vue'
 import jxgzTmplApi from '@/api/jxgz-tmpl-api'
-
+import MIXIN_ROLE from "@/mixin/ROLE";
 export default {
+	mixins: [MIXIN_ROLE],
   components: {
     Tables, Edit, Add
   },
@@ -54,7 +55,8 @@ export default {
               h('Button', {
                 props: {
                   type: 'success',
-                  size: 'small'
+                  size: 'small',
+									disabled: !this.isAccessForButton("0005"),
                 },
                 on: {
                   'click': (e) => {
@@ -73,7 +75,7 @@ export default {
               h('Poptip', {
                 props: {
                   confirm: true,
-                  title: '你确定要删除吗?'
+                  title: '你确定要删除吗?',						
                 },
                 on: {
                   'on-ok': () => {
@@ -89,7 +91,8 @@ export default {
                 h('Button', {
                   props: {
                     type: 'error',
-                    size: 'small'
+                    size: 'small',
+										disabled: !this.isAccessForButton("0006"),
                   }
                 }, '删除')
               ])
@@ -103,35 +106,49 @@ export default {
       total:0
     }
   },
+
   methods: {
     addModalClose () {
       this.addModal.show = false
-      this.getTmpls()
+      this.getList ()
     },
     editModalClose () {
       this.editModal.show = false
-      this.getTmpls()
+      this.getList ()
     },
-    getTmpls () {
-      jxgzTmplApi.getJxgzTmplList({pageIndex: this.pageSize*(this.pageIndex - 1)+1, pageSize: this.pageSize}, (data) => {
-        console.log(data)
-        this.tmplList = data.result.list
-        this.total =  data.result.total
-      })
+    getList  () {
+			let data = {
+				pageIndex: this.pageSize*(this.pageIndex - 1), 
+				pageSize: this.pageSize,
+				data: this.ROLE.projectId
+			}
+			jxgzTmplApi.getJxgzTmplListByProjectId(data)
+			.then( data =>{
+				console.log(data);
+				this.tmplList = data.list
+				this.total =  data.total
+			})
+//       jxgzTmplApi.getJxgzTmplList({pageIndex: this.pageSize*(this.pageIndex - 1)+1, pageSize: this.pageSize}, (data) => {
+//         console.log(data)
+//         this.tmplList = data.result.list
+//         this.total =  data.result.total
+//       })
     },
+		buildingChange (){},//引入minx引起
     pageChange (pageIndex) {
       console.log(pageIndex)
       this.pageIndex = pageIndex
-      this.getTmpls()
+      this.getList ()
     },
     pageSizeChange(pageSize){
       console.log(pageSize)
       this.pageSize = parseInt(pageSize);
-      this.getTmpls()
-    }
+      this.getList ()
+    },
+		
   },
   mounted () {
-    this.getTmpls()
+    this.getList ()
   }
 }
 </script>

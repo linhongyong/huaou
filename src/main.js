@@ -21,6 +21,27 @@ import math from "_u/math.js";
 // 实际打包时应该不引入mock
 /* eslint-disable */
 //if (process.env.NODE_ENV !== 'production') require('@/mock')
+Vue.prototype.isAccessForButton  = (code)=> {
+	let buttons = [];
+	if(store.state.user && store.state.user.buttonList.length){
+		buttons =   store.state.user.buttonList
+	}
+	else{
+		let buttonList = JSON.parse(localStorage.getItem("buttonList"))
+		if(buttonList && buttonList.length){
+			buttons =  buttonList;
+			store.commit("setButtonList", buttonList)
+		}else{
+			buttons =  [];
+		}
+	}
+	for(let i=0; i<buttons.length; i++){
+		if(buttons[i].url == code){
+			return true;
+		}
+	}
+	return false;
+}
 
 Vue.use(iView, {
   i18n: (key, value) => i18n.t(key, value)

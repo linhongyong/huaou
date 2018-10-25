@@ -1,18 +1,18 @@
 <template>
   <Form>
     <div class="" style="min-height: 200px;">
-      <div class=""  style="min-height: 100px; clear: both;padding: 0 20px; font-size: 18px;">
-        <div class="" style="float: left;"  v-if="obj.roleSelectedList.length > 0"> 已选角色 ：</div>
-        <div class="" v-for="(item, index) in obj.roleSelectedList" style="float: left; padding-right: 20px;" v-on:click="reduceRole(index)" >
-          <span class="">{{ item.roleName }}{{ item.projectName ? "（"+item.projectName+"项目）" : ""}}</span><Icon class="add-icon" type="md-remove" />
-        </div>
+      <div class=""  style="min-height: 100px; clear: both;padding: 0 20px; font-size: 18px;margin-top: 40px;">
+        <Tag color="success" v-if="obj.roleSelectedList.length > 0"> 已选职务:</Tag>
+				<span class=""  v-for="(item, index) in obj.roleSelectedList" style="padding-left:20px; font-size: 18px;" :key="index">
+					<Button type="success" @click="reduceRole(index)"><span style="padding-right: 5px;">{{ item.roleName }}{{ item.projectName ? "（"+item.projectName+"项目）" : ""}}</span><Icon type="ios-trash-outline" size="18"/></Button>
+				</span>
       </div>
-      
-      <div class=""  style="min-height: 100px; clear: both;padding: 0 20px; font-size: 18px;">
-        <div class="" style="float: left;" v-if="obj.roleList.length > 0">可选角色 ：</div>
-        <div class="" v-for="(item, index) in obj.roleList" style="float: left; padding-right: 20px;" v-on:click="addRole(index)" >
-          <span class="">{{ item.roleName }}</span><Icon class="add-icon md-add" type="md-add"/>
-        </div>
+      <div class=""  style="min-height: 60px; clear: both;padding: 0 20px; font-size: 18px;">
+        <Tag color="warning" v-if="obj.roleList.length > 0">可选职务:</Tag>
+				<span class=""  v-for="(item, index) in obj.roleList" style="padding-left:20px; font-size: 18px;" :key="index">
+					<Button type="warning" @click="addRole(index)"><span style="padding-right: 5px;">{{ item.roleName }}</span><Icon type="md-add" size="18"/></Button>
+				</span>
+	
       </div>
     </div>
     <FormItem style="text-align: right;">

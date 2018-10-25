@@ -4,7 +4,7 @@
       <Table width="100%" border :columns="columns2" :data="userList"></Table>
       <div style="padding: 18px 10px 18px;text-align: right;clear: both;">
         <Page :total="total" show-total class="float-l" show-elevator show-sizer @on-change="pageChange" @on-page-size-change="pageSizeChange" :current="pageIndex"/>
-        <Button style="" type="primary" shape="circle" icon="md-person-add" v-on:click="addModal.show = true"></Button>
+        <Button style="" type="primary" shape="circle" icon="md-person-add" v-on:click="addModal.show = true" :disabled="!isAccessForButton('0026')"></Button>
       </div>
     </Card>
     <Modal v-model="editModal.show" title="修改用户信息" :footer-hide="true" width="60%">
@@ -17,7 +17,7 @@
         <Add @addModalClose="addModalClose"></Add>
       </div>
     </Modal>
-    <Modal v-model="isUserRoleSetModalShow" title="设置用户角色" :footer-hide="true" width="60%">
+    <Modal v-model="isUserRoleSetModalShow" title="设置用户职务" :footer-hide="true" width="60%">
       <div id="" style="width:80%, margin:0 auto">
         <SetUserRole :obj="user"  @modalAction="onModalAction"></SetUserRole>
       </div>
@@ -74,7 +74,8 @@ export default {
               h('Button', {
                 props: {
                   type: 'success',
-                  size: 'small'
+                  size: 'small',
+									disabled: !this.isAccessForButton("0026"),
                 },
                 on: {
                   'click': (e) => {
@@ -91,7 +92,8 @@ export default {
               h('Button', {
                 props: {
                   type: 'success',
-                  size: 'small'
+                  size: 'small',
+									disabled: !this.isAccessForButton("0027"),
                 },
                 on: {
                   'click': (e) => {
@@ -109,7 +111,7 @@ export default {
                 style: {
                   marginRight: '5px'
                 }
-              }, '设置用户角色'),
+              }, '设置用户职务'),
               h('Poptip', {
                 props: {
                   confirm: true,
@@ -129,7 +131,8 @@ export default {
                 h('Button', {
                   props: {
                     type: 'error',
-                    size: 'small'
+                    size: 'small',
+										disabled: !this.isAccessForButton("0028"),
                   }
                 }, '删除')
               ])

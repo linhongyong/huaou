@@ -16,19 +16,20 @@ role.addRole = (data, fnOk, fnError) => {
     }
   })
 }
-role.deleteRole = (data, fnOk, fnError) => {
-  axios.request({
-    url: `/role/delete?id=${data.id}`,
-    method: 'post',
-  }).then(res => {
-    console.log(res)
-    if(res.data.code != "Success"){
-      fnError(res.data)
-    }else{
-      fnOk(res.data)
-    }
-  })
-}
+role.deleteRole = (data) => httpClient.post({ url: `/role/delete?id=${data.id}`, data });
+// role.deleteRole = (data, fnOk, fnError) => {
+//   axios.request({
+//     url: `/role/delete?id=${data.id}`,
+//     method: 'post',
+//   }).then(res => {
+//     console.log(res)
+//     if(res.data.code != "Success"){
+//       fnError(res.data)
+//     }else{
+//       fnOk(res.data)
+//     }
+//   })
+// }
 role.updateRole = (data, fnOk, fnError) => {
   axios.request({
     url: '/role/update',

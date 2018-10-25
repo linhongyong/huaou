@@ -11,11 +11,11 @@
           <Input v-model="obj.mobile" placeholder=""></Input>
         </FormItem>
       </Col>
-      <Col span="7">
+      <!-- <Col span="7">
         <FormItem label="密码" prop="password">
           <Input v-model="obj.password" placeholder=""></Input>
         </FormItem>
-      </Col>
+      </Col> -->
       
     </Row>
     <FormItem style="text-align: right;">

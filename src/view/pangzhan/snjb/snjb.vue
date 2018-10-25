@@ -71,7 +71,8 @@ export default {
                 {
                   props: {
                     type: "success",
-                    size: "small"
+                    size: "small",
+										disabled: !this.isAccessForButton("0008"),
                   },
                   on: {
                     click: e => {
@@ -94,7 +95,8 @@ export default {
                 {
                   props: {
                     type: "warning",
-                    size: "small"
+                    size: "small",
+										disabled: !this.isAccessForButton("0007"),
                   },
                   on: {
                     click: e => {
@@ -139,7 +141,8 @@ export default {
                     {
                       props: {
                         type: "error",
-                        size: "small"
+                        size: "small",
+												disabled: !this.isAccessForButton("0009"),
                       }
                     },
                     "删除"
@@ -190,10 +193,16 @@ export default {
     },
     // 获取列表的方法名统一改为getList，为了在选择工程的时候 刷新页面
     getList() {
-      snjbApi.getListByCondition({ projectId: this.ROLE.projectId, buildingId: this.ROLE.buildingId}).then(data => {
+			let data = { 
+				projectId: this.ROLE.projectId, 
+				buildingId: this.ROLE.buildingId,
+				pageIndex:(this.pageIndex - 1)*this.pageSize,
+				pageSize:this.pageSize ,
+				}
+      snjbApi.getListByCondition(data).then(data => {
         console.log(data);
-        this.snjbList = data;
-        this.total = data.length;
+        this.snjbList = data.list;
+        this.total = data.total;
       });
     },
     buildingChange() {

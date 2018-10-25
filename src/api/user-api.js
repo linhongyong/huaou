@@ -4,7 +4,7 @@ let user = new Object();
 
 //获得用户菜单
 user.getMenusOwn = (data) => httpClient.get({ url: '/menu/getMenusOwn', data });
-
+user.getUserInfo = (data) => httpClient.get({ url: '/user/getUserLogin', data });
 user.login = ({ userName, password }) => {
   const data = {
     userName,
@@ -17,15 +17,7 @@ user.login = ({ userName, password }) => {
   })
 }
 
-user.getUserInfo = (token) => {
-  return axios.request({
-    url: 'get_info',
-    params: {
-      token
-    },
-    method: 'get'
-  })
-}
+
 
 user.logout = (token) => {
   return axios.request({

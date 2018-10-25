@@ -17,7 +17,7 @@ export default {
     avatorImgPath: '',
     token: getToken(),
     access: '',
-
+		buttonList: [],//用户拥有的按钮
     project: {
       id: '',
       name: '',
@@ -37,6 +37,9 @@ export default {
     })
   },
   mutations: {
+		setButtonList(state, buttonList) {
+			state.buttonList = buttonList;
+		},
     setAvator(state, avatorPath) {
       state.avatorImgPath = avatorPath;
     },
@@ -101,6 +104,9 @@ export default {
           .then(() => {
             commit('setToken', '');
             commit('setAccess', []);
+						commit('setButtonList', []);
+						// commit('setAccess', []);						
+						localStorage.clear();
             resolve();
           })
           .catch((err) => {
@@ -126,8 +132,20 @@ export default {
 //      };
         userApi.getMenusOwn()
         .then( data => {
+					userApi.getUserInfo({})
+					.then( data2 => {
+						console.log(data2);
+						commit('setAvator', data2.avatar	)
+						commit('setUserName', data2.userName	)
+					})
           resolve(data)
         })
+// 				.then(data=>{
+// 					userApi.getUserInfo({})
+// 					.then( data => {
+// 						console.log(data);
+// 					})
+// 				})
 //      getUserInfo(state.token).then(res => {
 //        const data = res.data
 //        commit('setAvator', data.avator)

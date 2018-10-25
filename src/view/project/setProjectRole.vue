@@ -2,19 +2,19 @@
   <Form :model="obj" ref="obj" :rules="ruleCustom">
     <Row  type="flex" style="font-size:16px; margin-bottom:20px">
       <Col span="12">
-       <p> {{obj.projectName}}</p>
+       <!-- <p> {{obj.projectName}}</p> -->
       </Col>
     </Row>
     <Row  type="flex"  justify="space-around" class="border">
       <Col span="11">
-         <FormItem label="选择角色类型" prop="currentRoleIndex">
+         <FormItem label="选择职务类型" prop="currentRoleIndex">
             <Select @on-change="onRoleChange">
               <Option v-bind:value="index" v-for="(item, index) in roleList" :key="index">{{ item.roleName }}</Option>
             </Select>
         </FormItem>
       </Col>
       <Col span="11">
-        <FormItem label="搜索 - 添加对应角色用户">
+        <FormItem label="搜索 - 添加对应职务用户">
           <Input @on-change="searchUser"  v-model="searchKey"></Input>
           <div id=""  style="z-index: 9999; width: 100%;position: absolute; background-color: #fff;">
             <div v-for="(item, index) in userList" v-if="item.userName != '' || item.mobile != ''" :key="index">
@@ -29,14 +29,11 @@
       </Col>
     </Row>
     <div class="" style="min-height: 150px;">
-      <Row class="menber-row"  type="flex"  v-for="item in obj.roleTypeList" >
-          <span class="" style="font-size: 18px;">{{ item }} : </span>
-          <span>
-            <span class=""  v-for="(itemU, index) in obj.hooks[item]" style="padding-left:20px; font-size: 18px;" :key="index">
-              {{ itemU.userName }}（{{ itemU.mobile }} ） 
-              <div class="" style="display: inline; color: red; font-size: 12px;cursor: pointer;" :data-index="index" :data-roletype="item" :data-id="itemU.id" v-on:click="removeRoleUser">删除</div>;
-            </span>
-          </span>
+      <Row class="menber-row"  type="flex"  v-for="item in obj.roleTypeList" :key="item.id">
+          <span class="" ><Tag color="success">{{ item }} : </Tag></span>
+					<span class=""  v-for="(itemU, index) in obj.hooks[item]" style="padding-left:20px; font-size: 18px;" :key="index">
+						 <Tag closable @on-close="removeRoleUser" :name="index+'-'+item+'-'+itemU.id">{{ itemU.userName }} </Tag>
+					</span>
       </Row>
     </div>
     <FormItem style="text-align: right;">
@@ -89,28 +86,30 @@ export default {
     }
   },
   methods: {
-    removeRoleUser: function(e) {
-      console.log(e);
-      projectApi.deleteUserRole({ id: e.target.dataset.id }, data => {
-        this.obj.hooks[e.target.dataset.roletype].splice(
-          e.target.dataset.index,
+    removeRoleUser: function(e,name) {
+      console.log(name);
+			let index = name.split('-')[0]
+			let roletype = name.split('-')[1]
+			let id = name.split('-')[2]
+      projectApi.deleteUserRole({ id }, data => {
+        this.obj.hooks[roletype].splice(
+          index,
           1
         );
-        console.log(this.obj.hooks[e.target.dataset.roletype]);
+        console.log(this.obj.hooks[roletype]);
         this.obj.hooks = Object.assign({}, this.obj.hooks);
-        this.obj.roleTypeList = [];
+        this.obj.roleTypeList = []; //项目角色类别
         for (var prop in this.obj.hooks) {
-          if (this.obj.hooks[prop].length == 0) {
+          if (this.obj.hooks[prop].length == 0) {//去掉无相应人员的角色
             let temp = this.obj;
             delete temp.hooks[prop];
           } else {
             this.obj.roleTypeList.push(prop);
           }
         }
-        console.log(this.obj.roleTypeList);
         this.$Message.success(data.message);
         console.log(this.obj.roleTypeList);
-        console.log(this.obj.hooks[e.target.dataset.roletype]);
+        console.log(this.obj.hooks[roletype]);
         console.log(this.obj.hooks);
       });
     },
@@ -118,7 +117,7 @@ export default {
       console.log(index);
 
       if (this.currentRoleIndex == -1) {
-        this.$Message.error("请选择角色!");
+        this.$Message.error("请选择职务!");
         return;
       }
       projectApi.addUserRole(

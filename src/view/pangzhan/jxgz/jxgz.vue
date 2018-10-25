@@ -4,8 +4,10 @@
       <Table width="100%" border :columns="columns" :data="tableData"></Table>
       <div style="padding: 18px 10px 18px;text-align: right;clear: both;">
         <Page :total="total" show-total class="float-l" show-elevator show-sizer @on-change="pageChange" @on-page-size-change="pageSizeChange" :current="pageIndex" />
-        <p>{{word}}</p>
-        <Button type="primary" @click="showExportModal">导出Excel</Button>
+        <div>
+					<span style="padding-right: 20px;">{{word}} m³</span>
+					<Button type="primary" @click="showExportModal">导出Excel</Button>
+				</div>
       </div>
     </Card>
     <!--<Modal v-model="addModal.show" title="新增旁站灌注" ok-text="提交" :footer-hide="true" width="60%">
@@ -50,12 +52,30 @@
     data() {
       return {
         columns: [
-          //      { title: "楼栋号", key: "pileCode" },
           { title: "桩号", key: "pileCode" },
           { title: "设计坍落度", key: "designSlump" },
           { title: "砼理论方量", key: "theoryVolume" },
           { title: "砼实灌方量", key: "actualVolume" },
-          { title: "使用模板", key: "perfusionStartTime" },
+          { 
+						title: "状态", 
+						key: "perfusionStartTime",
+						render: (h, params) => {
+							return h("div", (() => {
+								console.log(params);
+								let str = "";
+								if(params.row.status == 0){
+									str = "未开始"
+								}else if(params.row.status == 1){
+									str = "已开始"
+								}else if(params.row.status == 2){
+									str = "待审核"
+								}else if(params.row.status == 3){
+									str = "已完成"
+								}
+								return str
+							})())
+						}
+					},
           {
             title: "操作",
             key: "handle",
@@ -66,7 +86,8 @@
                   {
                     props: {
                       type: "success",
-                      size: "small"
+                      size: "small",
+											disabled: !this.isAccessForButton("0001"),
                     },
                     on: {
                       click: e => {
@@ -76,6 +97,9 @@
                         });
                       }
                     },
+										style: {
+											marginRight: "5px"
+										}
                   },
                   "查看"
                 ),
@@ -84,7 +108,8 @@
                   {
                     props: {
                       type: "warning",
-                      size: "small"
+                      size: "small",
+											disabled: !this.isAccessForButton("0002"),
                     },
                     on: {
                       click: e => {
@@ -104,7 +129,7 @@
                   {
                     props: {
                       confirm: true,
-                      title: "你确定要删除吗?"
+                      title: "你确定要删除吗?",
                     },
                     on: {
                       "on-ok": () => {
@@ -122,7 +147,9 @@
                       {
                         props: {
                           type: "error",
-                          size: "small"
+                          size: "small",
+													disabled: !this.isAccessForButton("0003"),
+
                         }
                       },
                       "删除"
@@ -160,7 +187,7 @@
     },
     computed: {
       word() {
-        return `当前项目：${this.ROLE.projectName}，当前楼栋：${this.ROLE.buildingName}，当前水泥总量：${this.SoilVolume}`;
+        return `${this.ROLE.projectName}项目${this.ROLE.buildingName}楼砼实灌总方量：${this.SoilVolume}`;
       }
     },
     methods: {
@@ -209,17 +236,18 @@
             console.log(this.formItem);
             okfn && okfn()
           })
-        //    jxgzApi.getJxgzByCondition(tempobj).then(res => {
-        //      console.log(res.data);
-
-        //      okfn && okfn();
-        //    });
       },
       getList() {
-        jxgzApi.getListByCondition({ projectId: this.ROLE.projectId, buildingNum: this.ROLE.buildingId }).then(data => {
+				let data = { 
+					projectId: this.ROLE.projectId, 
+					buildingNum: this.ROLE.buildingId,
+					pageIndex:(this.pageIndex - 1)*this.pageSize,
+					pageSize:this.pageSize ,
+					}
+        jxgzApi.getListByCondition(data).then(data => {
           console.log(data);
-          this.tableData = data;
-          this.total = data.length;
+          this.tableData = data.list;
+          this.total = data.total;
         });
       },
       buildingChange() {
