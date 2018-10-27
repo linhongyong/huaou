@@ -27,7 +27,7 @@
         <setRole @modalAction="onModalAction" :obj="obj"></setRole>
       </div>
     </Modal>
-    <modalBuilding v-model="modal_building.show" :data="project"></modalBuilding>
+    <buildingSet v-model="isBuildingSetShow"  :obj="obj" :buildList="buildList"></buildingSet>
   </div>
 </template>
 
@@ -38,7 +38,7 @@ import Add from "./project-add.vue";
 import TmplSet from "./tmpl-set.vue";
 import setRole from "./setProjectRole.vue";
 import projectApi from "@/api/project-api";
-import modalBuilding from "./modal-building";
+import buildingSet from "./building-set.vue";
 import userApi from '@/api/user-api'
 export default {
   components: {
@@ -47,7 +47,7 @@ export default {
     Add,
     TmplSet,
     setRole,
-    modalBuilding
+    buildingSet
   },
   data() {
     return {
@@ -66,9 +66,7 @@ export default {
       setRoleModal: {
         show: false
       },
-      modal_building: {
-        show: false
-      },
+      isBuildingSetShow: false,
       project: {},
       hooks: {},
       roleTypeList: [],
@@ -177,9 +175,9 @@ export default {
                   },
                   on: {
                     click: e => {
-                      params.row.isModalBuildingShow = true;
-                      this.project = params.row;
-                      this.modal_building.show = true;
+											this.obj = Object.assign({}, this.obj, params.row) 
+											this.getBuildList(this.obj.id);
+                      this.isBuildingSetShow = true;
                     }
                   },
                   style: {

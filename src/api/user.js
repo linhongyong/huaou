@@ -20,7 +20,6 @@ export const login = ({
       throw new Error('账号或密码错误')
     }
   })
-
 }
 
 export const getUserInfo = (token) => {

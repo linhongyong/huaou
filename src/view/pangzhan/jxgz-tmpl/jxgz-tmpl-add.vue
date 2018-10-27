@@ -1,150 +1,169 @@
 <template>
-  <div style="width: 90%; margin: 0 auto;">
-    <div class="flex" >
-      <div class="flex-6 padding-v-5">模板名称：<Input v-model="obj.templateName" placeholder="" clearable :maxlength="200" style="width: 200px" /></div>
-      <div class="flex-6 padding-v-5">模板备注：<Input v-model="obj.remark" placeholder="" clearable :maxlength="200" style="width: 200px" /></div>
-    </div>
-    <div class="flex" >
-      <div class="flex-6 padding-v-5">施工单位：<Input v-model="obj.buildCompany" placeholder="" clearable :maxlength="200" style="width: 200px" /></div>
-    </div>
-    <div class="flex  padding-left-40">
-      <div class=" padding-v-5">一、机械设备：</div>
-      <div class="flex">
-        <div class=" padding-v-5">钻机型号: <Input v-model="obj.drillModel" placeholder="" clearable :maxlength="200" style="width: 150px" /></div> 
-        <div class="padding-v-5 margin-l-10">工作状态: <Input v-model="obj.workState" placeholder="" clearable :maxlength="200" style="width: 150px" /></div>
-      </div>
-    </div>
-    <div class="padding-left-40">
-      <div class="">二、材料质量:</div>
-      <div class="padding-left-40">
-        <div class="">
-          <div class="">钢筋笼配筋：</div>
-          <div class="padding-v-5 flex padding-left-40">
-            <div class="flex-3">主筋数量 : <Input v-model="obj.mainBarCount" placeholder="" clearable :maxlength="200" style="width: 100px" /></div>
-            <div class="flex-3">主筋类型 : 
-              <Input class="" v-model="obj.mainBarType" placeholder="" clearable :maxlength="200" style="width: 100px" >
-                <span slot="prefix" style="line-height: 30px;"></span>
-              </Input>
-            </div>
-            <div class="flex-3">箍筋 : 
-              <Input class="" v-model="obj.circularBar" placeholder="" clearable :maxlength="200" style="width: 100px" >
-                <span slot="prefix" style="line-height: 30px;"></span>
-              </Input>
-            </div>
-          </div>
-          <div class="padding-v-5 flex padding-left-40">
-            <div class="flex-3">加强箍 : 
-              <Input class="" v-model="obj.strongBar" placeholder="" clearable :maxlength="200" style="width: 100px" >
-                <span slot="prefix" style="line-height: 30px;"></span>
-              </Input>
-            </div>
-            <div class="flex-3">钢筋笼数量 : 
-              <Input class="" v-model="obj.barCageCount" placeholder=""  :maxlength="200" style="width: 100px" >
-                <span slot="suffix" style="line-height: 30px;">个</span>
-              </Input>
-            </div>
-            <div class="flex-3"></div><div class="flex-3"></div>
-            <!--<div class="flex-3">钢筋长度 : <Input v-model="obj.length" placeholder="" clearable :maxlength="200" style="width: 100px" /></div>-->
-            <!--<div class="flex-3">吊筋长度 : <Input v-model="obj.suspensionBarLength" placeholder="" clearable :maxlength="200" style="width: 100px" /></div>-->
-          </div>
-        </div>
-        <div class="padding-v-5 flex">
-        <div class="">钢筋及焊接结论：<Input v-model="obj.weldingResult" placeholder="" clearable :maxlength="200" style="width: 200px" /></div>
-        </div>
-      </div>
-    </div>
-    <div class="padding-left-40">
-       <div class="">三、施工情况：</div>
-       <div class="padding-v-5 padding-left-40">
-           <div class="flex">
-            <div class="flex-3">设计桩径  : 
-              <Input class="" v-model="obj.pileDiameter" placeholder="" :maxlength="200" style="width: 100px" >
-                <span slot="suffix" style="line-height: 30px;">mm</span>
-              </Input>
-             </div>
-            <div class="flex-3">设计桩长 : 
-              <Input class="" v-model="obj.designPileLength" placeholder="" :maxlength="200" style="width: 100px" >
-                <span slot="suffix" style="line-height: 30px;">m</span>
-              </Input>
-            </div>
-           </div>
-       </div>
-        <div class="padding-v-5 padding-left-40">
-           <div class="flex">
-             <div class="flex-3">平台标高/护筒标高 : 
-              <Input class="" v-model="obj.platformElevation" placeholder="" :maxlength="200" style="width: 100px" >
-                <span slot="suffix" style="line-height: 30px;">m</span>
-              </Input>
-             </div>
-             
-             <div class="flex-3">桩顶标高 : 
-              <Input class="" v-model="obj.pileTopHeight" placeholder="" :maxlength="200" style="width: 100px" >
-                <span slot="suffix" style="line-height: 30px;">m</span>
-              </Input>
-             </div>
-             
-           </div>
-       </div>
-    </div>
-    <div class="  padding-left-40">
-       <div class="">四、灌注情况：</div>
-       <div class="padding-v-5 padding-left-40">
-         <div class="">砼强度等级C : <Input v-model="obj.concreteStrongLevel" placeholder="" :maxlength="200" style="width: 100px" /></div>
-       </div>
-       <div class="padding-v-5 padding-left-40">
-        <div class="padding-v-5 flex">
-             <div class="flex-3">设计坍落度 : 
-               <Input class="" v-model="obj.designSlump" placeholder="" :maxlength="200" style="width: 100px" >
-                <span slot="suffix" style="line-height: 30px;">mm</span>
-              </Input>
-
-             </div>
-             <div class="flex-3">实测坍落度 : 
-               <Input class="" v-model="obj.actualSlump" placeholder="" :maxlength="200" style="width: 100px" >
-                <span slot="suffix" style="line-height: 30px;">m³</span>
-              </Input>
-
-             </div>
-             <div class="flex-3">砼理论方量 : 
-               <Input class="" v-model="obj.theoryVolume" placeholder="" :maxlength="200" style="width: 100px" >
-                <span slot="suffix" style="line-height: 30px;">m³</span>
-              </Input>
-
-             </div>
-             
-        </div>
-        <div class="padding-v-5 flex">
-             <div class="flex-3">砼实灌方量  : 
-               <Input class="" v-model="obj.actualVolume" placeholder="" :maxlength="200" style="width: 100px" >
-                <span slot="suffix" style="line-height: 30px;">m³</span>
-              </Input>
-             </div>
-            <div class="flex-5 margin-l-10">试块制作组数  : 
-              <Input class="" v-model="obj.sampleMaking" placeholder="" clearable :maxlength="200" style="width: 100px" >
-                <span slot="suffix" style="line-height: 30px;">组</span>
-              </Input>
-            </div>
-            <div class="flex-1"></div>
-            <div class="flex-1"></div>
-        </div>
-       </div>
-    </div>
-     <div class="" style="text-align: right;">
-     	<Button type="primary" @click="handleSubmit()">保存</Button>
-     </div>  
-  </div>
+	<div style="width: 90%; margin: 0 auto;">
+	<Form ref="obj" :model="obj" :rules="ruleValidate" :label-width="100">
+		<div class="display-flex-center-between"  >
+			<FormItem label="模板名称：" prop="templateName" required>
+					<Input v-model="obj.templateName" :maxlength="30"  style="width: 300px"></Input>
+			</FormItem>
+			<FormItem label="施工单位：" prop="buildCompany">
+					<Input v-model="obj.buildCompany"  :maxlength="30"  style="width: 300px"></Input>
+			</FormItem>
+		</div>
+		<FormItem label="模板备注：" prop="remark" required>
+				<Input v-model="obj.remark"  :maxlength="50"  style="width: 100%"></Input>
+		</FormItem>
+		<div class=" padding-v-5">一、机械设备：</div>
+		<div class="display-flex-center-between"  >
+			<FormItem label="钻机型号：" prop="drillModel">
+					<Input v-model="obj.drillModel" :maxlength="20"  style="width: 250px"></Input>
+			</FormItem>
+			<FormItem label="工作状态：" prop="workState">
+					<Input v-model="obj.workState"  :maxlength="8"  style="width: 250px"></Input>
+			</FormItem>
+		</div>
+		<div class="">二、材料质量:</div>
+		<div class="display-flex-center-between"  >
+			<FormItem label="主筋数量：" prop="mainBarCount">
+					<Input v-model="obj.mainBarCount" :maxlength="8"  style="width: 100px"></Input>
+			</FormItem>
+			<FormItem label="主筋类型：" prop="mainBarType">
+					<Input v-model="obj.mainBarType"  :maxlength="20"  style="width: 140px"></Input>
+			</FormItem>
+			<FormItem label="箍筋：" prop="circularBar">
+					<Input v-model="obj.circularBar" :maxlength="20"  style="width: 140px"></Input>
+			</FormItem>
+		</div>
+		<div class="display-flex-center-between"  >
+			<FormItem label="加强箍：" prop="strongBar">
+					<Input v-model="obj.strongBar" :maxlength="20"  style="width: 140px"></Input>
+			</FormItem>
+			<FormItem label="钢筋笼数量：" prop="barCageCount">
+					<Input v-model="obj.barCageCount" :maxlength="8"  style="width: 100px"></Input>
+			</FormItem>
+			<FormItem label="钢筋及焊接结论：" prop="weldingResult" :label-width="120">
+					<Input v-model="obj.weldingResult"  :maxlength="50"  style="width: 160px"></Input>
+			</FormItem>
+		</div>
+		<div class="">二、施工情况:</div>
+		<div class="display-flex-center-between"  >
+			<FormItem label="设计桩径 ：" prop="pileDiameter">
+					<Input v-model="obj.pileDiameter" :maxlength="8"  style="width: 120px">
+						<span slot="suffix" style="line-height: 30px;">mm</span>
+					</Input>
+			</FormItem>
+			<FormItem label="设计桩长：" prop="designPileLength">
+					<Input v-model="obj.designPileLength" :maxlength="8"  style="width: 120px">
+						<span slot="suffix" style="line-height: 30px;">m</span>
+					</Input>
+			</FormItem>
+			<FormItem label="平台标高/护筒标高 :" prop="platformElevation" :label-width="120">
+					<Input v-model="obj.platformElevation"  :maxlength="8"  style="width: 110px">
+						<span slot="suffix" style="line-height: 30px;">m</span>
+					</Input>
+			</FormItem>
+		</div>
+		<div class="flex"  >
+			<FormItem label="桩顶标高 :" prop="pileTopHeight">
+					<Input v-model="obj.pileTopHeight"  :maxlength="8"  style="width: 120px">
+						<span slot="suffix" style="line-height: 30px;">m</span>
+					</Input>
+			</FormItem>
+			<FormItem label="入岩深度 :" prop="deptRock">
+					<Input v-model="obj.deptRock"  :maxlength="8"  style="width: 120px">
+					</Input>
+			</FormItem>
+		</div>
+		<div class="">四、灌注情况：</div>
+		<div class="display-flex-center-between">
+			<FormItem label="砼强度等级C ：" prop="concreteStrongLevel">
+					<Input v-model="obj.concreteStrongLevel" :maxlength="20"  style="width: 120px"></Input>
+			</FormItem>
+			<FormItem label="设计坍落度 ：" prop="designSlump">
+					<Input v-model="obj.designSlump" :maxlength="8"  style="width: 120px">
+						<span slot="suffix" style="line-height: 30px;">mm</span>
+					</Input>
+			</FormItem>
+			<FormItem label="实测坍落度 :" prop="actualSlump">
+					<Input v-model="obj.actualSlump"  :maxlength="8"  style="width: 120px">
+						<span slot="suffix" style="line-height: 30px;">mm</span>
+					</Input>
+			</FormItem>
+			
+		</div>
+		<div class="display-flex-center-between"  >
+			<FormItem label="砼理论方量 :" prop="theoryVolume">
+					<Input v-model="obj.theoryVolume"  :maxlength="8"  style="width: 120px">
+						<span slot="suffix" style="line-height: 30px;">m³</span>
+					</Input>
+			</FormItem>
+			<FormItem label="砼实灌方量 ：" prop="actualVolume">
+					<Input v-model="obj.actualVolume" :maxlength="8"  style="width: 120px">
+						<span slot="suffix" style="line-height: 30px;">m³</span>
+					</Input>
+			</FormItem>
+			<FormItem label="试块制作组数 ：" prop="sampleMaking">
+					<Input v-model="obj.sampleMaking" :maxlength="8"  style="width: 120px">
+						<span slot="suffix" style="line-height: 30px;">组</span>
+					</Input>
+			</FormItem>
+			
+		</div>
+		
+	<div style="text-align: right;">
+		<FormItem>
+				<Button type="primary" @click="handleSubmit('obj')">保存</Button>
+        <Button @click="handleReset('obj')" style="margin-left: 8px">取消</Button>
+		</FormItem>
+	</div>
+		
+	</Form>
+	</div>
 </template>
 <script>
 import jxgzTmplApi from '@/api/jxgz-tmpl-api'
 export default {
+	
   data () {
+		const validateIsNaN = (rule, value, callback) => {
+			if(isNaN(value) && value){
+				callback(new Error('请输入数值'));
+			}else{
+				callback();
+			}
+		};
+		const validateIsInteger = (rule, value, callback) => {
+			if(isNaN(value) && value){
+				callback(new Error('请输入数值'));
+			}else{
+				if(Number.isInteger(value-0)  || !value){
+					callback();
+				}else{
+					callback(new Error('请输入整数'));
+				}
+			}
+		};
     return {
       obj: {
         roleName: '',
         remark: '',
         type: "0"
       },
-      
+      ruleValidate:{
+				templateName: [{ required: true, message: "必填项", trigger: 'change' } ],
+				remark: [{ required: true, message: "必填项", trigger: 'change' } ],
+				mainBarCount: [{ validator: validateIsInteger, trigger: 'change' } ],
+				barCageCount: [{ validator: validateIsInteger, trigger: 'change' } ],
+				pileDiameter: [{ validator: validateIsNaN, trigger: 'change' } ],
+				designPileLength: [{ validator: validateIsNaN, trigger: 'change' } ],
+				platformElevation: [{ validator: validateIsNaN, trigger: 'change' } ],
+				pileTopHeight: [{ validator: validateIsNaN, trigger: 'change' } ],
+				deptRock: [{ validator: validateIsNaN, trigger: 'change' } ],
+				designSlump: [{ validator: validateIsNaN, trigger: 'change' } ],
+				actualSlump: [{ validator: validateIsNaN, trigger: 'change' } ],
+				theoryVolume: [{ validator: validateIsNaN, trigger: 'change' } ],
+				actualVolume: [{ validator: validateIsNaN, trigger: 'change' } ],
+				sampleMaking: [{ validator: validateIsInteger, trigger: 'change' } ],
+			}
     }
   },
 	computed: {
@@ -155,43 +174,32 @@ export default {
   props: {
   },
   methods: {
-    handleSubmit (obj) {
-      let that = this
-      if(!this.obj.templateName){
-        this.$Message.error('请填写项目名称！');
-        return;
-      }
-      if(!this.obj.remark){
-        this.$Message.error('请填写项目备注！');
-        return;
-      }
-      if(!this.obj.buildCompany){
-        this.$Message.error('请填写施工单位！');
-        return;
-      }
-      if(!this.obj.drillModel){
-        this.$Message.error('请填写工作状态！');
-        return;
-      }
-      // this.obj.mainBar = `${this.obj.mainBarNum}φ${this.obj.mainBarType}`
-			this.obj.projectId = this.projectId;
-      jxgzTmplApi.addJxgzTmpl(this.obj, (data) => {
-        console.log(data); 
-        this.$Message.success({
-          content: '添加成功！',
-          onClose: () => {
-            this.obj = {};
-             this.$emit('addModalClose', true)
-          }
-        });
-      }, (data) => {
-        this.$Message.error(data.message);
-      })
-    },
-    handleReset () {
-      this.obj = {};
-      this.$emit('addModalClose', true)
-    }
+		handleSubmit (obj) {
+			this.$refs[obj].validate((valid) => {
+				if (valid) {
+						this.obj.projectId = this.projectId;
+						jxgzTmplApi.addJxgzTmpl(this.obj, (data) => {
+							console.log(data); 
+							this.$Message.success({
+								content: '保存成功！',
+								onClose: () => {
+									this.obj = {};
+									this.$emit('addModalClose', true)
+								}
+							});
+						}, (data) => {
+							this.$Message.error(data.message);
+						})
+				} else {
+						this.$Message.error('保存失败!');
+				}
+			})
+		},
+		handleReset (obj) {
+			this.obj = {}
+			this.$refs[obj].resetFields();
+			this.$emit('addModalClose', true)
+		}
   },
   mounted () {
 
