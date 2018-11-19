@@ -123,6 +123,39 @@ export default [
           }
         ]
       },
+			{
+				path: 'yyl',
+				name: 'yyl',
+				meta: {
+					hideInMenu: true,
+					icon: 'md-folder',
+					title: '预应力管桩'
+				},
+				component: parentView,
+				children: [
+					{
+						path: 'yyllist',
+						name: 'yyllist',
+						meta: {
+							icon: 'ios-list-box',
+							title: '预应力管桩旁站管理',
+							hideInMenu: true,
+						},
+						component: () => import('@/view/pangzhan/yyl/yyl.vue')
+					},
+// 					{
+// 						path: 'yyltmpl',
+// 						name: 'yyltmpl',
+// 						meta: {
+// 							icon: 'ios-list-box',
+// 							title: '机械灌注模板管理',
+// 							hideInMenu: true,
+// 						},
+// 						 component: () => import('@/view/pangzhan/jxgz-tmpl/jxgz-tmpl.vue')
+// 
+// 					}
+				]
+			},
       {
 
         path: 'commom',

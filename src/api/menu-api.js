@@ -55,7 +55,7 @@ menu.getMenus = (data, fnOk, fnError) => {
   axios
     .request({
       url: `/menu/list`,
-      method: 'post'
+      method: 'get'
     })
     .then((res) => {
       if (res.data.code != 'Success') {

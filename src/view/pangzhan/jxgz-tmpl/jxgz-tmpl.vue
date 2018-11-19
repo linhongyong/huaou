@@ -4,7 +4,7 @@
       <Table width="100%" border :columns="columns2" :data="tmplList"></Table>
       <div style="padding: 18px 10px 18px;text-align: right;clear: both;">
         <Page :total="total" show-total class="float-l" show-elevator show-sizer @on-change="pageChange" @on-page-size-change="pageSizeChange" :current="pageIndex"/>
-        <Button style="" type="primary" shape="circle" icon="md-add" v-on:click="addModal.show = true" :disabled="!isAccessForButton('0004')"></Button>
+        <Button style="" type="primary" shape="circle" icon="md-add" v-on:click="addModal.show = true"  :disabled="!isAccessForButton('0004')"></Button>
       </div>
     </Card>
     <Modal v-model="editModal.show" title="修改模板" :footer-hide="true" width="60%"  :scrollable="true"  :styles="{top:'0px'}">
@@ -120,7 +120,7 @@ export default {
 			let data = {
 				pageIndex: this.pageSize*(this.pageIndex - 1), 
 				pageSize: this.pageSize,
-				data: this.ROLE.projectId
+				data: this.PROJECT.id
 			}
 			jxgzTmplApi.getJxgzTmplListByProjectId(data)
 			.then( data =>{

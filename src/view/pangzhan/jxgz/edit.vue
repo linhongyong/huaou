@@ -42,7 +42,7 @@
             <div class="flex-3">主筋数量 : 
               <Input v-model="obj.mainBarCount" placeholder="" clearable :maxlength="200" style="width: 100px" />
             </div>
-            <div class="flex-3">主筋类型 : 
+            <div class="flex-3">主筋 : 
               <Input class="" v-model="obj.mainBarType" placeholder="" clearable :maxlength="200" style="width: 100px" >
                 <span slot="prefix" style="line-height: 30px;"></span>
               </Input>

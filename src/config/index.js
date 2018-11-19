@@ -13,8 +13,10 @@ export default {
    * @description api请求基础路径
    */
   baseUrl: {
-    dev: 'http://47.98.132.165:18088/',
-    //  dev: 'https://www.easy-mock.com/mock/5add9213ce4d0e69998a6f51/iview-admin/',
-    pro: 'http://47.98.132.165:18088/'
+    // dev: 'http://www.believeyou.top:18088',
+		dev: 'http://192.168.1.2:18088',
+		// dev: 'https://www.therethey.com',
+    // pro: 'https://www.therethey.com',
+		pro: 'https://www.therethey.com'
   }
 }

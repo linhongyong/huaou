@@ -4,13 +4,31 @@
       <div class=""  style="min-height: 100px; clear: both;padding: 0 20px; font-size: 18px;margin-top: 40px;">
         <Tag color="success" v-if="obj.roleSelectedList.length > 0"> 已选职务:</Tag>
 				<span class=""  v-for="(item, index) in obj.roleSelectedList" style="padding-left:20px; font-size: 18px;" :key="index">
-					<Button type="success" @click="reduceRole(index)"><span style="padding-right: 5px;">{{ item.roleName }}{{ item.projectName ? "（"+item.projectName+"项目）" : ""}}</span><Icon type="ios-trash-outline" size="18"/></Button>
+					<Button type="success" @click="reduceRole(index)" v-if="item.roleName != '老板' && item.roleName != '超级管理员' && item.roleName != '系统管理员' ">
+						<span style="padding-right: 5px;">{{ item.roleName }}{{ item.projectName ? "（"+item.projectName+"项目）" : ""}}</span>
+						<Icon type="ios-trash-outline" size="18"/>
+					</Button>
+					<Button type="success" @click="reduceRole(index)" :disabled="true" v-else-if="item.roleName != '老板' || item.roleName != '超级管理员'" >
+						<span style="padding-right: 5px;">{{ item.roleName }}{{ item.projectName ? "（"+item.projectName+"项目）" : ""}}</span>
+						<Icon type="ios-trash-outline" size="18"/>
+					</Button>
+					<Button type="success" @click="reduceRole(index)" :disabled="!isAccessForButton('0035')" v-else >
+						<span style="padding-right: 5px;">{{ item.roleName }}{{ item.projectName ? "（"+item.projectName+"项目）" : ""}}</span>
+						<Icon type="ios-trash-outline" size="18"/>
+					</Button>
 				</span>
       </div>
       <div class=""  style="min-height: 60px; clear: both;padding: 0 20px; font-size: 18px;">
         <Tag color="warning" v-if="obj.roleList.length > 0">可选职务:</Tag>
-				<span class=""  v-for="(item, index) in obj.roleList" style="padding-left:20px; font-size: 18px;" :key="index">
-					<Button type="warning" @click="addRole(index)"><span style="padding-right: 5px;">{{ item.roleName }}</span><Icon type="md-add" size="18"/></Button>
+				<span class=""  v-for="(item, index) in obj.roleList" style="padding-left:20px; font-size: 18px;" :key="index" >
+					<Button type="warning" @click="addRole(index)" v-if="item.roleName != '老板' && item.roleName != '超级管理员' && item.roleName != '系统管理员' ">
+						<span style="padding-right: 5px;">{{ item.roleName }}</span>
+						<Icon type="md-add" size="18"/>
+					</Button><!--v-if="item.roleName != '老板' && item.roleName != '超级管理员' " -->
+					<Button type="warning" @click="addRole(index)"  :disabled="!isAccessForButton('0035')" v-else-if="item.roleName == '系统管理员'" >
+						<span style="padding-right: 5px;">{{ item.roleName }}</span>
+						<Icon type="md-add" size="18"/>
+					</Button>
 				</span>
 	
       </div>
@@ -56,7 +74,7 @@ export default {
       
     },
     reduceRole (index){
-      if(this.obj.roleSelectedList[index].projectName && this.obj.roleSelectedList[index].projectName != ""){
+      if(this.obj.roleSelectedList[index].projectName){
         this.$Message.error("暂无相应权限");
         return;
       }

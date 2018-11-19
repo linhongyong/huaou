@@ -66,7 +66,7 @@
       // 获取当前项目的楼栋列表
       getBuildList() {
         apiProject
-          .getBuildList({ projectId: Number(this.roleData.projectId) })
+          .getBuildList({ projectId: Number(this.roleData.id) })
           .then(data => {
             this.buildList = data.map(({ buildingName, id }) => ({
               label: buildingName,
@@ -86,7 +86,7 @@
           if (valid) {
             this.$emit("input", false);
             const reqData = {
-              projectId: Number(this.roleData.projectId),
+              projectId: Number(this.roleData.id),
               buildingId: this.query.buildingId
             };
             this.exportExcel(

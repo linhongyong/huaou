@@ -28,7 +28,7 @@ export default {
     }
   },
   created() {
-    if (this.PROJECT.id) this.getList();
-    if (this.BUILDING.id) this.buildingChange();
+    if (this.PROJECT && this.PROJECT.id) this.getList();
+    if (this.BUILDING && this.BUILDING.id) this.buildingChange();
   }
 };

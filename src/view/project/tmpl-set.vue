@@ -124,8 +124,8 @@ export default {
         projectId: this.obj.id,
         buildingId: this.bodyObj.buildingId,
         type: this.bodyObj.type,
-        pageIndex: 1,
-        pageSize: 100,
+        pageIndex: 0,
+        pageSize: 10000,
       }
       if(!(temp.projectId && temp.buildingId && temp.type)){ return; }
       

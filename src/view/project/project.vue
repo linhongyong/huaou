@@ -3,7 +3,7 @@
     <Card>
       <Table width="100%" border :columns="columns2" :data="joinedList"></Table>
       <div style="padding: 18px 10px 18px;text-align: right;clear: both;">
-        <Page :total="total" show-total class="float-l" show-elevator show-sizer @on-change="pageChange" @on-page-size-change="pageSizeChange" :current="pageIndex"/>
+        <!-- <Page :total="total" show-total class="float-l" show-elevator show-sizer @on-change="pageChange" @on-page-size-change="pageSizeChange" :current="pageIndex"/> -->
         <Button style="" type="primary" shape="circle" icon="md-add" v-on:click="addModal.show = true" :disabled="!this.isAccessForButton('0013')"></Button>
       </div>
     </Card>
@@ -27,7 +27,7 @@
         <setRole @modalAction="onModalAction" :obj="obj"></setRole>
       </div>
     </Modal>
-    <buildingSet v-model="isBuildingSetShow"  :obj="obj" :buildList="buildList"></buildingSet>
+    <buildingSet v-model="isBuildingSetShow"  :obj="obj" :buildList="buildList" @updateBuildList="getBuildList"></buildingSet>
   </div>
 </template>
 
@@ -40,7 +40,9 @@ import setRole from "./setProjectRole.vue";
 import projectApi from "@/api/project-api";
 import buildingSet from "./building-set.vue";
 import userApi from '@/api/user-api'
+import MIXIN_project_building from "@/mixin/mixin-project-building";
 export default {
+	mixins: [MIXIN_project_building],
   components: {
     Tables,
     Edit,
@@ -225,13 +227,21 @@ export default {
           }
         }
       ],
-      joinedList: [],
+      
       buildList: [],
       pageIndex: 1,
       pageSize: 10,
-      total: 0
     };
   },
+	computed:{
+		joinedList() {
+			let list = this.$store.state.user.projects;
+			return list;
+		},
+		total(){
+			return this.$store.state.user.projects.length;
+		}
+	},
   methods: {
     onModalAction (e){
       console.log(e);
@@ -242,7 +252,7 @@ export default {
       }else{
         console.error("不存在这种模态框行为")
       }
-      this.getJoinedList();
+      this.getList();
     },
     addhooks: function(type, hook) {
       var hooks = this.hooks[type];
@@ -254,28 +264,33 @@ export default {
     },
     addModalClose() {
       this.addModal.show = false;
-      this.getJoinedList();
+      this.getList();
     },
     editModalClose() {
       this.hooks = [];
       this.roleTypeList = [];
       this.editModal.show = false;
-      this.getJoinedList();
-    },
-    getJoinedList() {//获取用户参与的所有项目
-      projectApi.getJoinedList({}, data => {
-        console.log(data);
-        this.joinedList = data.result;
-        this.total = data.result.length;
-      });
+      this.getList();
     },
     getList() {//获取用户参与的所有项目
-      projectApi.getList({}, data => {
-        console.log(data);
-        this.joinedList = data.result;
-        this.total = data.result.length;
-      });
+// 			this.$Notice.success({
+// 					title: '新建项目后请重新登录',
+// 					desc: '右上角退出登录然后重新登录. '
+// 			});
+			if(this.$store.state.user.isCanSeeAllProject){
+				this.getProjectList();
+			}else{
+				this.getJoinedList();
+			}
+
     },
+//     getList() {//获取用户参与的所有项目
+//       projectApi.getList({}, data => {
+//         console.log(data);
+//         this.joinedList = data.result;
+//         this.total = data.result.length;
+//       });
+//     },
     getBuildList(id) { //通过ProjectId获得楼栋信息
       projectApi
         .getBuildList({ projectId: id })
@@ -286,16 +301,16 @@ export default {
           this.$Message.error("获取楼栋数据失败");
         });
     },
-    pageChange(pageIndex) {
-      console.log(pageIndex);
-      this.pageIndex = pageIndex;
-      this.getJoinedList();
-    },
-    pageSizeChange(pageSize) {
-      console.log(pageSize);
-      this.pageSize = parseInt(pageSize);
-      this.getJoinedList();
-    },
+//     pageChange(pageIndex) {
+//       console.log(pageIndex);
+//       this.pageIndex = pageIndex;
+//       this.getList();
+//     },
+//     pageSizeChange(pageSize) {
+//       console.log(pageSize);
+//       this.pageSize = parseInt(pageSize);
+//       this.getList();
+//     },
     onCancelEditModal() {
       this.hooks = [];
       this.roleTypeList = [];
@@ -306,11 +321,7 @@ export default {
     }
   },
   mounted() {
-    this.getJoinedList();
-    userApi.getMenusOwn()
-    .then( data => {
-      console.log(data);
-    })
+    // this.getList();
   }
 };
 </script>

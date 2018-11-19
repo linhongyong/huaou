@@ -22,6 +22,7 @@
         <Detail  :obj="detail"></Detail>
       </div>
     </Modal>
+		<OperationLog v-model="isOperationLogShow" :operationLogList="operationLogList" :obj="obj"></OperationLog>
   </div>
 </template>
 <script>
@@ -31,14 +32,16 @@ import Add from "./snjb-add.vue";
 import Detail from "./snjb-detail.vue";
 import snjbApi from "@/api/snjb-api";
 import MIXIN_ROLE from "@/mixin/ROLE";
-
+import pangzhanApi from "@/api/pangzhan-api";
+import OperationLog from "../operation-record.vue"
 export default {
   mixins: [MIXIN_ROLE], // 引入mixin之后，即可通过this.ROLE获取到权限信息
   components: {
     Tables,
     Edit,
     Add,
-    Detail
+    Detail,
+		OperationLog
   },
   data() {
     return {
@@ -55,10 +58,26 @@ export default {
       columns2: [
 //      { title: "模板名称", key: "templateName" },
         { title: "桩号", key: "pileStartNum" },
-        { title: "成桩开始时间", key: "finishPileStartTime" },
-        { title: "成桩结束时间", key: "finishPileEndTime" },
-        { title: "日完成桩数", key: "dayFinishCount" },
-        { title: "日完成量", key: "dayFinishVolume" },
+        { 
+        	title: "状态", 
+        	key: "perfusionStartTime",
+        	render: (h, params) => {
+        		return h("div", (() => {
+        			console.log(params);
+        			let str = "";
+        			if(params.row.status == 0){
+        				str = "未开始"
+        			}else if(params.row.status == 1){
+        				str = "已开始"
+        			}else if(params.row.status == 2){
+        				str = "待审核"
+        			}else if(params.row.status == 3){
+        				str = "已完成"
+        			}
+        			return str
+        		})())
+        	}
+        },
         {
           title: "操作",
           key: "action",
@@ -143,12 +162,38 @@ export default {
                         type: "error",
                         size: "small",
 												disabled: !this.isAccessForButton("0009"),
-                      }
+                      },
+											style: {
+												marginRight: "5px"
+											}
                     },
                     "删除"
                   )
                 ]
-              )
+              ),
+							h(
+								"Button",
+								{
+									props: {
+										type: "success",
+										size: "small",
+										disabled: !this.isAccessForButton("0030"),
+									},
+									on: {
+										click: e => {
+											console.log(params.row);
+											this.obj = Object.assign({}, this.obj, params.row) 
+											this.obj.pileCode = params.row.pileStartNum//兼容水泥
+											this.getOperationLogList(this.obj.id);
+											this.isOperationLogShow = true;
+										}
+									},
+									style: {
+										marginRight: "5px"
+									}
+								},
+								"查看操作记录"
+							),
             ]);
           }
         }
@@ -156,7 +201,12 @@ export default {
       snjbList: [],
       pageIndex: 1,
       pageSize: 10,
-      total: 0
+      total: 0,
+			isOperationLogShow: false,
+			operationLogList:[],
+			obj:{
+				
+			}
     };
   },
   methods: {
@@ -194,8 +244,8 @@ export default {
     // 获取列表的方法名统一改为getList，为了在选择工程的时候 刷新页面
     getList() {
 			let data = { 
-				projectId: this.ROLE.projectId, 
-				buildingId: this.ROLE.buildingId,
+				projectId: this.PROJECT.id, 
+				buildingId: this.BUILDING.id,
 				pageIndex:(this.pageIndex - 1)*this.pageSize,
 				pageSize:this.pageSize ,
 				}
@@ -208,6 +258,18 @@ export default {
     buildingChange() {
       this.getList();
     },
+		getOperationLogList(id){
+			pangzhanApi
+				.getOperationLogListByIdType({
+					pangzhanId: id,
+					type: "0002"
+				})
+				.then(data => {
+					this.operationLogList = data;
+				})
+				.catch(() => {
+				});
+		},
     pageChange(pageIndex) {
       console.log(pageIndex);
       this.pageIndex = pageIndex;

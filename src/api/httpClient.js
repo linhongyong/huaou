@@ -11,7 +11,11 @@ const client = (method) => ({ url, data, defaultValue }) =>
     axios
       .request(config)
       .then((res) => {
-        if (res.data.code == 'Success') resolve(res.data.result);
+        if (res.data.code == 'Success'){
+					console.log(url,res.data.result,"**********")
+					// console.log(res.data.result)	
+					resolve(res.data.result);
+				}
         else reject(res.data);
       })
       .catch((err) => {

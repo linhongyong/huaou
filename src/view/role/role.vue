@@ -61,8 +61,20 @@ export default {
         },
         {
           title: '是否项目职务',
-          key: 'type'
-          //  width: 100
+          key: 'type',
+          render: (h, params) => {
+          	return h("div", (() => {
+          		let str = "";
+          		if(params.row.type == 0){
+          			str = "否"
+          		}else if(params.row.type == 1){
+          			str = "是"
+          		}else{
+          			str = "未知"
+          		}
+          		return str
+          	})())
+          }
         },
         {
           title: '操作',

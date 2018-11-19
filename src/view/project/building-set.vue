@@ -2,13 +2,13 @@
     <Modal v-model="show" :title="'设置楼栋信息: '+obj.projectName"   width="60%">
         <Form inline :model="buildData" ref="form" :rules="ruleValidate">
             <FormItem label="楼栋名" :label-width="80" prop="buildingName" >
-                <Input v-model="buildData.buildingName"></Input>
+                <Input v-model="buildData.buildingName" :maxlength="30"></Input>
             </FormItem>
-            <FormItem label="楼栋编号" :label-width="80" prop="buildingCode">
-                <Input  v-model="buildData.buildingCode"></Input>
+            <FormItem label="楼栋编号" :label-width="80" prop="buildingCode" >
+                <Input  v-model="buildData.buildingCode" :maxlength="30"></Input>
             </FormItem>
             <FormItem label="总桩数" :label-width="80">
-                <InputNumber v-model="buildData.pileNum" :min="0" :max="1000"></InputNumber>
+                <InputNumber v-model="buildData.pileNum" :min="0" :max="5000"></InputNumber>
             </FormItem>
              <FormItem :label-width="20">
                  <Button v-if="buttonType === 0" type="primary" @click="addBuildData">添加</Button>
@@ -41,17 +41,17 @@ export default {
       // 0: 新增 1: 确认修改
       buttonType: 0,
       columns: [
-				{
-						type: 'expand',
-						width: 50,
-						render: (h, params) => {
-								return h(expandRow, {
-										props: {
-												rowObj: params.row
-										}
-								})
-						}
-				},
+// 				{
+// 						type: 'expand',
+// 						width: 50,
+// 						render: (h, params) => {
+// 								return h(expandRow, {
+// 										props: {
+// 												rowObj: params.row
+// 										}
+// 								})
+// 						}
+// 				},
         { title: "楼栋名", key: "buildingName" },
         { title: "楼栋代码", key: "buildingCode" },
         { title: "总桩数", key: "pileNum" },
@@ -110,7 +110,7 @@ export default {
           apiProject
             .addBuild(
               Object.assign(this.buildData, {
-                projectId: Number(this.data.id)
+                projectId: Number(this.obj.id)
               })
             )
             .then(() => {
@@ -131,7 +131,7 @@ export default {
           apiProject
             .updateBuild(
               Object.assign(this.buildData, {
-                projectId: Number(this.data.id)
+                projectId: Number(this.obj.id)
               })
             )
             .then(() => {
@@ -147,7 +147,19 @@ export default {
         }
       });
     },
-
+		getBuildList() { //通过ProjectId获得楼栋信息
+		
+			this.$emit("updateBuildList", this.obj.id);
+// 			console.log(this.obj.id);
+//       apiProject
+//         .getBuildList({ projectId: this.obj.id } )
+//         .then(data => {
+//           this.buildList = data;
+//         })
+//         .catch(err => {
+//           this.$Message.error("获取楼栋数据失败");
+//         });
+    },
     handleOk() { this.$emit("input", false); },
     handleCancel() { this.$emit("input", false); }
   }

@@ -17,7 +17,7 @@
         <Add @addModalClose="addModalClose"></Add>
       </div>
     </Modal>
-    <Modal v-model="isUserRoleSetModalShow" title="设置用户职务" :footer-hide="true" width="60%">
+    <Modal v-model="isUserRoleSetModalShow" :title="'设置用户职务: '+user.userName" :footer-hide="true" width="60%">
       <div id="" style="width:80%, margin:0 auto">
         <SetUserRole :obj="user"  @modalAction="onModalAction"></SetUserRole>
       </div>

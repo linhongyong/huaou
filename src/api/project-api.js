@@ -147,11 +147,18 @@ project.addUserRole = (data, fnOk, fnError) => {
     });
 };
 
+project.getProjectList = (data) => httpClient.get({
+  url: '/project/list',
+  data
+});
+project.getJoinedList = (data) => httpClient.get({
+  url: '/project/getJoinedList',
+  data
+});
 project.getOwnList = (data) => httpClient.get({
   url: '/project/listOwn',
   data
 });
-
 project.addProjectByName = (data) => httpClient.post({
   url: '/project/addByName',
   data

@@ -124,12 +124,10 @@
 				this.checkedBoxs = nodes;
 			},
 			addMenu: function(){
-				this.obj = {
-          icon:"+",
-          parentId:null
-        }
+				this.obj = initObj()
 			},
 			deleteMenu: function () {
+				// this.$Message.success("暂时关闭了删除操作");
 				let id = this.obj.id
 				menuApi.deleteById({id})
 				.then(() => {
@@ -180,6 +178,9 @@
       },
       getRoleDetail(roles ){
         console.log(roles)
+				if(!roles || !roles.length){
+					return
+				}
 				this.obj.id = roles[0].id;
         this.obj.parentId = roles[0].parentId;
 				this.obj.menuName = roles[0].menuName;

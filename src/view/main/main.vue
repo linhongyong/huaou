@@ -82,12 +82,9 @@
         return this.tagNavList.length ? this.tagNavList.filter(item => !(item.meta && item.meta.notCache)).map(item => item.name) : []
       },
       menuList() {
-				console.log("监听到menuList变化··········")
 				if(!this.$store.state.app.menuList.length){
-					console.log(JSON.parse(localStorage.getItem("menuList")))
 					return JSON.parse(localStorage.getItem("menuList"))
 				}
-				console.log(this.$store.state.app.menuList);
         return this.$store.state.app.menuList
 // 				console.log(this.$store.getters.menuList);
 // 				return this.$store.getters.menuList
@@ -150,7 +147,6 @@
     },
     watch: {
       '$route'(newRoute) {
-        console.log(newRoute)
         this.setBreadCrumb(newRoute.matched)
         this.setTagNavList(getNewTagList(this.tagNavList, newRoute))
       }

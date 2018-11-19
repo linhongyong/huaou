@@ -4,11 +4,11 @@
     <custom-bread-crumb show-icon style="margin-left: 30px;" :list="breadCrumbList"></custom-bread-crumb>
 
     <div class="custom-content-con">
-      <Select v-model="projectId" style="width:200px" class="i-select" @on-change="handleSelectChange">
-        <Option v-for="item in projectList" :value="item.value" :key="item.value">{{ item.projectName }}</Option>
+      <Select :value="projectId" style="width:200px" class="i-select" @on-change="handleProjectIdChange">
+        <Option v-for="item in projectList" :value="item.id" :key="item.id">{{ item.projectName }}</Option>
       </Select>
-      <Select v-model="buildingId" style="width:200px" class="i-select" @on-change="handleBuildingIdChange">
-        <Option v-for="item in buildList" :value="item.value" :key="item.value">{{ item.label }}</Option>
+      <Select :value="buildingId" style="width:200px" class="i-select" @on-change="handleBuildingIdChange">
+        <Option v-for="item in buildList" :value="item.id" :key="item.id">{{ item.buildingName }}</Option>
       </Select>
       <slot></slot>
     </div>
@@ -19,6 +19,7 @@ import siderTrigger from "./sider-trigger";
 import customBreadCrumb from "./custom-bread-crumb";
 import "./header-bar.less";
 import apiProject from "@/api/project-api";
+import userApi from "@/api/user-api";
 import { mapMutations, mapState } from "vuex";
 
 export default {
@@ -36,75 +37,134 @@ export default {
     }),
     breadCrumbList() {
       return this.$store.state.app.breadCrumbList;
-    }
+    },
+		projectId(){
+			let project = this.$store.state.user.project;
+			console.log("project----",project);
+			if(!project.id){
+				console.log(localStorage.getItem("project"));
+				let obj = JSON.parse(localStorage.getItem("project"))
+				if(obj && obj.id){
+					this.setProject(obj);
+					project = obj;
+				}
+			}
+			return project.id;
+		},
+		buildingId(){
+			let building = this.$store.state.user.building;
+			if(!building.id){
+				let obj = JSON.parse(localStorage.getItem("building"))
+				if(obj && obj.id){
+					this.setProject(obj);
+					building = obj;
+				}
+			}
+			return building.id;
+		},
+		projectList() {
+			let list = this.$store.state.user.projects;
+			if(!list.length){
+				list = JSON.parse(localStorage.getItem("projects"))
+				if(list){
+					this.setProjects(list);
+					return list;
+				}
+			}
+			return this.$store.state.user.projects;
+		},
+		
+		buildList() {
+			let list = this.$store.state.user.buildings;
+			if(!list.length){
+				list = JSON.parse(localStorage.getItem("buildings"))
+				if(list){
+					this.setBuildings(list);
+					return list;
+				}
+			}
+			return this.$store.state.user.buildings;
+		},
+		
   },
   watch: {
-    ROLE(val) {},
     projectId(id) {
       this.getBuildList(id);
-    }
+    },
   },
   data() {
     return {
-      projectId: "",
-      projectList: [],
-      buildingId: "",
-      buildList: []
+			projectIndex: 0,
+			buildingIndex: 0,
     };
   },
   created() {
-    this.getProjectList();
   },
   methods: {
-    ...mapMutations(["setProject", "setBuilding"]),
+    ...mapMutations(["setProjects","setProject", "setBuilding", "setRoles", "setBuildings"]),
     handleCollpasedChange(state) {
       this.$emit("on-coll-change", state);
     },
-    getProjectList() {
-      apiProject
-        .getOwnList()
-        .then(data => {
-          this.projectList = data.map(item =>
-            Object.assign(item, {
-              label: item.projectName,
-              value: item.projectId
-            })
-          );
-          // 默认选择第一个项目
-          if (this.projectList.length > 0) {
-            const { projectId, projectName } = this.projectList[0];
-            this.projectId = projectId;
-            // 提交mutation
-            this.setProject({ projectId, projectName });
-          }
-        })
-        .catch(err => {
-          this.$Message.error("获取项目列表失败");
-        });
-    },
+		getRoles() {
+			userApi
+				.getRoles()
+				.then(roles => {
+					this.roles = roles;
+					this.setRoles(roles);//1.保存到全局
+					let isCanSeeAllProject = false;
+					roles.forEach(function (item) {
+						if (item.roleName == '老板' || item.roleName == '贵宾') {
+							isCanSeeAllProject = true
+						}
+					})
+					if (isCanSeeAllProject) {
+						console.log("获得所有项目");
+						this.getProjectList();
+					} else{
+						console.log("获得参与项目");
+						this.getJoinedList();
+					}
+					
+				})
+				.catch(err => {
+					this.$Message.error("获取职务列表失败");
+				});
+		},
     getBuildList(projectId) {
       apiProject.getBuildList({ projectId }).then(data => {
-        this.buildList = data.map(({ buildingName, id, buildingCode }) => ({
-          label: buildingName,
-          value: id,
-          buildingId: id,
-          buildingName,
-          buildingCode
-        }));
-        if (this.buildList.length > 0) {
-          const { buildingId, buildingName, buildingCode } = this.buildList[0];
-          this.buildingId = buildingId;
-          // 提交mutation
-          this.setBuilding({ buildingId, buildingName, buildingCode });
-        }
+				if(!data || !data.length){
+					data = []
+				}
+				this.setBuildings(data);
+				localStorage.setItem("buildings",JSON.stringify(data))
+        if (data.length > 0) {
+          this.setBuilding(data[0]);
+					localStorage.setItem("building",JSON.stringify(data[0]))
+        }else{
+					this.setBuilding({});
+					localStorage.setItem("building",JSON.stringify({}))
+				}
       });
     },
     // 选择项目时触发
-    handleSelectChange(id) {
-      this.setProject(this.projectList.find(item => item.projectId === id));
+    handleProjectIdChange(id) {
+			this.getBuildList(id);
+			let project = this.projectList.find(item => item.id == id);
+			if(project){
+				this.setProject(project);
+				localStorage.setItem("project",JSON.stringify(project))
+			}
+      
     },
     handleBuildingIdChange(id) {
-      this.setBuilding(this.buildList.find(item => item.buildingId === id));
+			let building = this.buildList.find(item => item.id == id);
+			if(building && building.id){
+				this.setBuilding(building);
+				localStorage.setItem("building",JSON.stringify(building))
+			}else{
+				this.setBuilding({});
+				localStorage.setItem("building",JSON.stringify({}))
+			}
     }
   }
 };

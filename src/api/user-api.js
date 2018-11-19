@@ -5,6 +5,8 @@ let user = new Object();
 //获得用户菜单
 user.getMenusOwn = (data) => httpClient.get({ url: '/menu/getMenusOwn', data });
 user.getUserInfo = (data) => httpClient.get({ url: '/user/getUserLogin', data });
+user.getRoles = (data) => httpClient.get({ url: '/user/getRoles', data });
+
 user.login = ({ userName, password }) => {
   const data = {
     userName,

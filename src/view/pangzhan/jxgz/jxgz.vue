@@ -26,6 +26,7 @@
       </div>
     </Modal>
     <modalExport v-model="modal_export.show" :roleData="this.modal_export.roleData"></modalExport>
+		<OperationLog v-model="isOperationLogShow" :operationLogList="operationLogList" :obj="obj"></OperationLog>
   </div>
 </template>
 
@@ -36,8 +37,11 @@
   import Edit from "./edit.vue";
   import Detail from "./detail.vue";
   import modalExport from "./modal-export";
+	import OperationLog from "../operation-record.vue"
   //import expandRow from './table-expand.vue'
   import jxgzApi from "@/api/jxgz-api";
+	import pangzhanApi from "@/api/pangzhan-api";
+	
   import MIXIN_ROLE from "@/mixin/ROLE";
   import math from "_u/math.js";
   export default {
@@ -47,15 +51,16 @@
       Tables,
       Edit,
       Detail,
-      modalExport
+      modalExport,
+			OperationLog
     },
     data() {
       return {
         columns: [
           { title: "桩号", key: "pileCode" },
-          { title: "设计坍落度", key: "designSlump" },
-          { title: "砼理论方量", key: "theoryVolume" },
-          { title: "砼实灌方量", key: "actualVolume" },
+//           { title: "设计坍落度", key: "designSlump" },
+//           { title: "砼理论方量", key: "theoryVolume" },
+//           { title: "砼实灌方量", key: "actualVolume" },
           { 
 						title: "状态", 
 						key: "perfusionStartTime",
@@ -79,6 +84,7 @@
           {
             title: "操作",
             key: "handle",
+						
             render: (h, params) => {
               return h("div", [
                 h(
@@ -150,12 +156,36 @@
                           size: "small",
 													disabled: !this.isAccessForButton("0003"),
 
-                        }
+                        },
+												style: {
+													marginRight: "5px"
+												}
                       },
                       "删除"
                     )
                   ]
-                )
+                ),
+								h(
+									"Button",
+									{
+										props: {
+											type: "success",
+											size: "small",
+											disabled: !this.isAccessForButton("0029"),
+										},
+										on: {
+											click: e => {
+												this.obj = Object.assign({}, this.obj, params.row) 
+												this.getOperationLogList(this.obj.id);
+												this.isOperationLogShow = true;
+											}
+										},
+										style: {
+											marginRight: "5px"
+										}
+									},
+									"查看操作记录"
+								),
               ]);
             }
           }
@@ -182,12 +212,17 @@
           show: false,
           roleData: {}
         },
-        SoilVolume: 0
+        SoilVolume: 0,
+				isOperationLogShow: false,
+				operationLogList:[],
+				obj:{
+					
+				}
       };
     },
     computed: {
       word() {
-        return `${this.ROLE.projectName}项目${this.ROLE.buildingName}楼砼实灌总方量：${this.SoilVolume}`;
+        return `${this.PROJECT.projectName}项目${this.BUILDING.buildingName}楼砼实灌总方量：${this.SoilVolume}`;
       }
     },
     methods: {
@@ -238,9 +273,12 @@
           })
       },
       getList() {
+				if(!this.PROJECT || !this.PROJECT.id || !this.BUILDING || !this.BUILDING.id){
+					return;
+				}
 				let data = { 
-					projectId: this.ROLE.projectId, 
-					buildingNum: this.ROLE.buildingId,
+					projectId: this.PROJECT.id, 
+					buildingNum: this.BUILDING.id,
 					pageIndex:(this.pageIndex - 1)*this.pageSize,
 					pageSize:this.pageSize ,
 					}
@@ -265,10 +303,14 @@
         this.getList();
       },
       getSoilVolume() {
+				if(!this.PROJECT || !this.PROJECT.id || !this.BUILDING || !this.BUILDING.id){
+					return;
+				}
+				console.log(this.PROJECT);console.log(this.BUILDING);
         jxgzApi
           .getSoilVolume({
-            projectId: Number(this.ROLE.projectId),
-            buildingId: this.ROLE.buildingId
+            projectId: Number(this.PROJECT.id),
+            buildingId: this.BUILDING.id
           })
           .then(data => {
             this.SoilVolume = data || 0;
@@ -277,9 +319,22 @@
             this.$Message.error("获得水泥总数失败");
           });
       },
-      showExportModal() {
+      getOperationLogList(id){
+				pangzhanApi
+					.getOperationLogListByIdType({
+						pangzhanId: id,
+						type: "0001"
+					})
+					.then(data => {
+						this.operationLogList = data;
+					})
+					.catch(() => {
+					});
+			},
+			showExportModal() {
         this.modal_export.show = true;
-        this.modal_export.roleData = deepCopy(this.ROLE)
+        // this.modal_export.roleData = deepCopy(this.ROLE);
+				this.modal_export.roleData = this.$store.state.user.project
       }
     },
     mounted() { }

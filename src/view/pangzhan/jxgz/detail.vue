@@ -26,7 +26,7 @@
           <div class="">钢筋笼配筋：</div>
           <div class="padding-v-5 flex padding-left-40">
             <div class="flex-3">主筋数量 : {{ obj.mainBarCount }} </div>
-						<div class="flex-3">主筋类型:{{ obj.mainBarType }}</div>
+						<div class="flex-3">主筋:{{ obj.mainBarType }}</div>
             <div class="flex-3">箍筋 : {{ obj.circularBar }}</div>
             <div class="flex-3">加强箍 : {{ obj.strongBar }}</div>
           </div>
