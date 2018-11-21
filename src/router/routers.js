@@ -143,17 +143,6 @@ export default [
 						},
 						component: () => import('@/view/pangzhan/yyl/yyl.vue')
 					},
-// 					{
-// 						path: 'yyltmpl',
-// 						name: 'yyltmpl',
-// 						meta: {
-// 							icon: 'ios-list-box',
-// 							title: '机械灌注模板管理',
-// 							hideInMenu: true,
-// 						},
-// 						 component: () => import('@/view/pangzhan/jxgz-tmpl/jxgz-tmpl.vue')
-// 
-// 					}
 				]
 			},
       {
@@ -183,6 +172,28 @@ export default [
       
     ]
   },
+	{
+		path: '/tz',
+		name: 'tz',
+		meta: {
+			icon: 'md-person',
+			title: '台账',
+			// hideInMenu: true,
+		},
+		component: Main,
+		children: [
+			{
+				path: '/gjycl_list',
+				name: 'gjycl_list',
+				meta: {
+					icon: 'ios-podium',
+					title: '钢筋原材料',
+					// hideInMenu: true,
+				},
+				component: () => import('@/view/taizhang/gjycl/gjycl.vue')
+			}
+		]
+	},
   {
     path: '/project',
     name: 'project',

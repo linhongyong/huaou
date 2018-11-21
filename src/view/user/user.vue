@@ -167,7 +167,7 @@ export default {
       this.getUsers()
     },
     getUsers () {
-      userApi.getUsers({pageIndex: this.pageSize*(this.pageIndex - 1)+1, pageSize: this.pageSize}, (data) => {
+      userApi.getUsers({pageNum : this.pageIndex, pageSize: this.pageSize}, (data) => {
         console.log(data)
         this.userList = data.result.list
         this.total =  data.result.total

@@ -71,7 +71,7 @@ user.updateUser = (data, fnOk, fnError) => {
 }
 user.getUsers = (data, fnOk, fnError) => {
   axios.request({
-    url: `/user/list?pageIndex=${data.pageIndex}&pageSize=${data.pageSize}`,
+    url: `/user/list?pageNum=${data.pageNum}&pageSize=${data.pageSize}`,
     method: 'post',
   }).then(res => {
     console.log(res)

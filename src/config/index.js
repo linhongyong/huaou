@@ -14,7 +14,7 @@ export default {
    */
   baseUrl: {
     // dev: 'http://www.believeyou.top:18088',
-		dev: 'http://192.168.1.2:18088',
+		dev: 'https://www.therethey.com',
 		// dev: 'https://www.therethey.com',
     // pro: 'https://www.therethey.com',
 		pro: 'https://www.therethey.com'

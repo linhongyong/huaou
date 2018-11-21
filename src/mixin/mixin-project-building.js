@@ -118,8 +118,6 @@ export default {
 					localStorage.setItem("building",'{}')
 					this.setBuilding({});
 				}
-				
-	  	
 	  	});
 	  },
   },

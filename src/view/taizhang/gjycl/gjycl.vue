@@ -2,27 +2,22 @@
   <div>
     <Card>
       <Table width="100%" border :columns="columns" :data="tableData"></Table>
-			<div style="padding: 18px 10px 40px;text-align: right;clear: both;">
-				<Page :total="total" show-total class="float-l" show-elevator show-sizer @on-change="pageChange" @on-page-size-change="pageSizeChange" :current="pageIndex"/>
-				<!--<Button style="" type="primary" shape="circle" icon="md-add" v-on:click="addModal.show = true"></Button>-->
-			</div>
-    </Card>
-    <!--<Modal v-model="addModal.show" title="新增旁站灌注" ok-text="提交" :footer-hide="true" width="60%">
-      <div id="" style="width:80%, margin:0 auto">
-        <Add  @addModalClose="<addModalClose></addModalClose>"></Add>
+      <div style="padding: 18px 10px 40px;text-align: right;clear: both;">
+      	<Page :total="total" show-total class="float-l" show-elevator show-sizer @on-change="pageChange" @on-page-size-change="pageSizeChange" :current="pageIndex"/>
+      	<!--<Button style="" type="primary" shape="circle" icon="md-add" v-on:click="addModal.show = true"></Button>-->
       </div>
-    </Modal>-->
-    <Modal v-model="editModal.show" title="修改预应力管桩旁站" ok-text="提交" :footer-hide="true" width="60%" :scrollable="true" :styles="{top:'0px'}">
+    </Card>
+
+    <!-- <Modal v-model="editModal.show" title="修改预应力管桩旁站" ok-text="提交" :footer-hide="true" width="60%" :scrollable="true" :styles="{top:'0px'}">
       <div id="" style="width:80%, margin:0 auto">
         <Edit @editModalClose="editModalClose" :obj="formItem"></Edit>
       </div>
-    </Modal>
-    <Modal v-model="detailModal.show" title="预应力管桩旁站详情" ok-text="确认" width="60%" :scrollable="true">
+    </Modal> -->
+    <Modal v-model="detailModal.show" :title="'台账详情 编号:'+formItem.id" ok-text="确认" width="60%" :scrollable="true">
       <div id="">
         <Detail :obj="formItem"></Detail>
       </div>
     </Modal>
-    <!-- <modalExport v-model="modal_export.show" :roleData="this.modal_export.roleData"></modalExport> -->
 		<OperationLog v-model="isOperationLogShow" :operationLogList="operationLogList" :obj="obj"></OperationLog>
   </div>
 </template>
@@ -30,15 +25,11 @@
 <script>
   import Tables from "_c/tables";
 
-  //import Add from './add.vue'
   import Edit from "./edit.vue";
   import Detail from "./detail.vue";
-  // import modalExport from "./modal-export";
 	import OperationLog from "../operation-record.vue"
-  //import expandRow from './table-expand.vue'
-  import yylApi from "@/api/yyl-api";
+  import taizhangApi from "@/api/taizhang-api";
 	import pangzhanApi from "@/api/pangzhan-api";
-	
   import MIXIN_ROLE from "@/mixin/ROLE";
   import math from "_u/math.js";
   export default {
@@ -55,34 +46,13 @@
     data() {
       return {
         columns: [
-          { title: "桩号", key: "pileCode" },
-//           { title: "设计坍落度", key: "designSlump" },
-//           { title: "砼理论方量", key: "theoryVolume" },
-//           { title: "砼实灌方量", key: "actualVolume" },
-          { 
-						title: "状态", 
-						key: "perfusionStartTime",
-						render: (h, params) => {
-							return h("div", (() => {
-								console.log(params);
-								let str = "";
-								if(params.row.status == 0){
-									str = "未开始"
-								}else if(params.row.status == 1){
-									str = "已开始"
-								}else if(params.row.status == 2){
-									str = "待审核"
-								}else if(params.row.status == 3){
-									str = "已完成"
-								}
-								return str
-							})())
-						}
-					},
+          { title: "编号", key: "id" },
+          { title: "进程日期", key: "enterDate" },
+					{ title: "生产厂家", key: "manufacturer" },
+					{ title: "规格", key: "specifications" },
           {
             title: "操作",
             key: "handle",
-						
             render: (h, params) => {
               return h("div", [
                 h(
@@ -96,7 +66,7 @@
                     on: {
                       click: e => {
                         console.log(params.row);
-                        this.getDetailById(params.row.id);
+                        this.getDetail(params.row.id);
                       }
                     },
 										style: {
@@ -126,65 +96,6 @@
                   },
                   "修改"
                 ),
-                h(
-                  "Poptip",
-                  {
-                    props: {
-                      confirm: true,
-                      title: "你确定要删除吗?",
-                    },
-                    on: {
-                      "on-ok": () => {
-                        console.log(params);
-												let data = {
-													id: params.row.id
-												}
-                        yylApi.deleteById(data).then(data => {
-                          this.tableData.splice(params.index, 1);
-                          this.$Message.success("删除成功！");
-                        });
-                      }	
-                    }
-                  },
-                  [
-                    h(
-                      "Button",
-                      {
-                        props: {
-                          type: "error",
-                          size: "small",
-													disabled: !this.isAccessForButton("0034"),
-
-                        },
-												style: {
-													marginRight: "5px"
-												}
-                      },
-                      "删除"
-                    )
-                  ]
-                ),
-								h(
-									"Button",
-									{
-										props: {
-											type: "success",
-											size: "small",
-											disabled: !this.isAccessForButton("0031"),
-										},
-										on: {
-											click: e => {
-												this.obj = Object.assign({}, this.obj, params.row) 
-												this.getOperationLogList(this.obj.id);
-												this.isOperationLogShow = true;
-											}
-										},
-										style: {
-											marginRight: "5px"
-										}
-									},
-									"查看操作记录"
-								),
               ]);
             }
           }
@@ -211,7 +122,6 @@
           show: false,
           roleData: {}
         },
-        SoilVolume: 0,
 				isOperationLogShow: false,
 				operationLogList:[],
 				obj:{
@@ -240,32 +150,30 @@
         this.editModal.show = false;
         this.getList();
       },
-      getDetailById(id, okfn) {
-        yylApi.getDetailById({ id })
+      getDetail(id, okfn) {
+        taizhangApi.getDetail({ id, type: "0001" })
           .then(data => {
            this.formItem = data
 					 this.detailModal.show = true
           })
       },
       getList() {
-				if(!this.PROJECT || !this.PROJECT.id || !this.BUILDING || !this.BUILDING.id){
+				if(!this.PROJECT || !this.PROJECT.id){
 					return;
 				}
 				let data = { 
+					type: "0001",
 					projectId: this.PROJECT.id, 
-					buildingId: this.BUILDING.id,
 					pageIndex:(this.pageIndex - 1)*this.pageSize,
 					pageSize:this.pageSize ,
 					}
-        yylApi.getYylgzpzList(data).then(data => {
+        taizhangApi.getTZList(data).then(data => {
           console.log(data);
           this.tableData = data.list;
           this.total = data.total;
         });
       },
-      buildingChange() {
-        this.getList();
-      },
+			buildingChange (){},
       pageChange(pageIndex) {
         console.log(pageIndex);
         this.pageIndex = pageIndex;
@@ -288,10 +196,6 @@
 					.catch(() => {
 					});
 			},
-// 			showExportModal() {
-//         this.modal_export.show = true;
-//         this.modal_export.roleData = deepCopy(this.ROLE)
-//       }
     },
     mounted() { }
   };
