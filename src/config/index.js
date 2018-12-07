@@ -13,10 +13,9 @@ export default {
    * @description api请求基础路径
    */
   baseUrl: {
-    // dev: 'http://www.believeyou.top:18088',
-		dev: 'https://www.therethey.com',
+    dev: 'https://www.believeyou.top',
 		// dev: 'https://www.therethey.com',
-    // pro: 'https://www.therethey.com',
+		// pro: 'https://www.believeyou.top',
 		pro: 'https://www.therethey.com'
   }
 }

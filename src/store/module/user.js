@@ -69,22 +69,6 @@ export default {
 		setProject(state, project) {
 			state.project = project;
 		},
-//     setProject(state, {
-//       projectId,
-//       projectName
-//     }) {
-//       state.project.id = Number(projectId);
-//       state.project.name = projectName;
-//     },
-//     setBuilding(state, {
-//       buildingId,
-//       buildingName,
-//       buildingCode
-//     }) {
-//       state.building.id = Number(buildingId);
-//       state.building.name = buildingName;
-//       state.building.buildingCode = buildingCode;
-//     },
   },
   actions: {
     // 登录
@@ -133,20 +117,9 @@ export default {
         .then( data => {
 					userApi.getUserInfo({})
 					.then( data2 => {
-						// console.log(data2);
 						commit('setAvator', data2.avatar	)
 						commit('setUserName', data2.userName	)
 					})
-// 					userApi.getRoles({})
-// 					.then( data3 => {
-// 						// console.log(data3);
-// 						data3.forEach(function(elem){
-// 							if (elem.roleName == '老板' || elem.roleName == '贵宾') {
-// 								console.log(elem.roleName)
-// 								commit('setIsCanSeeAllProjectr', true)
-// 							}
-// 						})
-// 					})
           resolve(data)
         })
         .catch(err => {

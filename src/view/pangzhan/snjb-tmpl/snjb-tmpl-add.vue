@@ -2,8 +2,11 @@
   <div style="width: 90%; margin: 0 auto;">
     <div class="flex padding-v-5" >
       <div class="flex-6 padding-v-5">模板名称：<Input v-model="obj.templateName" placeholder="" clearable :maxlength="200" style="width: 200px" /></div>
-      <div class="flex-6 padding-v-5">模板备注：<Input v-model="obj.remark" placeholder="" clearable :maxlength="200" style="width: 200px" /></div>
+			<div class="flex-6 padding-v-5">几轴水泥：<Input v-model="obj.severalAxes " placeholder="如:一轴/二轴/三轴" clearable :maxlength="200" style="width: 200px" /></div>
     </div>
+		<!-- <div class="flex padding-v-5" >
+			<div class="flex-6 padding-v-5">模板备注：<Input v-model="obj.remark" placeholder="" clearable :maxlength="200" style="width: 200px" /></div>
+		</div> -->
     <div class=" padding-v-5">
       <div class=" padding-v-5">一、机械设备：</div>
       <div class="flex padding-v-5  padding-left-40">
@@ -25,7 +28,7 @@
        <div class="padding-v-5 padding-left-40">
            <div class="flex">
              <div class="flex-3">设计桩径  : <Input v-model="obj.desigePileDiameter" placeholder="" clearable :maxlength="200" style="width: 80px" /></div>
-              <div class="flex-3">桩底标高 : <Input v-model="obj.pileBottomHeight" placeholder="" clearable :maxlength="200" style="width: 80px" /></div>
+              <div class="flex-3">桩底相对标高 : <Input v-model="obj.pileBottomHeight" placeholder="" clearable :maxlength="200" style="width: 80px" /></div>
              <div class="flex-3">桩顶标高 : <Input v-model="obj.pileTopHeight" placeholder="" clearable :maxlength="200" style="width: 80px" /></div>
              <div class="flex-3">设计桩长 : <Input v-model="obj.desigePileLength" placeholder="" clearable :maxlength="200" style="width: 80px" /></div>
            </div>
@@ -78,6 +81,7 @@ export default {
         this.$Message.error('请填写项目名称！');
         return;
       }
+			this.obj.projectId = this.projectId;
       snjbTmplApi.addSnjbTmpl(this.obj, (data) => {
         console.log(data); 
         this.$Message.success({
@@ -95,6 +99,11 @@ export default {
       this.$emit('addModalClose', true)
     }
   },
+	computed: {
+		projectId() {
+			return this.$store.state.user.project.id
+		},
+	},
   mounted () {
 
   }

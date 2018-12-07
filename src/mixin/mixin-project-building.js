@@ -30,10 +30,10 @@ export default {
 	  			let isCanSeeAllProject = false;
 	  			localStorage.setItem("roles",JSON.stringify(roles))
 	  			roles.forEach(function (item) {
-						console.log(this);
-	  				if (item.roleName == '老板' || item.roleName == '贵宾') {
+	  				if (item.roleName == '老板' || item.roleName == '管理员' || item.roleName == '系统管理员' || item.roleName == '超级系统管理员') {
 							this.setIsCanSeeAllProject(true)
 	  					isCanSeeAllProject = true
+							localStorage.setItem("isCanSeeAllProject", true)
 	  				}
 	  			}, this)
 	  			if (isCanSeeAllProject) {
@@ -67,7 +67,7 @@ export default {
 				if (data.length > 0) {
 					localStorage.setItem("project",JSON.stringify(data[0]))
 					this.setProject(data[0]);
-					this.getBuildList(data[0].id);
+					// this.getBuildList(data[0].id);
 				}else{
 					localStorage.setItem("project",'{}')
 					this.setProject({});
@@ -92,7 +92,7 @@ export default {
 	  			if (data.length > 0) {
 	  				localStorage.setItem("project",JSON.stringify(data[0]))
 	  				this.setProject(data[0]);
-	  				this.getBuildList(data[0].id);
+	  				// this.getBuildList(data[0].id);
 	  			}
 	  		})
 	  		.catch(err => {
@@ -105,7 +105,9 @@ export default {
 		 * 并存入localStorage、更新vuex中的buildings和builidng
 		 */
 	  getBuildList(projectId) {
+			console.log("getBuildList------")
 	  	projectApi.getBuildList({ projectId }).then(data => {
+				console.log("---------getBuildList")
 				if(!data || !data.length){
 					data = []
 				}
@@ -122,6 +124,8 @@ export default {
 	  },
   },
   created() {
-   
+		if(localStorage.getItem("isCanSeeAllProject")){
+			this.setIsCanSeeAllProject(true)
+		}
   }
 };

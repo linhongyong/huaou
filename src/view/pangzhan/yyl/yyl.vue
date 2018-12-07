@@ -1,6 +1,18 @@
 <template>
   <div>
+		
     <Card>
+			<div style="padding: 10px;">
+			<!-- 	<Input v-model="wordRange" placeholder="输入桩号范围(如:1,2,3 或 1-3)" style="width: 300px" />
+				<Button type="primary" @click="showExportWord" style="margin-left: 10px;">批量导出Word</Button> -->
+				<!-- <form class="" :action="'https://www.therethey.com//pangzhan//exportWords'" method="post" style="display: inline-block;">
+					<input placeholder="输入桩号范围(如:1,2,3 或 1-3)" style="width: 300px" name="ranges"/>
+					<input name="type" type="text" value="0003" hidden/>
+					<input name="projectId" type="text" :value="projectId" hidden />
+					<input name="buildingId" type="text" :value="buildingId" hidden />
+					<input class="btn" type="submit" value="导出wosrd" style=""/>
+				</form> -->
+			</div>
       <Table width="100%" border :columns="columns" :data="tableData"></Table>
 			<div style="padding: 18px 10px 40px;text-align: right;clear: both;">
 				<Page :total="total" show-total class="float-l" show-elevator show-sizer @on-change="pageChange" @on-page-size-change="pageSizeChange" :current="pageIndex"/>
@@ -64,7 +76,7 @@
 						key: "perfusionStartTime",
 						render: (h, params) => {
 							return h("div", (() => {
-								console.log(params);
+								// console.log(params);
 								let str = "";
 								if(params.row.status == 0){
 									str = "未开始"
@@ -73,6 +85,11 @@
 								}else if(params.row.status == 2){
 									str = "待审核"
 								}else if(params.row.status == 3){
+									str = "已完成"
+								}
+								else if(params.row.status == 4){
+									str = "待审核"
+								}else if(params.row.status == 5){
 									str = "已完成"
 								}
 								return str
@@ -95,6 +112,12 @@
                     },
                     on: {
                       click: e => {
+												if(params.row.status != 3 && params.row.status != 5){//未完成的旁站
+													if(this.isAccessForButton("39")){
+														this.$Message.error("未完成旁站，暂不允许查看");
+														return;
+													}
+												}
                         console.log(params.row);
                         this.getDetailById(params.row.id);
                       }
@@ -219,8 +242,14 @@
 				}
       };
     },
-    computed: {
-    },
+	computed: {
+		projectId(){
+			return this.PROJECT.id
+		},
+		buildingId(){
+			return this.BUILDING.id
+		}
+	},
     methods: {
       exportExcel() {
         this.$refs.tables.exportCsv({

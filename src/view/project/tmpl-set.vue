@@ -62,6 +62,7 @@ import { getStrArrayFromBigArray } from "@/libs/mytools";
 import pangzhanTmplApi from "@/api/pangzhan-tmpl-api";
 import jxgzTmplApi from '@/api/jxgz-tmpl-api'
 import snjbTmplApi from '@/api/snjb-tmpl-api'
+import yylTmplApi from '@/api/yyl-tmpl-api'
 export default {
   data() {
     return {
@@ -150,13 +151,13 @@ export default {
       })
     },
     getTemplList  : function(){
+			let data = {
+				pageIndex: 0, 
+				pageSize: 100,
+				data: this.obj.id
+			}
       if(this.bodyObj.type == "0001"){
-				let data = {
-					pageIndex: 0, 
-					pageSize: 100,
-					data: this.obj.id
-				}
-				jxgzTmplApi.getJxgzTmplListByProjectId(data)
+				jxgzTmplApi.getTmplList(data)
 				.then( data =>{
 					console.log(data);
 					for(let i=0; i<data.list.length; i++){
@@ -166,7 +167,7 @@ export default {
 					this.getPangzhanTmplInfo();
 				})
       }else if(this.bodyObj.type == "0002"){
-        snjbTmplApi.getTmplList({pageIndex: 1, pageSize: 100})
+        snjbTmplApi.getTmplList(data)
         .then( data => {
           console.log(data)
 					for(let i=0; i<data.list.length; i++){
@@ -176,7 +177,15 @@ export default {
 					this.getPangzhanTmplInfo();
         })
       }else if(this.bodyObj.type == "0003"){
-        this.tmplList = [];
+        yylTmplApi.getTmplList(data)
+        .then( data => {
+        	console.log(data)
+        	for(let i=0; i<data.list.length; i++){
+        		data.list[i].pileList = [];
+        	}
+        	this.tmplList = data.list//接口不统
+        	this.getPangzhanTmplInfo();
+        })
       }
       
     },

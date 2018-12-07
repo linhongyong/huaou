@@ -143,6 +143,16 @@ export default [
 						},
 						component: () => import('@/view/pangzhan/yyl/yyl.vue')
 					},
+					{
+						path: 'yyltmpl_list',
+						name: 'yyltmpl_list',
+						meta: {
+							icon: 'ios-list-box',
+							title: '预应力管桩模板管理',
+							hideInMenu: true,
+						},
+						component: () => import('@/view/pangzhan/yyl-tmpl/yyl-tmpl.vue')
+					},
 				]
 			},
       {
@@ -176,9 +186,9 @@ export default [
 		path: '/tz',
 		name: 'tz',
 		meta: {
-			icon: 'md-person',
+			icon: 'ios-folder-open',
 			title: '台账',
-			// hideInMenu: true,
+			hideInMenu: true,
 		},
 		component: Main,
 		children: [
@@ -188,10 +198,40 @@ export default [
 				meta: {
 					icon: 'ios-podium',
 					title: '钢筋原材料',
-					// hideInMenu: true,
+					hideInMenu: true,
 				},
 				component: () => import('@/view/taizhang/gjycl/gjycl.vue')
-			}
+			},
+			{
+				path: '/gjjthj_list',
+				name: 'gjjthj_list',
+				meta: {
+					icon: 'ios-podium',
+					title: '钢筋接头焊接',
+					hideInMenu: true,
+				},
+				component: () => import('@/view/taizhang/gjjthj/gjjthj.vue')
+			},
+			{
+				path: '/tskjzqy_list',
+				name: 'tskjzqy_list',
+				meta: {
+					icon: 'ios-podium',
+					title: '砼试块见证取样',
+					hideInMenu: true,
+				},
+				component: () => import('@/view/taizhang/tskjzqy/tskjzqy.vue')
+			},
+			{
+				path: '/common_list',
+				name: 'common_list',
+				meta: {
+					icon: 'ios-podium',
+					title: '通用台账',
+					hideInMenu: true,
+				},
+				component: () => import('@/view/taizhang/common/common.vue')
+			},
 		]
 	},
   {

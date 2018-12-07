@@ -31,6 +31,7 @@
       <div class="flex">
         <div class=" padding-v-5">钻机型号: <Input v-model="obj.drillModel" placeholder="" clearable :maxlength="200" style="width: 150px" /></div> 
         <div class="padding-v-5 margin-l-10">工作状态: <Input v-model="obj.workState" placeholder="" clearable :maxlength="200" style="width: 150px" /></div>
+				<div class="padding-v-5 margin-l-10">桩机号: <Input v-model="obj.pilingMachine" placeholder="" clearable :maxlength="200" style="width: 150px" /></div>
       </div>
     </div>
     <div class="padding-left-40">
@@ -64,7 +65,7 @@
                 <span slot="suffix" style="line-height: 30px;">个</span>
               </Input>
             </div>
-            <!--<div class="flex-3">钢筋长度 : <Input v-model="obj.length" placeholder="" clearable :maxlength="200" style="width: 100px" /></div>-->
+            <div class="flex-3">钢筋笼长度 : <Input v-model="obj.length" placeholder="" clearable :maxlength="200" style="width: 100px" /></div>
             <!--<div class="flex-3">吊筋长度 : <Input v-model="obj.suspensionBarLength" placeholder="" clearable :maxlength="200" style="width: 100px" /></div>-->
           </div>
         </div>
@@ -82,20 +83,25 @@
                   <span slot="suffix" style="line-height: 30px;">mm</span>
                 </Input>
                </div>
-              <div class="flex-3">设计桩长 : 
+              <div class="flex-3">设计桩长B : 
                 <Input class="" v-model="obj.designPileLength" placeholder="" :maxlength="200" style="width: 100px" >
                   <span slot="suffix" style="line-height: 30px;">m</span>
                 </Input>
               </div>
+							<!-- <div class="flex-3">本次测量成孔深度 : 
+								<Input class="" v-model="obj.bencishen" placeholder="" :maxlength="200" style="width: 100px" >
+									<span slot="suffix" style="line-height: 30px;">m</span>
+								</Input>
+							</div> -->
             </div>
             <div class="flex padding-v-5">
-             <div class="flex-3">平台标高/护筒标高 : 
+             <div class="flex-3">平台标高/护筒标高A : 
               <Input class="" v-model="obj.platformElevation" placeholder="" :maxlength="200" style="width: 100px" >
                 <span slot="suffix" style="line-height: 30px;">m</span>
               </Input>
              </div>
              
-             <div class="flex-3">桩顶标高 : 
+             <div class="flex-3">桩顶标高C : 
               <Input class="" v-model="obj.pileTopHeight" placeholder="" :maxlength="200" style="width: 100px" >
                 <span slot="suffix" style="line-height: 30px;">m</span>
               </Input>
@@ -106,33 +112,63 @@
         <div class="flex padding-v-5">
              <div class="flex-3">开孔时间 : <Input v-model="obj.openTime" placeholder="" clearable :maxlength="200" style="width: 250px" /></div>
              <div class="flex-3">终孔时间 : <Input v-model="obj.stopTime" placeholder="" clearable :maxlength="200" style="width: 250px" /></div>
-             
         </div>
+				<div class="flex padding-v-5">
+						<div class="flex-3">下钢筋笼开始时间 : <Input v-model="obj.dropCageStartTime" placeholder="" clearable :maxlength="200" style="width: 250px" /></div>
+						<div class="flex-3">下钢筋笼结束时间 : <Input v-model="obj.dropCageEndTime" placeholder="" clearable :maxlength="200" style="width: 250px" /></div>
+				</div>
+				<div class="flex padding-v-5">
+						<div class="flex-3">二次清孔开始时间 : <Input v-model="obj.secondCleanStartTime" placeholder="" clearable :maxlength="200" style="width: 250px" /></div>
+						<div class="flex-3">二次清孔结束时间 : <Input v-model="obj.secondCleanEndTime" placeholder="" clearable :maxlength="200" style="width: 250px" /></div>
+				</div>
         <div class="flex padding-v-5">  
           <div class="flex-3">实际孔深 : 
             <Input class="" v-model="obj.actualDeep" placeholder="" :maxlength="200" style="width: 100px" >
               <span slot="suffix" style="line-height: 30px;">m</span>
             </Input>
           </div> 
-
+					<div class="flex-3">二次测量孔深 : 
+            <Input class="" v-model="obj.secondActualDeep" placeholder="" :maxlength="200" style="width: 100px" >
+              <span slot="suffix" style="line-height: 30px;">m</span>
+            </Input>
+          </div> 
           <div class="flex-3">有效桩长  :
             <Input class="" v-model="obj.validPileLength" placeholder="" :maxlength="200" style="width: 100px" >
               <span slot="suffix" style="line-height: 30px;">m</span>
             </Input>
           </div>
         </div>
+				<div class="flex padding-v-5">  
+					<div class="flex-3">泥浆比重 : 
+						<Input class="" v-model="obj.slurryProp" placeholder="" :maxlength="200" style="width: 100px" >
+						</Input>
+					</div> 
+					<div class="flex-3">入岩深度 : 
+						<Input class="" v-model="obj.deptRock" placeholder="" :maxlength="200" style="width: 100px" >
+							<span slot="suffix" style="line-height: 30px;c">m</span>
+						</Input>
+					</div> 
+					<div class="flex-3">入岩时间  :
+						<Input class="" v-model="obj.rockTime" placeholder="" :maxlength="200" style="width: 160px" >
+						</Input>
+					</div>
+				</div>
        </div>
      </div>
     <div class="  padding-left-40">
        <div class="">四、灌注情况：</div>
        <div class="padding-v-5 padding-left-40">
-         <div class="">砼强度等级C : <Input v-model="obj.concreteStrongLevel" placeholder="" clearable :maxlength="200" style="width: 100px" /></div>
+				 <div class="flex">
+				 	<div class="flex-3">砼强度等级C : <Input v-model="obj.concreteStrongLevel" placeholder="" clearable :maxlength="200" style="width: 100px" /></div>
+
+				 	<!-- <div class="flex-3">充盈系数 : <Input v-model="obj.fillingCoefficient" placeholder="" clearable :maxlength="200" style="width: 200px" /></div> -->
+				 </div>
        </div>
       <div class="padding-v-5 padding-left-40">
         <div class="flex">
-             <div class="flex-3">灌注开始时间 : <Input v-model="obj.perfusionStartTime" placeholder="" clearable :maxlength="200" style="width: 200px" /></div>
-             <!--<div class="flex-3">灌注结束时间 : <Input v-model="obj.perfusionEndTime" placeholder="" clearable :maxlength="200" style="width: 200px" /></div>-->
-          </div>
+					 <div class="flex-3">灌注开始时间 : <Input v-model="obj.perfusionStartTime" placeholder="" clearable :maxlength="200" style="width: 200px" /></div>
+					 <div class="flex-3">灌注结束时间 : <Input v-model="obj.perfusionEndTime" placeholder="" clearable :maxlength="200" style="width: 200px" /></div>
+				</div>
        </div>
        <div class="padding-v-5 padding-left-40">
         <div class="padding-v-5 flex">
@@ -172,7 +208,7 @@
         </div>
        </div>
     </div>
-    <div class="flex">
+    <!-- <div class="flex">
       <span class="padding-left-40">孔深照片：</span>
       <img  v-for="(item, index) in obj.actualDeepImg" v-bind:key="index" :src="item" width="100" height="100"/>
       
@@ -184,7 +220,7 @@
     <div class="flex">
       <span class="padding-left-40">岩样照片：</span>
       <img  v-for="(item, index) in obj.deptRockUrl" v-bind:key="index" :src="item" width="100" height="100"/>
-    </div>
+    </div> -->
     <!--<div class="flex">
             孔深照片：
       <img :src="obj.actualDeepImg[0]" v-if="obj.actualDeepImg.length > 0" width="100" height="100"/>
@@ -204,11 +240,6 @@
   <div class="" style="text-align: right;">
       <Button type="primary" @click="handleSubmit()">保存</Button>
      </div>  
-  <!--<FormItem style="text-align: right;">
-      
-
-  </FormItem>-->
-    
 </div> 
 </template>
 <script>

@@ -1,6 +1,17 @@
 <template>
   <div>
     <Card>
+			<div style="padding: 10px;">
+			<!-- 	<Input v-model="wordRange" placeholder="输入桩号范围(如:1,2,3 或 1-3)" style="width: 300px" />
+				<Button type="primary" @click="showExportWord" style="margin-left: 10px;">批量导出Word</Button> -->
+				<form class="" :action="'https://www.therethey.com//pangzhan//exportWords'" method="post" style="display: inline-block;">
+					<input placeholder="输入桩号范围(如:1,2,3 或 1-3)" style="width: 300px; padding: 3px 5px;" name="ranges"/>
+					<input name="type" type="text" value="0001" hidden/>
+					<input name="projectId" type="text" :value="projectId" hidden />
+					<input name="buildingId" type="text" :value="buildingId" hidden />
+					<input style="margin-left: 20px;" class="btn" type="submit" value="批量导出word"/>
+				</form>
+			</div>
       <Table width="100%" border :columns="columns" :data="tableData"></Table>
       <div style="padding: 18px 10px 18px;text-align: right;clear: both;">
         <Page :total="total" show-total class="float-l" show-elevator show-sizer @on-change="pageChange" @on-page-size-change="pageSizeChange" :current="pageIndex" />
@@ -56,6 +67,7 @@
     },
     data() {
       return {
+				wordRange: null,//批量导出的桩号范围
         columns: [
           { title: "桩号", key: "pileCode" },
 //           { title: "设计坍落度", key: "designSlump" },
@@ -66,7 +78,7 @@
 						key: "perfusionStartTime",
 						render: (h, params) => {
 							return h("div", (() => {
-								console.log(params);
+								// console.log(params);
 								let str = "";
 								if(params.row.status == 0){
 									str = "未开始"
@@ -75,6 +87,11 @@
 								}else if(params.row.status == 2){
 									str = "待审核"
 								}else if(params.row.status == 3){
+									str = "已完成"
+								}
+								else if(params.row.status == 4){
+									str = "待审核"
+								}else if(params.row.status == 5){
 									str = "已完成"
 								}
 								return str
@@ -97,6 +114,12 @@
                     },
                     on: {
                       click: e => {
+												if(params.row.status != 3 && params.row.status != 5){//未完成的旁站
+													if(this.isAccessForButton("39")){
+														this.$Message.error("未完成旁站，暂不允许查看");
+														return;
+													}
+												}
                         console.log(this.tableData[params.index]);
                         this.getDetai(this.tableData[params.index].id, () => {
                           this.detailModal.show = true;
@@ -223,7 +246,13 @@
     computed: {
       word() {
         return `${this.PROJECT.projectName}项目${this.BUILDING.buildingName}楼砼实灌总方量：${this.SoilVolume}`;
-      }
+      },
+			projectId(){
+				return this.PROJECT.id
+			},
+			buildingId(){
+				return this.BUILDING.id
+			}
     },
     methods: {
       exportExcel() {
@@ -231,6 +260,19 @@
           filename: `table-${new Date().valueOf()}.csv`
         });
       },
+			showExportWord(){
+				console.log(this.wordRange);
+				let data={
+					type:"0001",
+					ranges: this.wordRange,
+					projectId: this.PROJECT.id, 
+					buildingId: this.BUILDING.id,
+				}
+				pangzhanApi.exportWords(data)
+				.then(data => {
+					console.log(data)
+				})
+			},
       addModalShow() {
         this.addModal.show = true;
       },
@@ -273,6 +315,7 @@
           })
       },
       getList() {
+				console.log('getList---')
 				if(!this.PROJECT || !this.PROJECT.id || !this.BUILDING || !this.BUILDING.id){
 					return;
 				}
@@ -289,16 +332,17 @@
         });
       },
       buildingChange() {
+				console.log("buildingChange")
         this.getSoilVolume();
         this.getList();
       },
       pageChange(pageIndex) {
-        console.log(pageIndex);
+        console.log(pageIndex,"---");
         this.pageIndex = pageIndex;
         this.getList();
       },
       pageSizeChange(pageSize) {
-        console.log(pageSize);
+        console.log(pageSize,"---");
         this.pageSize = parseInt(pageSize);
         this.getList();
       },
@@ -306,7 +350,7 @@
 				if(!this.PROJECT || !this.PROJECT.id || !this.BUILDING || !this.BUILDING.id){
 					return;
 				}
-				console.log(this.PROJECT);console.log(this.BUILDING);
+				// console.log(this.PROJECT);console.log(this.BUILDING);
         jxgzApi
           .getSoilVolume({
             projectId: Number(this.PROJECT.id),

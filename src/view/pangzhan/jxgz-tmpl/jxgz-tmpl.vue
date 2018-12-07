@@ -118,11 +118,11 @@ export default {
     },
     getList  () {
 			let data = {
-				pageIndex: this.pageSize*(this.pageIndex - 1), 
+				pageNum: this.pageIndex, 
 				pageSize: this.pageSize,
 				data: this.PROJECT.id
 			}
-			jxgzTmplApi.getJxgzTmplListByProjectId(data)
+			jxgzTmplApi.getTmplList(data)
 			.then( data =>{
 				console.log(data);
 				this.tmplList = data.list
@@ -148,7 +148,6 @@ export default {
 		
   },
   mounted () {
-    this.getList ()
   }
 }
 </script>

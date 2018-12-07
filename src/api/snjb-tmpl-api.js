@@ -7,7 +7,7 @@ import httpClient from './httpClient';
  */
 let obj = new Object();
 
-obj.getTmplList = (data) => httpClient.post({ url: `/snJbjPzjlTemplate/list?pageIndex=${data.pageIndex}&pageSize=${data.pageSize}`, data });
+obj.getTmplList = (data) => httpClient.post({ url: `/snJbjPzjlTemplate/listByProjectId?pageNum=${data.pageNum}&pageSize=${data.pageSize}`, data });
 
 obj.addSnjbTmpl = (data, fnOk, fnError) => {
   return axios.request({
@@ -24,22 +24,6 @@ obj.addSnjbTmpl = (data, fnOk, fnError) => {
   })
 }
 
-/**
- * 查询
- */
-obj.getSnjbTmplList = (data, fnOk, fnError) => {
-  return axios.request({
-    url: `snJbjPzjlTemplate/list?pageIndex=${data.pageIndex}&pageSize=${data.pageSize}`,
-    method: 'post'
-  }).then(res => {
-    console.log(res)
-    if(res.data.code != "Success"){
-      fnError(res.data) 
-    }else{
-      fnOk(res.data)
-    }
-  })
-}
 
 obj.getSnjbTemplate = (data, fnOk, fnError) => {
   return axios.request({

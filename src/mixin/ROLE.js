@@ -17,18 +17,26 @@ export default {
     PROJECT: {
       deep: true,
       handler(project) {
+				console.log("watch,PROJECT")
         this.getList();
       }
     },
     BUILDING: {
       deep: true,
       handler(building) {
+				console.log("watch,BUILDING")
         this.buildingChange();
       }
     }
   },
   created() {
-    if (this.PROJECT && this.PROJECT.id) this.getList();
-    if (this.BUILDING && this.BUILDING.id) this.buildingChange();
+    if (this.PROJECT && this.PROJECT.id) {
+			console.log("created，getList");
+			this.getList();
+		}
+//     if (this.BUILDING && this.BUILDING.id){
+// 			console.log("created，buildingChange");
+// 			this.buildingChange();
+// 		}
   }
 };

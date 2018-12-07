@@ -30,6 +30,7 @@ module.exports = {
     config.resolve.alias
       .set('@', resolve('src')) // key,value自行定义，比如.set('@@', resolve('src/components'))
       .set('_c', resolve('src/components'))
+			.set('_vc', resolve('src/view/components'))
       .set('_u', resolve('src/utility'))
       .set('_conf', resolve('config'))
   },

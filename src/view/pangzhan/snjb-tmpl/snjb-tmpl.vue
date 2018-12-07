@@ -25,8 +25,9 @@ import Tables from '_c/tables'
 import Edit from './snjb-tmpl-edit.vue'
 import Add from './snjb-tmpl-add.vue'
 import snjbTmplApi from '@/api/snjb-tmpl-api'
-
+import MIXIN_ROLE from "@/mixin/ROLE";
 export default {
+	mixins: [MIXIN_ROLE],
   components: {
     Tables, Edit, Add
   },
@@ -41,7 +42,7 @@ export default {
       role:{},
       columns2: [
         {title: '模板名称', key: 'templateName'},
-        {title: '模板备注', key: 'remark'},
+        // {title: '模板备注', key: 'remark'},
         {title: '供应单位', key: 'supplier'},
         {title: '搅拌机型号', key: 'blenderModel'},
         {
@@ -105,32 +106,39 @@ export default {
   methods: {
     addModalClose () {
       this.addModal.show = false
-      this.getTmpls()
+      this.getList()
     },
     editModalClose () {
       this.editModal.show = false
-      this.getTmpls()
+      this.getList()
     },
-    getTmpls () {
-      snjbTmplApi.getSnjbTmplList({pageIndex: this.pageSize*(this.pageIndex - 1)+1, pageSize: this.pageSize}, (data) => {
-        console.log(data)
-        this.tmplList = data.result.list
-        this.total =  data.result.total
-      })
-    },
+
+		getList () {
+			let data = {
+				pageNum: this.pageIndex, 
+				pageSize: this.pageSize,
+				data: this.PROJECT.id
+			}
+			snjbTmplApi.getTmplList(data)
+			.then( data =>{
+				console.log(data);
+				this.tmplList = data.list
+				this.total =  data.total
+			})
+		},
+		buildingChange (){},//引入minx引起
     pageChange (pageIndex) {
       console.log(pageIndex)
       this.pageIndex = pageIndex
-      this.getTmpls()
+      this.getList()
     },
     pageSizeChange(pageSize){
       console.log(pageSize)
       this.pageSize = parseInt(pageSize);
-      this.getTmpls()
+      this.getList()
     }
   },
   mounted () {
-    this.getTmpls()
   }
 }
 </script>
