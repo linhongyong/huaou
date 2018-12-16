@@ -1,4 +1,4 @@
-import axios from '@/libs/api.request';
+import {axios, exportFile} from '@/libs/api.request';
 import defaultData from "./mock/default";
 const client = (method) => ({ url, data, defaultValue }) =>
   new Promise((resolve, reject) => {

@@ -1,24 +1,33 @@
 <template>
   <div>
-		
-    <Card>
-			<div style="padding: 10px;">
-			<!-- 	<Input v-model="wordRange" placeholder="输入桩号范围(如:1,2,3 或 1-3)" style="width: 300px" />
-				<Button type="primary" @click="showExportWord" style="margin-left: 10px;">批量导出Word</Button> -->
-				<!-- <form class="" :action="'https://www.therethey.com//pangzhan//exportWords'" method="post" style="display: inline-block;">
-					<input placeholder="输入桩号范围(如:1,2,3 或 1-3)" style="width: 300px" name="ranges"/>
-					<input name="type" type="text" value="0003" hidden/>
-					<input name="projectId" type="text" :value="projectId" hidden />
-					<input name="buildingId" type="text" :value="buildingId" hidden />
-					<input class="btn" type="submit" value="导出wosrd" style=""/>
-				</form> -->
+		<Card>
+			<div class="display-flex-center">
+				<div class="" style="margin-right: 20px;">
+					<span style="font-size: 12px;margin-right: 10px;">旁站状态 :</span>	
+					<Select v-model="currentStatus" style="width:200px" @on-change="selectOption">
+						<Option v-for="item in OptionList" :value="item.value" :key="item.value">{{ item.lable }}</Option>
+					</Select>
+				</div>
+				<Input class="" search enter-button="搜索桩号" placeholder="不限" @on-search="searchByPileCode"  style="width: 200px;"/>
 			</div>
+		</Card>		
+    <Card>
       <Table width="100%" border :columns="columns" :data="tableData"></Table>
 			<div style="padding: 18px 10px 40px;text-align: right;clear: both;">
 				<Page :total="total" show-total class="float-l" show-elevator show-sizer @on-change="pageChange" @on-page-size-change="pageSizeChange" :current="pageIndex"/>
 				<!--<Button style="" type="primary" shape="circle" icon="md-add" v-on:click="addModal.show = true"></Button>-->
 			</div>
     </Card>
+		<Card>
+			<div class="display-flex-center" style="padding: 10px;">
+				<div style="display: inline-block; margin-right: 50px;">
+					<Input v-model="ranges" clearable :maxlength="200"  style="width: 300px;"  placeholder="输入桩号范围(如:1,2,3 或 1-3)">
+						<Button type="primary" slot="append" @click="batchExportWords">批量导出word</Button>
+					</Input>
+				</div>
+				<Button type="primary" @click="batchExportImages">{{'导出'+BUILDING.buildingName+'预应力管桩旁站相关图片'}}</Button>
+			</div>
+		</Card>
     <!--<Modal v-model="addModal.show" title="新增旁站灌注" ok-text="提交" :footer-hide="true" width="60%">
       <div id="" style="width:80%, margin:0 auto">
         <Add  @addModalClose="<addModalClose></addModalClose>"></Add>
@@ -29,7 +38,7 @@
         <Edit @editModalClose="editModalClose" :obj="formItem"></Edit>
       </div>
     </Modal>
-    <Modal v-model="detailModal.show" title="预应力管桩旁站详情" ok-text="确认" width="60%" :scrollable="true">
+    <Modal v-model="detailModal.show" title="预应力管桩旁站详情" ok-text="确认" width="60%" :scrollable="true" :styles="{top:'0px'}">
       <div id="">
         <Detail :obj="formItem"></Detail>
       </div>
@@ -81,7 +90,7 @@
 								if(params.row.status == 0){
 									str = "未开始"
 								}else if(params.row.status == 1){
-									str = "已开始"
+									str = "进行中"
 								}else if(params.row.status == 2){
 									str = "待审核"
 								}else if(params.row.status == 3){
@@ -119,7 +128,12 @@
 													}
 												}
                         console.log(params.row);
-                        this.getDetailById(params.row.id);
+                        // this.getDetailById(params.row.id);
+												yylApi.getDetailById({ id:params.row.id })
+													.then(data => {
+													this.formItem = data
+													this.detailModal.show = true
+													})
                       }
                     },
 										style: {
@@ -138,9 +152,14 @@
                     },
                     on: {
                       click: e => {
-                        this.getDetai(this.tableData[params.index].id, () => {
-                          this.editModal.show = true;
-                        });
+												yylApi.getDetailById({ id:params.row.id })
+													.then(data => {
+													this.formItem = data
+													this.editModal.show = true
+													})
+//                         this.getDetailById(this.tableData[params.index].id, () => {
+//                           this.editModal.show = true;
+//                         });
                       }
                     },
                     style: {
@@ -212,7 +231,7 @@
             }
           }
         ],
-
+				ranges: null,
         tableData: [],
         addModal: {
           show: false
@@ -237,9 +256,17 @@
         SoilVolume: 0,
 				isOperationLogShow: false,
 				operationLogList:[],
-				obj:{
-					
-				}
+				obj:{},
+				statusList: [1,2,3,4,5],
+				pileCode: null,
+				currentStatus: 1,
+				OptionList:[
+					{lable:"不限", value:1},
+					{lable:"进行中", value:2},
+					{lable:"待审核", value:3},
+					{lable:"已完成", value:4},
+					{lable:"未开始", value:5},
+				]
       };
     },
 	computed: {
@@ -251,6 +278,48 @@
 		}
 	},
     methods: {
+			selectOption(option){
+				if(option == 1){//不限
+					this.statusList = [1,2,3,4,5];
+				}else if(option == 2){//进行中
+					this.statusList = [1];
+				}else if(option == 3){//待审核
+					this.statusList = [2];
+				}else if(option == 4){//已完成
+					this.statusList = [3,5];
+				}else if(option == 5){//未开始
+					this.statusList = [0];
+				}
+				this.getList();
+			},
+			searchByPileCode(value){
+				let pileCode = parseInt(value);
+				if(pileCode >= 0 ){
+					this.pileCode = pileCode;
+					this.getList();	
+				}else if(!value){
+					this.pileCode = null;
+					this.getList();	
+				}else{
+					this.$Message.error("桩号不正确");
+				}
+			},
+			batchExportWords(){
+				const data = {
+					ranges: this.ranges,
+					type: "0003",
+					projectId: this.projectId,
+					buildingId: this.buildingId,
+				};
+				pangzhanApi.exportWordsBatchPZ(data);
+			},
+			batchExportImages(){
+				const data = {
+					projectId: this.projectId,
+					buildingId: this.buildingId,
+				};
+				pangzhanApi.exportImagesBatchPZ(data);
+			},
       exportExcel() {
         this.$refs.tables.exportCsv({
           filename: `table-${new Date().valueOf()}.csv`
@@ -280,17 +349,31 @@
 				if(!this.PROJECT || !this.PROJECT.id || !this.BUILDING || !this.BUILDING.id){
 					return;
 				}
+// 				let data = { 
+// 					projectId: this.PROJECT.id, 
+// 					buildingId: this.BUILDING.id,
+// 					pageIndex:(this.pageIndex - 1)*this.pageSize,
+// 					pageSize:this.pageSize ,
+// 					}
+//         yylApi.getYylgzpzList(data).then(data => {
+//           console.log(data);
+//           this.tableData = data.list;
+//           this.total = data.total;
+//         });
 				let data = { 
 					projectId: this.PROJECT.id, 
 					buildingId: this.BUILDING.id,
-					pageIndex:(this.pageIndex - 1)*this.pageSize,
+					type:"0003",
+					statusList: this.statusList,
+					pileCode: this.pileCode,
+					pageNum:this.pageIndex,
 					pageSize:this.pageSize ,
-					}
-        yylApi.getYylgzpzList(data).then(data => {
-          console.log(data);
-          this.tableData = data.list;
-          this.total = data.total;
-        });
+				}
+				pangzhanApi.getListByCondition(data).then(data => {
+					console.log(data);
+					this.tableData = data.list;
+					this.total = data.total;
+				});
       },
       buildingChange() {
         this.getList();

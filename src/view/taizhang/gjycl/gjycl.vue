@@ -1,7 +1,7 @@
 <template>
   <div>
-    <Card>
-			<div style="padding: 5px 0 20px 0;">
+		<Card>
+			<div style="padding: 5px 0 0px 0;">
 				<div class="display-flex-center-between">
 						<div>
 								进场日期：<DatePicker type="daterange" @on-change="okEnterDateRange" placement="bottom-start" confirm placeholder="不限" style="width: 200px"></DatePicker>
@@ -15,11 +15,11 @@
 						<div>
 								检测结果：<Input   style="width: 200px" @on-change="okResult" placeholder="不限" v-model="searchObj.testResult"></Input>
 						</div>
-						<!-- <div>
-								<Button type="primary" @click="getList">搜索</Button>
-						</div> -->
 				</div>
 			</div>
+		</Card>
+    <Card>
+			
 			<div id="myElementId" style="width: 100%;" v-if="tableData.length">
 				<div>
 					<div style="text-align: center;font-size: larger;">钢筋原材料台账</div>

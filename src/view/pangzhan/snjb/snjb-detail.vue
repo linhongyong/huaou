@@ -1,11 +1,15 @@
 <template>
   <div style="width: 90%; margin: 0 auto;">
-		<div style="text-align: right; position: absolute; top: 10px; right: 60px;">
+		<div style="position: absolute; top: 10px; right: 60px;">
+			<button class="btn" style="margin-left: 20px;cursor: pointer;"  @click="exportWord">导出word</button>
+			<button class="btn" style="margin-left: 20px;cursor: pointer;"  @click="printTable">直接打印</button>
+		</div>
+		<!-- <div style="text-align: right; position: absolute; top: 10px; right: 60px;">
 			<form class="" :action="'https://www.therethey.com//snJbjPzjl/download?id='+obj.id" method="post" style="display: inline-block;">
 				<input class="btn" type="submit" value="导出word" style=""/>
 			</form>
 			<button class="btn" style="margin-left: 10px;"  @click="printTable">打印</button>
-		</div>
+		</div> -->
 		<div id="myElementId" >
 			<div class="display-flex-center-between" style="font-weight: bolder; font-size: larger;">
 				<div>监C4</div> <div>编 号：{{ obj.number }}</div>
@@ -87,6 +91,7 @@ import jQuery from "jquery"
 import {jQueryPrint} from '@/libs/jQuery.print'
 jQueryPrint(jQuery);
 import DateTimeToDate from "../../components/datetime-to-date/datetime-to-date.vue"
+	import pangzhanApi from "@/api/pangzhan-api";
 export default {
 	components: {
 		DateTimeToDate,
@@ -111,6 +116,12 @@ export default {
     },
 	},
   methods: {
+		exportWord: function(){
+			const data = {
+				id: this.obj.id,
+			};
+			pangzhanApi.exportSNJBWord(data);
+		},
 		printTable: function(){
 			jQuery("#myElementId").print();
 		},

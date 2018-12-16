@@ -1,8 +1,12 @@
 <template>
-  <div class="display-flex-center">
-    <div id="myChart" :style="{width: '600px', height: '300px'}"></div>
-    <div id="myChart2" :style="{width: '600px', height: '300px'}"></div>
-  </div>
+  <div style="width: 100%;">
+		<div class="display-flex-center">
+			<div id="myChart" :style="{width: '600px', height: '300px'}"></div>
+			<div id="myChart2" :style="{width: '600px', height: '300px'}"></div>
+		</div>
+		<div v-html="statisticsDes" style="padding-left: 10px;">
+		</div>
+	</div>
 </template>
 
 <script>
@@ -12,18 +16,27 @@ require('echarts/lib/chart/bar')// 引入柱状图组件
 require('echarts/lib/chart/line')
 
 require('echarts/lib/component/tooltip')// 引入提示框和title组件
-require('echarts/lib/component/title')
+require('echarts/lib/component/title');
+import pangzhanApi from "@/api/pangzhan-api";
+import MIXIN_ROLE from "@/mixin/ROLE";
 export default {
   name: 'hello',
+	mixins: [MIXIN_ROLE],
   data() {
     return {
-      msg: 'Welcome to Your Vue.js App'
+      msg: 'Welcome to Your Vue.js App',
+			statisticsDes: ""
     }
   },
-  mounted() {
-    this.drawLine();
-    this.drawLine2();
-  },
+
+	computed: {
+		projectId(){
+			return this.PROJECT.id
+		},
+		buildingId(){
+			return this.BUILDING.id
+		}
+	},
   methods: {
     drawLine() {
       // 基于准备好的dom，初始化echarts实例
@@ -75,8 +88,59 @@ export default {
       if (option && typeof option === "object") {
           myChart.setOption(option, true);
       }
-    }
-  }
+    },
+		getList(){
+			console.log("-----------")
+			this.pangzhanStatistics();
+		},
+		buildingChange(){},
+		pangzhanStatistics(){
+			pangzhanApi
+				.pangzhanStatistics({
+					projectId: this.projectId,
+					type: "0001"
+				})
+				.then(data => {
+					console.log(data.length);
+					let statusMapList = [0,0,0,0,0,0,0];
+					let finishedNum = 0;
+					let unCheckNum = 0;
+					let startedNum = 0;
+					let allPileNum = 0;
+					for(let i=0; i<data.length; i++){
+						if(!data[i].statusMap['3']) data[i].statusMap['3']=0;
+						if(!data[i].statusMap['5']) data[i].statusMap['5']=0;
+						if(!data[i].statusMap['2']) data[i].statusMap['2']=0;
+						if(!data[i].statusMap['4']) data[i].statusMap['4']=0;
+						if(!data[i].statusMap['1']) data[i].statusMap['1']=0;
+						finishedNum +=  data[i].statusMap['3'] + data[i].statusMap['5'];
+						unCheckNum += data[i].statusMap['2'] + data[i].statusMap['4'];
+						startedNum += data[i].statusMap['1'];
+						allPileNum += data[i].pileNum
+						for(let j=0; j<6; j++){ 
+							if(!!data[i].statusMap[j+'']){
+								statusMapList[j] = statusMapList[j] + data[i].statusMap[j+'']
+							}
+						}
+					}
+					console.log(statusMapList, finishedNum);
+					let statisticsDes = `<div style="font-size:18px">${this.PROJECT.projectName} 项目共有 ${allPileNum} 根桩。
+					进行中: ${startedNum}。待审核: ${unCheckNum}。
+					已完成: ${finishedNum}, 其中`;
+					for(let i=0; i<data.length; i++){
+						statisticsDes+= `${data[i].buildingName} 完成： ${data[i].statusMap['3'] + data[i].statusMap['5']} ; `
+					}
+					statisticsDes+= '</div>'
+					this.statisticsDes = statisticsDes;
+				})
+				.catch(() => {
+				});
+		}
+  },
+	mounted() {
+		this.drawLine();
+		this.drawLine2();
+	},
 }
 
 </script>

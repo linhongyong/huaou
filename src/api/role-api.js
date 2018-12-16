@@ -1,4 +1,4 @@
-import axios from '@/libs/api.request'
+import {axios} from '@/libs/api.request'
 import httpClient from './httpClient';
 let role = new Object();
 

@@ -1,31 +1,24 @@
 <template>
   <div>
-    <Card>
-			<div style="padding: 10px;">
-			<!-- 	<Input v-model="wordRange" placeholder="输入桩号范围(如:1,2,3 或 1-3)" style="width: 300px" />
-				<Button type="primary" @click="showExportWord" style="margin-left: 10px;">批量导出Word</Button> -->
-				<form class="" :action="'https://www.therethey.com//pangzhan//exportWords'" method="post" style="display: inline-block;">
-					<input placeholder="输入桩号范围(如:1,2,3 或 1-3)" style="width: 300px; padding: 3px 5px;" name="ranges"/>
-					<input name="type" type="text" value="0001" hidden/>
-					<input name="projectId" type="text" :value="projectId" hidden />
-					<input name="buildingId" type="text" :value="buildingId" hidden />
-					<input style="margin-left: 20px;" class="btn" type="submit" value="批量导出word"/>
-				</form>
+		<Card>
+			<div class="display-flex-center">
+				<div class="" style="margin-right: 20px;">
+					<span style="font-size: 12px;margin-right: 10px;">旁站状态 :</span>	
+					<Select v-model="currentStatus" style="width:200px" @on-change="selectOption">
+						<Option v-for="item in OptionList" :value="item.value" :key="item.value">{{ item.lable }}</Option>
+					</Select>
+				</div>
+				<Input class="" search enter-button="搜索桩号" placeholder="不限" @on-search="searchByPileCode"  style="width: 200px;"/>
+				<Input class="" search enter-button="搜索桩机号" placeholder="不限" @on-search="searchByDrillModel"  style="width: 250px;margin-left: 20px;"/>
 			</div>
+		</Card>
+    <Card>
       <Table width="100%" border :columns="columns" :data="tableData"></Table>
       <div style="padding: 18px 10px 18px;text-align: right;clear: both;">
         <Page :total="total" show-total class="float-l" show-elevator show-sizer @on-change="pageChange" @on-page-size-change="pageSizeChange" :current="pageIndex" />
-        <div>
-					<span style="padding-right: 20px;">{{word}} m³</span>
-					<Button type="primary" @click="showExportModal">导出Excel</Button>
-				</div>
+        <div><span style="padding-right: 20px;">{{word}} m³</span></div>
       </div>
     </Card>
-    <!--<Modal v-model="addModal.show" title="新增旁站灌注" ok-text="提交" :footer-hide="true" width="60%">
-      <div id="" style="width:80%, margin:0 auto">
-        <Add  @addModalClose="addModalClose"></Add>
-      </div>
-    </Modal>-->
     <Modal v-model="editModal.show" title="修改机械灌注旁站" ok-text="提交" :footer-hide="true" width="60%" :scrollable="true" :styles="{top:'0px'}">
       <div id="" style="width:80%, margin:0 auto">
         <Edit @editModalClose="editModalClose" :obj="formItem"></Edit>
@@ -36,7 +29,17 @@
         <Detail :obj="formItem"></Detail>
       </div>
     </Modal>
-    <modalExport v-model="modal_export.show" :roleData="this.modal_export.roleData"></modalExport>
+		<Card>
+			<div class="display-flex-center" style="padding: 10px;">
+				<div style="display: inline-block; margin-right: 50px;">
+					<Input v-model="ranges" clearable :maxlength="200"  style="width: 300px;"  placeholder="输入桩号范围(如:1,2,3 或 1-3)">
+						<Button type="primary" slot="append" @click="batchExportWords">批量导出word</Button>
+					</Input>
+				</div>
+				<Button type="primary" @click="batchExportImages">{{'导出'+BUILDING.buildingName+'机械灌注桩旁站相关图片'}}</Button>
+				<Button type="primary" @click="exportExcel" style="margin-left: 20px;">{{'导出'+BUILDING.buildingName+'旁站表格'}}</Button>
+			</div>
+		</Card>
 		<OperationLog v-model="isOperationLogShow" :operationLogList="operationLogList" :obj="obj"></OperationLog>
   </div>
 </template>
@@ -44,12 +47,9 @@
 <script>
   import Tables from "_c/tables";
 
-  //import Add from './add.vue'
   import Edit from "./edit.vue";
   import Detail from "./detail.vue";
-  import modalExport from "./modal-export";
 	import OperationLog from "../operation-record.vue"
-  //import expandRow from './table-expand.vue'
   import jxgzApi from "@/api/jxgz-api";
 	import pangzhanApi from "@/api/pangzhan-api";
 	
@@ -62,7 +62,6 @@
       Tables,
       Edit,
       Detail,
-      modalExport,
 			OperationLog
     },
     data() {
@@ -70,12 +69,9 @@
 				wordRange: null,//批量导出的桩号范围
         columns: [
           { title: "桩号", key: "pileCode" },
-//           { title: "设计坍落度", key: "designSlump" },
-//           { title: "砼理论方量", key: "theoryVolume" },
-//           { title: "砼实灌方量", key: "actualVolume" },
           { 
 						title: "状态", 
-						key: "perfusionStartTime",
+						key: "status",
 						render: (h, params) => {
 							return h("div", (() => {
 								// console.log(params);
@@ -83,7 +79,7 @@
 								if(params.row.status == 0){
 									str = "未开始"
 								}else if(params.row.status == 1){
-									str = "已开始"
+									str = "进行中"
 								}else if(params.row.status == 2){
 									str = "待审核"
 								}else if(params.row.status == 3){
@@ -132,6 +128,29 @@
                   },
                   "查看"
                 ),
+								h(
+									"Button",
+									{
+										props: {
+											type: "success",
+											size: "small",
+										},
+										on: {
+											click: e => {
+												
+												const data = {
+													id: params.row.id,
+													type: "0001"
+												};
+												pangzhanApi.exportImagesForPZ(data);
+											}
+										},
+										style: {
+											marginRight: "5px"
+										}
+									},
+									"导出图片"
+								),
                 h(
                   "Button",
                   {
@@ -153,6 +172,7 @@
                   },
                   "修改"
                 ),
+								
                 h(
                   "Poptip",
                   {
@@ -213,7 +233,7 @@
             }
           }
         ],
-
+				ranges:null,
         tableData: [],
         addModal: {
           show: false
@@ -238,9 +258,18 @@
         SoilVolume: 0,
 				isOperationLogShow: false,
 				operationLogList:[],
-				obj:{
-					
-				}
+				obj:{},
+				statusList: [1,2,3,4,5],
+				drillModel: null,	
+				pileCode: null,
+				currentStatus: 1,
+				OptionList:[
+					{lable:"不限", value:1},
+					{lable:"进行中", value:2},
+					{lable:"待审核", value:3},
+					{lable:"已完成", value:4},
+					{lable:"未开始", value:5},
+				]
       };
     },
     computed: {
@@ -255,23 +284,65 @@
 			}
     },
     methods: {
-      exportExcel() {
-        this.$refs.tables.exportCsv({
-          filename: `table-${new Date().valueOf()}.csv`
-        });
-      },
-			showExportWord(){
-				console.log(this.wordRange);
-				let data={
-					type:"0001",
-					ranges: this.wordRange,
-					projectId: this.PROJECT.id, 
-					buildingId: this.BUILDING.id,
+			selectOption(option){
+				if(option == 1){//不限
+					this.statusList = [1,2,3,4,5];
+				}else if(option == 2){//进行中
+					this.statusList = [1];
+				}else if(option == 3){//待审核
+					this.statusList = [2];
+				}else if(option == 4){//已完成
+					this.statusList = [3,5];
+				}else if(option == 5){//未开始
+					this.statusList = [0];
 				}
-				pangzhanApi.exportWords(data)
-				.then(data => {
-					console.log(data)
-				})
+				this.getList();
+			},
+			searchByPileCode(value){
+				let pileCode = parseInt(value);
+				if(pileCode >= 0 ){
+					this.pileCode = pileCode;
+					this.getList();	
+				}else if(!value){
+					this.pileCode = null;
+					this.getList();	
+				}else{
+					this.$Message.error("桩号不正确");
+				}
+			},
+			searchByDrillModel(value){
+				if(value){
+					this.drillModel = value;
+					this.getList();	
+				}else if(!value){
+					this.drillModel = null;
+					this.getList();	
+				}else{
+					this.$Message.error("桩机号不正确");
+				}
+			},
+      exportExcel() {
+        const data = {
+        	projectId: this.projectId,
+        	buildingId: this.buildingId,
+        };
+        pangzhanApi.exportExcelForJXGZPZ(data);
+      },
+			batchExportWords(){
+				const data = {
+					ranges: this.ranges,
+					type: "0001",
+					projectId: this.projectId,
+					buildingId: this.buildingId,
+				};
+				pangzhanApi.exportWordsBatchPZ(data);
+			},
+			batchExportImages(){
+				const data = {
+					projectId: this.projectId,
+					buildingId: this.buildingId,
+				};
+				pangzhanApi.exportImagesBatchPZ(data);
 			},
       addModalShow() {
         this.addModal.show = true;
@@ -306,30 +377,41 @@
               data.deptRockUrl = JSON.parse(data.deptRockUrl);
             }
             this.formItem = Object.assign({}, this.formItem, data);
-            // this.formItem.mainBarNum = data.mainBar && data.mainBar.split("φ")[0]
-            // this.formItem.mainBarType = data.mainBar && data.mainBar.split("φ")[1]
-            this.formItem.fillingCoefficient = math.accDiv(data.actualVolume, data.theoryVolume, 2)
-
+            // this.formItem.fillingCoefficient = math.accDiv(data.actualVolume, data.theoryVolume, 2)
             console.log(this.formItem);
             okfn && okfn()
           })
       },
       getList() {
-				console.log('getList---')
 				if(!this.PROJECT || !this.PROJECT.id || !this.BUILDING || !this.BUILDING.id){
 					return;
 				}
 				let data = { 
 					projectId: this.PROJECT.id, 
-					buildingNum: this.BUILDING.id,
-					pageIndex:(this.pageIndex - 1)*this.pageSize,
+					buildingId: this.BUILDING.id,
+					type:"0001",
+					statusList: this.statusList,
+					drillModel: this.drillModel,	
+					pileCode: this.pileCode,
+					pageNum:this.pageIndex,
 					pageSize:this.pageSize ,
 					}
-        jxgzApi.getListByCondition(data).then(data => {
-          console.log(data);
-          this.tableData = data.list;
-          this.total = data.total;
-        });
+					pangzhanApi.getListByCondition(data).then(data => {
+						console.log(data);
+						this.tableData = data.list;
+						this.total = data.total;
+					});
+// 				let data = { 
+// 					projectId: this.PROJECT.id, 
+// 					buildingNum: this.BUILDING.id,
+// 					pageNum:this.pageIndex,
+// 					pageSize:this.pageSize ,
+// 					}
+//         jxgzApi.getListByCondition(data).then(data => {
+//           console.log(data);
+//           this.tableData = data.list;
+//           this.total = data.total;
+//         });
       },
       buildingChange() {
 				console.log("buildingChange")
@@ -350,7 +432,6 @@
 				if(!this.PROJECT || !this.PROJECT.id || !this.BUILDING || !this.BUILDING.id){
 					return;
 				}
-				// console.log(this.PROJECT);console.log(this.BUILDING);
         jxgzApi
           .getSoilVolume({
             projectId: Number(this.PROJECT.id),

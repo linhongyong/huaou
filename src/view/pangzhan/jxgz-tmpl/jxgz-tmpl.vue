@@ -118,7 +118,7 @@ export default {
     },
     getList  () {
 			let data = {
-				pageNum: this.pageIndex, 
+				pageIndex: this.pageSize*(this.pageIndex - 1), 
 				pageSize: this.pageSize,
 				data: this.PROJECT.id
 			}

@@ -24,14 +24,14 @@ export default {
         return []
       }
     },
-	obj: {
-		type: Object,
-		default () { return {} }
-	},
-	value:{
-		type: Boolean,
-		default (){ return false }
-	}
+		obj: {
+			type: Object,
+			default () { return {} }
+		},
+		value:{
+			type: Boolean,
+			default (){ return false }
+		}
   },
   methods: {
     handleOk() { this.$emit("input", false); },
