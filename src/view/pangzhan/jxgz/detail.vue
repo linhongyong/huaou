@@ -2,7 +2,7 @@
 	<div style="width: 90%; margin: 0 auto;">
 		<div style="position: absolute; top: 10px; right: 60px;">
 			<button class="btn" style="margin-left: 20px;cursor: pointer;"  @click="exportWord">导出word</button>
-			<button class="btn" style="margin-left: 20px;cursor: pointer;"  @click="printTable">直接打印</button>
+			<button class="btn" style="margin-left: 20px;cursor: pointer;"  @click="printTable">直接打印({{obj.printNum ? obj.printNum : "0"}})</button>
 		</div>
 		<div id="myElementId" >
 			<div class="display-flex-center-between" style="font-weight: bolder; font-size: larger;">
@@ -19,8 +19,8 @@
 					<span>{{ obj.buildingCode }} </span> 
 					<span class=""> {{ obj.pileCode }} </span>     
 				</div>
-				<div class="flex border-b">
-					<div class="flex-1 p-10">旁站监理开始时间：<span class="valuep2">{{obj.startTime}}</span>；</div><div class="border-l flex-1 p-10">旁站监理结束时间：<span class="valuep2">{{obj.endTime}}</span>；</div>
+				<div class="flex border-b"><!-- 开孔时间就是旁站开始时间 -->
+					<div class="flex-1 p-10">旁站监理开始时间：<span class="valuep2">{{obj.openTime}}</span>；</div><div class="border-l flex-1 p-10">旁站监理结束时间：<span class="valuep2">{{obj.endTime}}</span>；</div>
 				</div>
 				<div class="p-10 border-b">
 					<div class="">一、机械设备</div>
@@ -68,7 +68,7 @@
 						<span class="p-l-10">沉渣厚度：  <span class="valuep">{{chengzhahoudu}}</span>   mm；</span>
 					</div>
 					<div class="padding-left-40 p-5-l-10"><span>泥浆比重： <span class="valuep">{{obj.slurryProp}}</span>； </span> <span>终孔时间： <span class="valuep2">{{obj.stopTime}}</span>；</span></div>
-					<div class="padding-left-40 p-5-l-10"><span>入岩深度： <span class="valuep">{{obj.deptRock}}</span> cm；</span>  <span>入岩时间： <span class="valuep2">{{obj.rockTime}}</span>；</span></div>
+					<div class="padding-left-40 p-5-l-10"><span>入岩深度： <span class="valuep">{{obj.deptRock}}</span> m；</span>  <span>入岩时间： <span class="valuep2">{{obj.rockTime}}</span>；</span></div>
 					
 					<div class="">四、灌注情况</div>
 					<div class="padding-left-40 p-5-l-10">
@@ -79,9 +79,20 @@
 						<span class="">第一次灌入量: <span class="valuep">{{obj.firstIrrigationAmount}}</span>m³；</span>
 						<span class="p-l-10">灌注结束时间：<span class="valuep2">{{obj.perfusionEndTime}}</span>；</span>  
 					</div>
-					<div class="padding-left-40 p-5-l-10"><span>设计坍落度： <span class="valuep">{{obj.designSlump}}</span>mm；</span> <span class="p-l-10">实测坍落度： <span class="valuep">{{obj.actualSlump}}</span>mm；</span></div>
-					<div class="padding-left-40 p-5-l-10"><span>砼理论方量： <span class="valuep">{{obj.theoryVolume}}</span>m³；</span> <span class="p-l-10">砼实灌方量： <span class="valuep">{{obj.actualVolume}}</span>m³；</span></div>
-					<div class="padding-left-40 p-5-l-10"><span>充盈系数： <span class="valuep">{{obj.fillingCoefficient=="NaN" ? "":obj.fillingCoefficient}}</span>；</span> <span class="p-l-10">试块制作组数： <span class="valuep">{{obj.sampleMaking}}</span>组； </span></div>
+					<div class="padding-left-40 p-5-l-10">
+						<span>设计坍落度： <span class="valuep">{{obj.designSlump}}</span>mm；</span> 
+						<span class="p-l-10">实测坍落度： <span class="valuep">{{obj.actualSlump}}</span>mm；</span>
+						<span class="p-l-10">试块制作组数： <span class="valuep">{{obj.sampleMaking}}</span>组； </span>
+					</div>
+					<div class="padding-left-40 p-5-l-10">
+						<span>砼理论方量： <span class="valuep">{{obj.theoryVolume}}</span>m³；</span> 
+						<span class="p-l-10">砼实灌方量： <span class="valuep">{{obj.actualVolume}}</span>m³；</span>
+						<span>充盈系数： <span class="valuep">{{obj.fillingCoefficientTemp > 0 ? obj.fillingCoefficientTemp:""}}</span>；</span> 
+					</div>
+					<!-- <div class="padding-left-40 p-5-l-10">
+						<span>充盈系数： <span class="valuep">{{obj.fillingCoefficient=="NaN" ? "":obj.fillingCoefficient}}</span>；</span> 
+						<span class="p-l-10">试块制作组数： <span class="valuep">{{obj.sampleMaking}}</span>组； </span>
+					</div> -->
 				</div>	
 				<div class="p-10 border-b">
 					<div>发现的问题及处理情况：</div>
@@ -93,19 +104,19 @@
 				</div>
 			</div>
 		</div>
-    <div class="flex" style="margin-top: 20px;">
-      <span class="">孔深照片：</span>
-      <img  v-for="(item, index) in obj.actualDeepImg" v-bind:key="index" :src="item" width="100" height="100"/>
+    <div class="" style="margin-top: 20px;">
+      <div class="">孔深照片：</div>
+      <img  v-for="(item, index) in obj.actualDeepImg" v-bind:key="index" :src="item" width="100" height="100" style="margin-right: 10px;"/>
 			<span style="margin-left: 20px;"  v-if="!obj.actualDeepImg || !obj.actualDeepImg.length">暂无相关照片</span>
     </div>
-    <div class="flex" style="margin-top: 20px;">
-      <span class="">钢筋笼照片组：</span>
-      <img  v-for="(item, index) in obj.barCageCountImg" v-bind:key="index" :src="item" width="100" height="100"/>
+    <div class="" style="margin-top: 20px;">
+      <div class="">钢筋笼照片组：</div>
+      <img  v-for="(item, index) in obj.barCageCountImg" v-bind:key="index" :src="item" width="100" height="100" style="margin-right: 10px;"/>
 			<span style="margin-left: 20px;"  v-if="!obj.barCageCountImg || !obj.barCageCountImg.length">暂无相关照片</span>
     </div>
-    <div class="flex" style="margin-top: 20px;">
-      <span class="">岩样照片：</span>
-      <img  v-for="(item, index) in obj.deptRockUrl" v-bind:key="index" :src="item" width="100" height="100" />
+    <div class="" style="margin-top: 20px;">
+      <div class="">岩样照片：</div>
+      <img  v-for="(item, index) in obj.deptRockUrl" v-bind:key="index" :src="item" width="100" height="100"  style="margin-right: 10px;"/>
 			<span style="margin-left: 20px;" v-if="!obj.deptRockUrl || !obj.deptRockUrl.length">暂无相关照片</span>
     </div>
   </div>
@@ -117,6 +128,7 @@ import math from '@/libs/math'
 jQueryPrint(jQuery);
 import DateTimeToDate from "../../components/datetime-to-date/datetime-to-date.vue"
 import pangzhanApi from "@/api/pangzhan-api";
+import jxgzApi from '@/api/jxgz-api'
 export default {
 	components: {
 		DateTimeToDate,
@@ -155,6 +167,13 @@ export default {
 			pangzhanApi.exportJXGZWord(data);
 		},
 		printTable: function(){
+			if(this.obj.status == 3 || this.obj.status ==5){
+				this.obj.printNum++;
+				jxgzApi.updateJxZkGzzPzjl(this.obj).then(res => {
+					console.log('打印次數加一')
+				})
+			}
+			
 			jQuery("#myElementId").print();
 		}
   },

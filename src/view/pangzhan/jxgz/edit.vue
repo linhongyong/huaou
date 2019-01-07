@@ -260,19 +260,18 @@ export default {
   },
   methods: {
       handleSubmit () {
-        this.obj.mainBar = `${this.obj.mainBarNum}φ${this.obj.mainBarType}`
         let data = this.obj;
         jxgzApi.updateJxZkGzzPzjl(data).then(res => {
-        console.log(res)
-        if (res.data.code === 'Success') {
-          this.$Message.success({
-            content: '修改成功！',
-            onClose: () => {
-               this.$emit('editModalClose', true)
-            }
-          });
-        }
-      })
+					console.log(res)
+					if (res.data.code === 'Success') {
+						this.$Message.success({
+							content: '修改成功！',
+							onClose: () => {
+								 this.$emit('editModalClose', true)
+							}
+						});
+					}
+				})
 
     },
   },

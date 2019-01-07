@@ -9,6 +9,14 @@
 					</Select>
 				</div>
 				<Input class="" search enter-button="搜索桩号" placeholder="不限" @on-search="searchByPileCode"  style="width: 200px;"/>
+				<div class="" style="margin-left: 20px;">
+					<span style="font-size: 12px;margin-right: 10px;">打印次数 :</span>	
+					<Select v-model="currentPrintNum" style="width:200px" @on-change="selectOption2">
+						<Option value="null">不限</Option>
+						<Option value="0" >0次</Option>
+						<Option value="1" >一次或多次</Option>
+					</Select>
+				</div>
 			</div>
 		</Card>		
     <Card>
@@ -258,6 +266,7 @@
 				operationLogList:[],
 				obj:{},
 				statusList: [1,2,3,4,5],
+				currentPrintNum: "null",
 				pileCode: null,
 				currentStatus: 1,
 				OptionList:[
@@ -292,6 +301,10 @@
 				}
 				this.getList();
 			},
+			selectOption2(option){
+				this.printNum = option;
+				this.getList();
+			},
 			searchByPileCode(value){
 				let pileCode = parseInt(value);
 				if(pileCode >= 0 ){
@@ -304,6 +317,7 @@
 					this.$Message.error("桩号不正确");
 				}
 			},
+			
 			batchExportWords(){
 				const data = {
 					ranges: this.ranges,

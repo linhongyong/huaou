@@ -156,8 +156,9 @@ export default {
      * @param {Object} e
      */
     searchUser: function(e) {
-      console.log(e.data);
-      userApi.searchUsers({ searchStr: e.data }, data => {
+      console.log(e);
+			console.log(this.searchKey,e.srcElement.value);
+      userApi.searchUsers({ searchStr: this.searchKey }, data => {
         console.log(data.result);
         if (data.result.length > 3) {
           data.result.length = 3;

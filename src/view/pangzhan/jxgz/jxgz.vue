@@ -10,6 +10,14 @@
 				</div>
 				<Input class="" search enter-button="搜索桩号" placeholder="不限" @on-search="searchByPileCode"  style="width: 200px;"/>
 				<Input class="" search enter-button="搜索桩机号" placeholder="不限" @on-search="searchByDrillModel"  style="width: 250px;margin-left: 20px;"/>
+				<div class="" style="margin-left: 20px;">
+					<span style="font-size: 12px;margin-right: 10px;">打印次数 :</span>	
+					<Select v-model="currentPrintNum" style="width:200px" @on-change="selectOption2">
+						<Option value="null">不限</Option>
+						<Option value="0" >0次</Option>
+						<Option value="1" >一次或多次</Option>
+					</Select>
+				</div>
 			</div>
 		</Card>
     <Card>
@@ -68,10 +76,11 @@
       return {
 				wordRange: null,//批量导出的桩号范围
         columns: [
-          { title: "桩号", key: "pileCode" },
+          { title: "桩号", width: 250,key: "pileCode" },
           { 
 						title: "状态", 
 						key: "status",
+						width: 250,
 						render: (h, params) => {
 							return h("div", (() => {
 								// console.log(params);
@@ -91,6 +100,21 @@
 									str = "已完成"
 								}
 								return str
+							})())
+						}
+					},
+					{ 
+						title: "打印次数", 
+						key: "status",
+						width: 250,
+						render: (h, params) => {
+							return h("div", (() => {
+								// console.log(params);
+								if(!params.row.printNum){
+									return 0;
+								}else{
+									return params.row.printNum;
+								}
 							})())
 						}
 					},
@@ -262,6 +286,8 @@
 				statusList: [1,2,3,4,5],
 				drillModel: null,	
 				pileCode: null,
+				printNum:null,
+				currentPrintNum: "null",
 				currentStatus: 1,
 				OptionList:[
 					{lable:"不限", value:1},
@@ -296,6 +322,10 @@
 				}else if(option == 5){//未开始
 					this.statusList = [0];
 				}
+				this.getList();
+			},
+			selectOption2(option){
+				this.printNum = option;
 				this.getList();
 			},
 			searchByPileCode(value){
@@ -377,7 +407,7 @@
               data.deptRockUrl = JSON.parse(data.deptRockUrl);
             }
             this.formItem = Object.assign({}, this.formItem, data);
-            // this.formItem.fillingCoefficient = math.accDiv(data.actualVolume, data.theoryVolume, 2)
+            this.formItem.fillingCoefficientTemp = math.accDiv(data.actualVolume, data.theoryVolume, 2)
             console.log(this.formItem);
             okfn && okfn()
           })
@@ -393,6 +423,7 @@
 					statusList: this.statusList,
 					drillModel: this.drillModel,	
 					pileCode: this.pileCode,
+					printNum:this.printNum ,
 					pageNum:this.pageIndex,
 					pageSize:this.pageSize ,
 					}
